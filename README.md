@@ -1,6 +1,6 @@
 # Public-API-Documentations
 
-<img src="https://github.com/PandaTechAM/Public-API-Documentations/blob/adf95981bea5146757342ba74dd61aec5ba4014b/assets/pandatech_horisontal.svg" alt="Logo" width="400" height="200"/>
+<img src="https://github.com/PandaTechAM/Public-API-Documentations/blob/1451acefb82b99863729a3b2a0cba780fd777c0a/assets/pandatech_horisontal.png" alt="Logo" width="400" height="200"/>
 
 Welcome to **PandaTech's Public API Documentations** repository! This is a centralized hub where you can find comprehensive API documentation for a wide range of projects.
 
