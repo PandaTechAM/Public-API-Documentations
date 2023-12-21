@@ -240,6 +240,7 @@ To use the API, you must have a registered user account in the system. It's cruc
 }
 ```
 
+
 ### 1.8.3. Contributing
 
 We encourage contributions to improve our API documentation. If you have suggestions or corrections, please feel free to open a pull request or an issue.
