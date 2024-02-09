@@ -162,7 +162,7 @@ To use the API, you must have a registered user account in the system. It's cruc
 
 ### 1.6.4. Debt retrieval by estate owner unique identifier
 
-- **Path:** `/api/v1/debts/{estateId}`
+- **Path:** `/api/v1/debts/owner/{ownerId}`
 - **Method:** `/GET`
 - **Description:** Retrieves estate related all outstanding debts by estate owner unique identifier. Unique identifier can be SSN or Tax Code
 - **Response:**
