@@ -168,8 +168,9 @@ To use the API, you must have a registered user account in the system. It's cruc
 - **Response:**
 
 ```json
-{
-  "estateId": "vsv",
+[{
+  "estateId": "vsv
+  "estateAddress":"Tumanyan 29, bn 4"
   "amount": 700,
   "debts": [
     {
@@ -180,8 +181,21 @@ To use the API, you must have a registered user account in the system. It's cruc
       "debtId": "zd3",
       "amount": 299.5
     }
-  ]
-}
+},
+{
+  "estateId": "vsd
+  "estateAddress":"Tumanyan 29, bn 5"
+  "amount": 1000.5,
+  "debts": [
+    {
+      "debtId": "zd4",
+      "amount": 500.5
+    },
+    {
+      "debtId": "zdz",
+      "amount": 500
+    }
+}]
 ```
 
 ### 1.6.5. Debt repayment
