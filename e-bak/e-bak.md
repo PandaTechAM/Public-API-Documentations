@@ -169,7 +169,7 @@ To use the API, you must have a registered user account in the system. It's cruc
 
 ```json
 [{
-  "estateId": "vsv
+  "estateId": "vsv",
   "estateAddress":"Tumanyan 29, bn 4",
   "amount": 700,
   "debts": [
@@ -184,8 +184,8 @@ To use the API, you must have a registered user account in the system. It's cruc
    ]
 },
 {
-  "estateId": "vsd
-  "estateAddress":"Tumanyan 29, bn 5,
+  "estateId": "vsd",
+  "estateAddress":"Tumanyan 29, bn 5",
   "amount": 1000.5,
   "debts": [
     {
