@@ -1,13 +1,11 @@
-# 1. e-bak API Documentation V1.0
-
 - [1. e-bak API Documentation V1.0](#1-e-bak-api-documentation-v10)
   - [1.1. Overview](#11-overview)
-  - [1.2. Base URL](#12-base-url)
+  - [1.2. Configuration Details](#12-configuration-details)
+    - [1.2.1. Environments](#121-environments)
   - [1.3. Common Response Codes](#13-common-response-codes)
-  - [1.4. Error Message Format](#14-error-message-format)
-    - [1.4.1. Error Fields Explained](#141-error-fields-explained)
-    - [1.4.2. Handling Errors](#142-handling-errors)
-  - [1.5. Authentication and Authorization](#15-authentication-and-authorization)
+  - [1.4. Error Handling](#14-error-handling)
+    - [1.4.1. Key Points](#141-key-points)
+  - [1.5. Authentication \& Authorization](#15-authentication--authorization)
     - [1.5.1. User Authentication](#151-user-authentication)
     - [1.5.2. Obtaining an Access Token](#152-obtaining-an-access-token)
     - [1.5.3. Using the Token](#153-using-the-token)
@@ -25,26 +23,51 @@
     - [1.6.10. Issues and Support](#1610-issues-and-support)
   - [1.7. Stay Updated](#17-stay-updated)
 
+
+# 1. e-bak API Documentation V1.0
+
 ## 1.1. Overview
 
-The e-bak API provides programmatic access to our service, allowing users to retrieve debts and repay condominium association fees. This API is designed to be RESTful and is intended to be used by developers to integrate SampleProject's capabilities into their applications.
+The e-bak API provides programmatic access to our service, allowing users to retrieve debts and repay condominium association fees. This API is designed to be RESTful and is intended to be used by developers to integrate e-bak's capabilities into their applications.
 
-## 1.2. Base URL
+## 1.2. Configuration Details
 
-All API requests in `test` environment should be made to the base URL: [https://becapublicapi.pandatech.it](https://becapublicapi.pandatech.it)
-All API requests in `production` environment should be made to the base URL: [https://public.ebak.am](https://public.pandatech.it)
+### 1.2.1. Environments
+
+- **Test Environment:** Make all API requests to the base
+  URL: [https://becapublicapi.pandatech.it](https://becapublicapi.pandatech.it). Access Swagger UI and OpenAPI specifications at
+  [https://becapublicapi.pandatech.it/swagger](https://becapublicapi.pandatech.it/swagger)
+- **Production Environment:** API requests should be directed to the base URL:
+  [https://public.ebak.am](https://public.pandatech.it)
+
 
 ## 1.3. Common Response Codes
 
-- `200 OK` - Request succeeded.
-- `400 Bad Request` - Invalid request format.
-- `401 Unauthorized` - Authentication failed or user doesn’t have permissions for requested operation.
-- `404 Not Found` - Resource not found.
+- `200 OK` - The request was successful.
+- `400 Bad Request` - The request was improperly formatted or contained invalid parameters.
+- `401 Unauthorized` - Authentication failed.
+- `403 Forbidden` - The user does not have permission to access the requested resource.
+- `404 Not Found` - The requested resource was not found.
 - `500 Internal Server Error` - An error occurred in the server.
 
-## 1.4. Error Message Format
+## 1.4. Error Handling
 
-Our API uses a standardized error response structure, which differs from the structure used for successful responses. Below is the format of the error message:
+Errors return a standardized JSON structure for consistency and ease of debugging:
+
+```json
+{
+  "TraceId": "Unique request identifier",
+  "Instance": "API call context",
+  "StatusCode": "HTTP status code",
+  "Type": "Error type",
+  "Errors": {
+    "field": "Error message"
+  },
+  "Message": "General error description"
+}
+```
+
+Real-world example:
 
 ```json
 {
@@ -60,27 +83,24 @@ Our API uses a standardized error response structure, which differs from the str
 }
 ```
 
-### 1.4.1. Error Fields Explained
+### 1.4.1. Key Points
 
 - **TraceId:** A unique identifier for the request, useful for debugging and tracing the request flow.
-- **Instance:** Provides context about the API call, including the HTTP method, the client's IP address, and the endpoint accessed.
+- **Instance:** Provides context about the API call, including the HTTP method, the client's IP address, and the
+  endpoint accessed.
 - **StatusCode:** The HTTP status code associated with the error (e.g., `400` for bad requests).
 - **Type:** A brief description of the error type, such as `BadRequestException`.
-- **Errors:** A detailed breakdown of specific errors encountered. This section can include multiple key-value pairs, with each key representing a field that caused an error and its corresponding error message.
-- **Note:** The `Errors` object can contain multiple entries, and the fields listed will depend on the nature of the error.
-- **Message:** A general message describing the error, often indicating why the request was invalid or could not be processed.
+- **Errors:** A detailed breakdown of specific errors encountered. This section can include multiple key-value pairs,
+  with each key representing a field that caused an error and its corresponding error message.
+- **Note:** The `Errors` object can contain multiple entries, and the fields listed will depend on the nature of the
+  error.
+- **Message:** A general message describing the error, often indicating why the request was invalid or could not be
+  processed.
 
-### 1.4.2. Handling Errors
+Ensure to check the `StatusCode` and `Errors` object for debugging and resolving issues. Utilize the `TraceId` when
+seeking support.
 
-When you encounter an error response:
-
-- Check the `StatusCode` to understand the nature of the error (e.g., client-side or server-side error).
-- Refer to the `Errors` object for detailed information about what went wrong. This can guide you in correcting the request.
-- Use the `TraceId` for any debugging or when contacting support for assistance.
-
-This standardized error structure is designed to provide comprehensive and actionable information to help you quickly identify and resolve issues in your API requests.
-
-## 1.5. Authentication and Authorization
+## 1.5. Authentication & Authorization
 
 ### 1.5.1. User Authentication
 
