@@ -352,3 +352,75 @@ for the most current information.
 ---
 
 Thank you for using PandaTech's APIs! We hope this documentation helps you in your development journey.
+
+
+
+# Using iFrame in Xamarin.Forms with WebView
+
+## Overview
+
+This documentation provides guidance on integrating an iFrame within a Xamarin.Forms application using the WebView control. The provided example demonstrates how to interact with the content of the iFrame using JavaScript within a Xamarin.Forms app.
+
+## Code Example
+
+Below is a code snippet illustrating how to utilize an iFrame in Xamarin.Forms:
+
+```csharp
+<WebView x:Name="View"
+
+         Source="https://iframe.pandatech.it"
+
+         Loaded="View_OnLoaded">
+</WebView>
+```
+
+```csharp
+// Event handler for when the WebView has loaded
+private void View_OnLoaded(object? sender, EventArgs e)
+{
+    // Set the title to indicate that the WebView is loaded
+    Data = "any JSON data from iframe";
+
+    // Set local storage item 'token' with AccessTokenSignature value
+    View.EvaluateJavaScriptAsync("window.localStorage.setItem('token', '" + AccessTokenSignature + "');");
+}
+//get data from iframe
+async Task Start()
+{
+    // Create a periodic timer
+    var timer = new PeriodicTimer(TimeSpan.FromSeconds(0.1));
+
+    // Continuously evaluate JavaScript in the WebView
+    while (await timer.WaitForNextTickAsync())
+    {
+        try
+        {
+            // Evaluate JavaScript function 'window.getMessage()' in the WebView
+            var message = await View.EvaluateJavaScriptAsync("window.getMessage();");
+
+           //get JSON data from iframe
+            Data = message ?? Data;
+        }
+        catch (Exception e)
+        {
+            // Display any errors occurred during evaluation
+            Data = e.ToString();
+        }
+    }
+}
+
+
+
+
+```
+
+## Iframe Example
+
+On iframe example, we have a simple HTML form with an iframe that contains a simple form. When the button is clicked, the iframe sends a data to the parent window using the `window.getMessage({ price, id, commission })` method.
+
+At the top of the form you can see token value from local storage.
+
+```html
+
+```
+
