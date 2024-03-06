@@ -15,10 +15,14 @@
     - [1.6.2. Login](#162-login)
     - [1.6.3. Refresh Token](#163-refresh-token)
     - [1.6.4. Sync and Login](#164-sync-and-login)
-    - [1.6.5. Contributing](#165-contributing)
-    - [1.6.6. Issues and Support](#166-issues-and-support)
-  - [1.7. Stay Updated](#17-stay-updated)
-
+    - [1.6.5. Ticket order](#165-ticket-order)
+    - [1.6.6. Payment](#166-payment)
+  - [1.7. IFrame Integration](#17-iframe-integration)
+    - [1.7.1. Implementation Steps](#171-implementation-steps)
+    - [1.7.2. Xamarin.Forms WebView Example](#172-xamarinforms-webview-example)
+  - [1.8. Contributing](#18-contributing)
+  - [1.9. Issues and Support](#19-issues-and-support)
+  - [1.10. Stay Updated](#110-stay-updated)
 
 # 1. EasyEvents API Documentation V1.0
 
@@ -177,7 +181,7 @@ functionalities, refer to the respective sections below.
 ### 1.6.1. Ping
 
 - **Path:** `/above-board/ping`
-- **Method:** `/GET`
+- **Method:** `GET`
 - **Description:** For monitoring connection with the server
 - **Response:**
 
@@ -188,7 +192,7 @@ functionalities, refer to the respective sections below.
 ### 1.6.2. Login
 
 - **Path:** `/api/v1/integration/authentication/server/login`
-- **Method:** `/POST`
+- **Method:** `POST`
 - **Description:** Login for authentication and authorization retrieval
 - **Request:**
 
@@ -231,7 +235,7 @@ fields.
 ### 1.6.3. Refresh Token
 
 - **Path:** `/api/v1/integration/authentication/refresh-token`
-- **Method:** `/GET`
+- **Method:** `GET`
 - **Description:** Refresh tokens for authentication and authorization retrieval
 - **Request:** Make sure that `Refresh-Token` header is set with the refresh token signature
 - **Response:**
@@ -267,7 +271,7 @@ cancelling any call.
 ### 1.6.4. Sync and Login
 
 - **Path:** `/api/v1/integration/authentication/sync-and-login`
-- **Method:** `/POST`
+- **Method:** `POST`
 - **Description:** Login for authentication and authorization retrieval and update your user in EasyEvents
 - **Request:**
 
@@ -334,42 +338,91 @@ All other fields are optional.
 Note: Access token and refresh token is required to be transferred to your client which will provide it to IFrame. This
 token is not related to the server's token and will be refreshed by the IFrame.
 
-### 1.6.5. Contributing
+### 1.6.5. Ticket order
 
-We encourage contributions to improve our API documentation. If you have suggestions or corrections, please feel free to
-open a pull request or an issue.
+- **Path:** `/api/v1/integration/ticket/order/{ticketOrderId}`
+- **Method:** `GET`
+- **Description:** After a user clicks the order button in the IFrame, a `TicketOrderId` will be sent in the return message from the IFrame. This ID should be provided to this endpoint by the server to retrieve the order details. For more information about the IFrame, please refer to the section below.
+- **Request:** /api/v1/integration/ticket/order/s1ed
+- **Response:**
+  ```json
+  {
+    "ticketOrderId": "asd",
+    "price": 12000,
+    "commission": 200
+  }
+  ```
+  - **Possible Errors:**
+  - `404 Not Found`
 
-### 1.6.6. Issues and Support
+### 1.6.6. Payment
 
-If you encounter any problems or have questions regarding a specific API, please use the 'Issues' section of this
-repository. Our team will do its best to assist you.
+- **Path:** `/api/v1/integration/ticket/payment`
+- **Method:** `POST`
+- **Description:** After the user successfully pays the order in full, the payment information should be sent to this endpoint. `ExternalSystemPaymentId` is a unique identifier for the payment in your system.
+- **Request Body:**
 
-## 1.7. Stay Updated
+```json
+{
+  "ticketOrderId": "asd",
+  "price": 12000,
+  "commission": 200,
+  "externalSystemPaymentId": "d97cf534-a7cd-473a-ba86-71bbeb31b872"
+}
+```
 
-We regularly update our API documentation to reflect the latest changes and improvements. Keep an eye on this repository
-for the most current information.
+- **Response:** The response will only include a status code.
+-
+- **Possible Errors:**
+  - `400 Bad Request` - Invalid price. Please try again with actual price
+  - `400 Bad Request` - Invalid commission. Please try again with actual commission
+  - `400 Bad Request` - Duplicate `ExternalSystemPaymentId`
 
----
+## 1.7. IFrame Integration
 
-Thank you for using PandaTech's APIs! We hope this documentation helps you in your development journey.
+### 1.7.1. Implementation Steps
 
+Integrating an IFrame within your application provides a seamless experience for event querying, ticket purchasing, and management functionalities. This section focuses on the implementation details of embedding the IFrame and ensuring smooth interaction between your application and the IFrame content.
 
+1. **Embedding the IFrame:** Insert the IFrame into your application's designated UI component. Ensure the IFrame's `src` attribute points to the correct URL provided by EasyEvents.
 
-# Using iFrame in Xamarin.Forms with WebView
+```html
+<!-- Example HTML snippet for embedding the IFrame -->
+<iframe
+  id="easyEventsIframe"
+  src="https://iframe.easyevents.com"
+  style="width:100%; height:100%;"
+></iframe>
+```
 
-## Overview
+2. **Setting the Access Token:** Prioritize security by storing the access token in the local storage of the IFrame rather than sending it through postMessage. This ensures the token is securely communicated and accessible by the IFrame for authorization purposes.
 
-This documentation provides guidance on integrating an iFrame within a Xamarin.Forms application using the WebView control. The provided example demonstrates how to interact with the content of the iFrame using JavaScript within a Xamarin.Forms app.
+```js
+// Example JavaScript code for setting the access token in the IFrame's local storage
+const iframe = document.getElementById("easyEventsIframe").contentWindow;
+iframe.localStorage.setItem("token", "your_access_token_here");
+```
 
-## Code Example
+3. **Capturing Order Details & Exiting IFrame:** The IFrame will post a message containing the order details once the user completes a ticket order. Listen for this message to process the order in your application and exit the IFrame.
 
-Below is a code snippet illustrating how to utilize an iFrame in Xamarin.Forms:
+```js
+// Example JavaScript code for listening to messages from the IFrame
+window.addEventListener("message", (event) => {
+  if (event.origin === "https://iframe.easyevents.com") {
+    const orderDetails = event.data; // Assuming order details are directly sent as the message
+    console.log("Order details received from IFrame:", orderDetails);
+    // Process the order details as needed in your application
+  }
+});
+```
+
+### 1.7.2. Xamarin.Forms WebView Example
+
+For applications developed using Xamarin.Forms, integrating the IFrame can be achieved using the `WebView` control. Below is an example that demonstrates how to embed the IFrame within a Xamarin.Forms page and interact with it. This example is **not** following best Xamarin coding practices its only for illustration purposes:
 
 ```csharp
 <WebView x:Name="View"
-
          Source="https://iframe.pandatech.it"
-
          Loaded="View_OnLoaded">
 </WebView>
 ```
@@ -408,19 +461,23 @@ async Task Start()
         }
     }
 }
-
-
-
-
 ```
 
-## Iframe Example
+## 1.8. Contributing
 
-On iframe example, we have a simple HTML form with an iframe that contains a simple form. When the button is clicked, the iframe sends a data to the parent window using the `window.getMessage({ price, id, commission })` method.
+We encourage contributions to improve our API documentation. If you have suggestions or corrections, please feel free to
+open a pull request or an issue.
 
-At the top of the form you can see token value from local storage.
+## 1.9. Issues and Support
 
-```html
+If you encounter any problems or have questions regarding a specific API, please use the 'Issues' section of this
+repository. Our team will do its best to assist you.
 
-```
+## 1.10. Stay Updated
 
+We regularly update our API documentation to reflect the latest changes and improvements. Keep an eye on this repository
+for the most current information.
+
+---
+
+Thank you for using PandaTech's APIs! We hope this documentation helps you in your development journey.
