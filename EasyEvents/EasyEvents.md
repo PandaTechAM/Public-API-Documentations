@@ -399,22 +399,13 @@ Integrating an IFrame within your application provides a seamless experience for
 
 ```js
 // Example JavaScript code for setting the access token in the IFrame's local storage
-const iframe = document.getElementById("easyEventsIframe").contentWindow;
-iframe.localStorage.setItem("token", "your_access_token_here");
-```
+window.localStorage.setItem("token", JSON.stringify(  {
+    accessToken: "string";
+    accessTokenExpiration: "Date";
+    refreshToken: "string";
+    refreshTokenExpirationTime: "Date";
+  }));
 
-3. **Capturing Order Details & Exiting IFrame:** The IFrame will post a message containing the order details once the user completes a ticket order. Listen for this message to process the order in your application and exit the IFrame.
-
-```js
-// Example JavaScript code for listening to messages from the IFrame
-window.addEventListener("message", (event) => {
-  if (event.origin === "https://iframe.easyevents.com") {
-    const orderDetails = event.data; // Assuming order details are directly sent as the message
-    console.log("Order details received from IFrame:", orderDetails);
-    // Process the order details as needed in your application
-  }
-});
-```
 
 ### 1.7.2. Xamarin.Forms WebView Example
 
