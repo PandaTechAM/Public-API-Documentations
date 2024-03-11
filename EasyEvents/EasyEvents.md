@@ -430,7 +430,7 @@ private void View_OnLoaded(object? sender, EventArgs e)
     // Set local storage item 'token_expiration' with AccessTokenSignatureExpiration value
     View.EvaluateJavaScriptAsync("window.localStorage.setItem('token_expiration', '" + AccessTokenSignatureExpiration + "');");
     // Set local storage item 'refresh_token' with RefreshTokenSignature value
-    View.EvaluateJavaScriptAsync("window.localStorage.setItem('refresh_token_expiration', '" + RefreshTokenSignatureExpiration + "');");
+    View.EvaluateJavaScriptAsync("window.localStorage.setItem('refresh_token', '" + RefreshTokenSignature + "');");
     // Set local storage item 'refresh_token' with RefreshTokenSignature value
     View.EvaluateJavaScriptAsync("window.localStorage.setItem('refresh_token_expiration', '" + RefreshTokenSignatureExpiration + "');");
 }
