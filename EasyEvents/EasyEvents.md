@@ -427,9 +427,12 @@ private void View_OnLoaded(object? sender, EventArgs e)
 
     // Set local storage item 'token' with AccessTokenSignature value
     View.EvaluateJavaScriptAsync("window.localStorage.setItem('token', '" + AccessTokenSignature + "');");
-    View.EvaluateJavaScriptAsync("window.localStorage.setItem('token_expiration', '" + AccessTokenSignature + "');");
-    View.EvaluateJavaScriptAsync("window.localStorage.setItem('refresh_token', '" + AccessTokenSignature + "');");
-    View.EvaluateJavaScriptAsync("window.localStorage.setItem('refresh_token_expiration', '" + AccessTokenSignature + "');");
+    // Set local storage item 'token_expiration' with AccessTokenSignatureExpiration value
+    View.EvaluateJavaScriptAsync("window.localStorage.setItem('token_expiration', '" + AccessTokenSignatureExpiration + "');");
+    // Set local storage item 'refresh_token' with RefreshTokenSignature value
+    View.EvaluateJavaScriptAsync("window.localStorage.setItem('refresh_token_expiration', '" + RefreshTokenSignatureExpiration + "');");
+    // Set local storage item 'refresh_token' with RefreshTokenSignature value
+    View.EvaluateJavaScriptAsync("window.localStorage.setItem('refresh_token_expiration', '" + RefreshTokenSignatureExpiration + "');");
 }
 //get data from iframe
 async Task Start()
