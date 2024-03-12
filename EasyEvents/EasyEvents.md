@@ -36,11 +36,15 @@ application for event querying, ticket purchasing, and management functionalitie
 
 ### 1.2.1. Environments
 
-- **Test Environment:** Make all API requests to the base
-  URL: [https://test.events.easypay.am](https://test.events.easypay.am). Access Swagger UI and OpenAPI specifications at
-  [https://test.events.easypay.am/swagger/integration](https://test.events.easypay.am/swagger/integration)
-- **Production Environment:** API requests should be directed to the base URL:
-  [https://events.easypay.am](https://events.easypay.am)
+- **Test Environment:**
+
+  - Access APIs at [https://test.events.easypay.am](https://test.events.easypay.am).
+  - Access Swagger UI and OpenAPI specifications at [https://test.events.easypay.am/swagger/integration](https://test.events.easypay.am/swagger/integration)
+  - Access IFrame at [https://test.iframe.easyevents.com](https://test.iframe.easypay.am)
+
+- **Production Environment:**
+  - Access APIs at [https://events.easypay.am](https://events.easypay.am)
+  - Access IFrame at [https://iframe.easypay.com](https://iframe.easypay.com)
 
 ## 1.3. Common Response Codes
 
@@ -121,13 +125,13 @@ Our Identity server relies on specific headers for authentication and contextual
 
 - `Client-Type` header accepts values from 1 to 7 only.
 
-  1. Browser
-  2. Ios
-  3. Android
-  4. Windows
-  5. Mac
-  6. Linux
-  7. Other
+1. Browser
+2. Ios
+3. Android
+4. Windows
+5. Mac
+6. Linux
+7. Other
 
 - `Client-Type`: This header is crucial for identifying the type of client that is making the request. Valid values range from 1 to 7 as shown above, each representing a different platform. In browser contexts (`Client-Type` 1), authentication tokens are managed via `Secure` and `HttpOnly` cookies, negating the need for explicit `Authorization`, `Refresh-Token`, and `Device` headers.
 
@@ -349,10 +353,40 @@ token is not related to the server's token and will be refreshed by the IFrame.
   {
     "ticketOrderId": "asd",
     "price": 12000,
-    "commission": 200
+    "commission": 200,
+    "bankName": 1,
+    "bankAccount": "1450013254687513"
   }
   ```
-  - **Possible Errors:**
+- **BankName enum:**
+
+```csharp
+  public enum BankType
+{
+  [Description("ԱԿԲԱ ԲԱՆԿ")] AcbaBank,
+  [Description("ԱՐԱՐԱՏԲԱՆԿ")] AraratBank,
+  [Description("ԱՄԵՐԻԱԲԱՆԿ")] Ameriabank,
+  [Description("ԱՄԻՕ ԲԱՆԿ")] AmioBank,
+  [Description("ԱՅԴԻ ԲԱՆԿ")] IDBank,
+  [Description("ԱՐԴՇԻՆԲԱՆԿ")] Ardshinbank,
+  [Description("ԱՐՄՍՎԻՍԲԱՆԿ")] Armswissbank,
+  [Description("ԱՐՑԱԽԲԱՆԿ")] Artsakhbank,
+  [Description("ԲԻԲԼՈՍ ԲԱՆԿ ԱՐՄԵՆԻԱ")] BiblosBankArmenia,
+
+  [Description("ԷՅՉ-ԷՍ-ԲԻ-ՍԻ ԲԱՆԿ ՀԱՅԱՍՏԱՆ")]
+  HSBCBankArmenia,
+  [Description("ԷՎՈԿԱԲԱՆԿ")] Evocabank,
+  [Description("ԻՆԵԿՈԲԱՆԿ")] Inecobank,
+  [Description("ԿՈՆՎԵՐՍ ԲԱՆԿ")] ConverseBank,
+  [Description("ՀԱՅԷԿՈՆՈՄԲԱՆԿ")] Armeconombank,
+  [Description("ՄԵԼԼԱԹ ԲԱՆԿ")] MellatBank,
+  [Description("ՅՈՒՆԻԲԱՆԿ")] Unibank,
+  [Description("ՎՏԲ-ՀԱՅԱՍՏԱՆ ԲԱՆԿ")] VTBArmeniaBank,
+  [Description("ՖԱՍԹ ԲԱՆԿ")] FastBank,
+}
+```
+
+- **Possible Errors:**
   - `404 Not Found`
 
 ### 1.6.6. Payment
@@ -384,14 +418,14 @@ token is not related to the server's token and will be refreshed by the IFrame.
 
 Integrating an IFrame within your application provides a seamless experience for event querying, ticket purchasing, and management functionalities. This section focuses on the implementation details of embedding the IFrame and ensuring smooth interaction between your application and the IFrame content.
 
-1. **Embedding the IFrame:** Insert the IFrame into your application's designated UI component. Ensure the IFrame's `src` attribute points to the correct URL provided by EasyEvents.
+1. **Embedding the IFrame:** Insert the IFrame into your application's designated UI component. Ensure the IFrame's `src` attribute points to the correct URL provided by EasyEvents. Adjust the width and height to fit your UI design.
 
 ```html
 <!-- Example HTML snippet for embedding the IFrame -->
 <iframe
   id="easyEventsIframe"
   src="https://iframe.easyevents.com"
-  style="width:100%; height:100%;"
+  style="width:100%; height:100%; border:none;"
 ></iframe>
 ```
 
@@ -405,58 +439,119 @@ window.localStorage.setItem("token", JSON.stringify(  {
     refreshToken: "string";
     refreshTokenExpirationTime: "Date";
   }));
+```
 
+3. **Closing the IFrame:** To close the IFrame, either when a user completes an action or chooses to exit, your application should listen for a specific message or trigger from the IFrame. This can be done using the `window.postMessage` API for secure cross-origin communication. When the IFrame needs to be closed, it will send a message (`-1` or a predefined string ID), which your application will listen for and act upon by removing or hiding the IFrame.
+
+```js
+function startPollingMessages() {
+  const intervalId = setInterval(() => {
+    // Assuming 'getMessage' retrieves and clears the first message from the queue
+    const message = window.getMessage();
+
+    if (message !== undefined) {
+      switch (message) {
+        case "-1":
+          // User decided not to buy a ticket, close the IFrame
+          closeIFrame();
+          clearInterval(intervalId); // Stop the polling
+          break;
+        default:
+          // Handle the order based on the message (e.g., order ID)
+          handleOrder(message);
+          clearInterval(intervalId); // Stop the polling
+          break;
+      }
+    }
+  }, 100); // Polling every 100ms
+
+  return () => clearInterval(intervalId); // Return a cleanup function to stop polling when needed
+}
+
+function closeIFrame() {
+  // Logic to close or hide the IFrame
+  const iframe = document.getElementById("easyEventsIframe");
+  if (iframe) {
+    iframe.style.display = "none"; // or use iframe.remove() to remove it from the DOM
+  }
+}
+
+function handleOrder(orderId) {
+  // Handle the order based on orderId
+  console.log("Handle order with ID:", orderId);
+  // Implement the order handling logic here
+}
+
+// Start polling for messages from the IFrame
+const stopPolling = startPollingMessages();
+
+// Later, if you need to stop polling for messages
+// stopPolling();
+```
 
 ### 1.7.2. Xamarin.Forms WebView Example
 
-For applications developed using Xamarin.Forms, integrating the IFrame can be achieved using the `WebView` control. Below is an example that demonstrates how to embed the IFrame within a Xamarin.Forms page and interact with it. This example is **not** following best Xamarin coding practices its only for illustration purposes:
+For applications developed using Xamarin.Forms, integrating the IFrame can be achieved using the `WebView` control. Below is an example that demonstrates how to embed the IFrame within a Xamarin.Forms page and interact with it. This example is **not** following Xamarin best coding practices its only for illustration purposes:
 
 ```csharp
-<WebView x:Name="View"
-         Source="https://iframe.pandatech.it"
-         Loaded="View_OnLoaded">
-</WebView>
-```
-
-```csharp
-// Event handler for when the WebView has loaded
-private void View_OnLoaded(object? sender, EventArgs e)
-{
-    // Set the title to indicate that the WebView is loaded
-    Data = "any JSON data from iframe";
-
-    // Set local storage item 'token' with AccessTokenSignature value
-    View.EvaluateJavaScriptAsync("window.localStorage.setItem('token', '" + AccessTokenSignature + "');");
-    // Set local storage item 'token_expiration' with AccessTokenSignatureExpiration value
-    View.EvaluateJavaScriptAsync("window.localStorage.setItem('token_expiration', '" + AccessTokenSignatureExpiration + "');");
-    // Set local storage item 'refresh_token' with RefreshTokenSignature value
-    View.EvaluateJavaScriptAsync("window.localStorage.setItem('refresh_token', '" + RefreshTokenSignature + "');");
-    // Set local storage item 'refresh_token' with RefreshTokenSignature value
-    View.EvaluateJavaScriptAsync("window.localStorage.setItem('refresh_token_expiration', '" + RefreshTokenSignatureExpiration + "');");
-}
-//get data from iframe
 async Task Start()
 {
-    // Create a periodic timer
     var timer = new PeriodicTimer(TimeSpan.FromSeconds(0.1));
 
-    // Continuously evaluate JavaScript in the WebView
     while (await timer.WaitForNextTickAsync())
     {
         try
         {
-            // Evaluate JavaScript function 'window.getMessage()' in the WebView
             var message = await View.EvaluateJavaScriptAsync("window.getMessage();");
 
-           //get JSON data from iframe
-            Data = message ?? Data;
+            switch (message)
+            {
+                case null:
+                    // there is no new messages from iframe
+                    continue;
+                case "-1":
+                    // user decided not to buy a ticket
+                    CloseIFrame();
+                    return; // this will also stop the task. you can use cancellation token instead.
+                default:
+                    HandelOrder(message);
+                    return; // this will also stop the task. you can use cancellation token instead.
+            }
         }
         catch (Exception e)
         {
-            // Display any errors occurred during evaluation
-            Data = e.ToString();
+            // handel exceptions.
         }
     }
+}
+
+void HandelOrder(string orderNumber)
+{
+    // get order details from server (e.g. total price and so on)
+    // and navigate to payment page
+}
+
+void CloseIFrame()
+{
+    // closing iframe
+}
+
+
+private void View_OnLoaded(object? sender, EventArgs e) // this event will be loaded when the iframe's html is fully loaded.
+{
+    // Pass token data to the WebView
+    View.EvaluateJavaScriptAsync("window.localStorage.setItem('token', '" + JsonSerializer.Serialize(token) + "');");
+
+    // starting task, that is listening messages from the iframe
+    tTask = Start();
+}
+
+public class Token
+{
+    public string accessToken { get; set; }
+    public DateTime accessTokenExpiration { get; set; }
+    public string refreshToken { get; set; }
+    public DateTime refreshTokenExpirationTime { get; set; }
 }
 ```
 
