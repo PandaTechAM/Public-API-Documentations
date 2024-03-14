@@ -15,12 +15,13 @@
     - [1.6.2. Login](#162-login)
     - [1.6.3. Debt retrieval by Estate](#163-debt-retrieval-by-estate)
     - [1.6.4. Debt retrieval by estate owner unique identifier](#164-debt-retrieval-by-estate-owner-unique-identifier)
-    - [1.6.5. Debt repayment](#165-debt-repayment)
-    - [1.6.6. Search Condominium Association](#166-search-condominium-association)
-    - [1.6.7. Search Buildings Within a Condominium Association](#167-search-buildings-within-a-condominium-association)
-    - [1.6.8. Search Estates Within a Building](#168-search-estates-within-a-building)
-    - [1.6.9. Contributing](#169-contributing)
-    - [1.6.10. Issues and Support](#1610-issues-and-support)
+    - [1.6.5. Debt Commission](#165-debt-commission)
+    - [1.6.6. Debt repayment](#166-debt-repayment)
+    - [1.6.7. Search Condominium Association](#167-search-condominium-association)
+    - [1.6.8. Search Buildings Within a Condominium Association](#168-search-buildings-within-a-condominium-association)
+    - [1.6.9. Search Estates Within a Building](#169-search-estates-within-a-building)
+    - [1.6.10. Contributing](#1610-contributing)
+    - [1.6.11. Issues and Support](#1611-issues-and-support)
   - [1.7. Stay Updated](#17-stay-updated)
 
 
@@ -220,7 +221,32 @@ To use the API, you must have a registered user account in the system. It's cruc
 }]
 ```
 
-### 1.6.5. Debt repayment
+### 1.6.5. Debt Commission
+
+- **Path:** `/api/v1/debts/commission`
+- **Method:** `/POST`
+- **Description:** Commission for repayment of debts. The commission is calculated based on the amount with commission percentage for each estate. The commission is calculated and returned in the response.
+- **Request:**
+
+```json
+[
+  {
+    "estateId": "1000182",
+    "amount": 1000,
+    "debtId": ""
+  }
+]
+```
+
+- **Response:**
+
+```json
+{
+  "commission": 10
+}
+```
+
+### 1.6.6. Debt repayment
 
 - **Path:** `/api/v1/debts/payments`
 - **Method:** `/POST`
@@ -228,26 +254,31 @@ To use the API, you must have a registered user account in the system. It's cruc
 - **Request:**
 
 ```json
-{
-  "estateId": "vs1",
-  "amount": 452.25,
-  "outerPaymentId": "3fa85f64",
-  "debtId": ""
-}
+[
+  {
+    "estateId": "vs1",
+    "amount": 452.25,
+    "outerPaymentId": "3fa85f64",
+    "debtId": ""
+  }
+]
+"commission": 10
 ```
 
 - **Response:**
 
 ```json
-{
-  "transactionId": "l3",
-  "date": "2023-10-18T11:21:43.757Z",
-  "bank": "Ameriabank",
-  "bankAccount": "1500016548794561"
-}
+[
+  {
+    "transactionId": "l3",
+    "date": "2023-10-18T11:21:43.757Z",
+    "bank": "Ameriabank",
+    "bankAccount": "1500016548794561"
+  }
+]
 ```
 
-### 1.6.6. Search Condominium Association
+### 1.6.7. Search Condominium Association
 
 - **Path:** `/api/v1/search/condominium-associations`
 - **Method:** `/GET`
@@ -279,7 +310,7 @@ To use the API, you must have a registered user account in the system. It's cruc
 }
 ```
 
-### 1.6.7. Search Buildings Within a Condominium Association
+### 1.6.8. Search Buildings Within a Condominium Association
 
 - **Path:** `/api/v1/search/buildings`
 - **Method:** `/GET`
@@ -299,7 +330,7 @@ To use the API, you must have a registered user account in the system. It's cruc
 }
 ```
 
-### 1.6.8. Search Estates Within a Building
+### 1.6.9. Search Estates Within a Building
 
 - **Path:** `/api/v1/search/estates`
 - **Method:** `/GET`
@@ -319,11 +350,11 @@ To use the API, you must have a registered user account in the system. It's cruc
 }
 ```
 
-### 1.6.9. Contributing
+### 1.6.10. Contributing
 
 We encourage contributions to improve our API documentation. If you have suggestions or corrections, please feel free to open a pull request or an issue.
 
-### 1.6.10. Issues and Support
+### 1.6.11. Issues and Support
 
 If you encounter any problems or have questions regarding a specific API, please use the 'Issues' section of this repository. Our team will do its best to assist you.
 
