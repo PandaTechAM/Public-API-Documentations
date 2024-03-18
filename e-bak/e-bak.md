@@ -20,10 +20,9 @@
     - [1.6.7. Search Condominium Association](#167-search-condominium-association)
     - [1.6.8. Search Buildings Within a Condominium Association](#168-search-buildings-within-a-condominium-association)
     - [1.6.9. Search Estates Within a Building](#169-search-estates-within-a-building)
-    - [1.6.10. Contributing](#1610-contributing)
-    - [1.6.11. Issues and Support](#1611-issues-and-support)
-  - [1.7. Stay Updated](#17-stay-updated)
-
+  - [1.7. Contributing](#17-contributing)
+  - [1.8. Issues and Support](#18-issues-and-support)
+  - [1.9. Stay Updated](#19-stay-updated)
 
 # 1. e-bak API Documentation V1.0
 
@@ -40,7 +39,6 @@ The e-bak API provides programmatic access to our service, allowing users to ret
   [https://becapublicapi.pandatech.it/swagger](https://becapublicapi.pandatech.it/swagger)
 - **Production Environment:** API requests should be directed to the base URL:
   [https://public.ebak.am](https://public.pandatech.it)
-
 
 ## 1.3. Common Response Codes
 
@@ -189,36 +187,38 @@ To use the API, you must have a registered user account in the system. It's cruc
 - **Response:**
 
 ```json
-[{
-  "estateId": "vsv",
-  "estateAddress":"Tumanyan 29, bn 4",
-  "amount": 700,
-  "debts": [
-    {
-      "debtId": "zd1",
-      "amount": 399.5
-    },
-    {
-      "debtId": "zd3",
-      "amount": 299.5
-    }
-   ]
-},
-{
-  "estateId": "vsd",
-  "estateAddress":"Tumanyan 29, bn 5",
-  "amount": 1000.5,
-  "debts": [
-    {
-      "debtId": "zd4",
-      "amount": 500.5
-    },
-    {
-      "debtId": "zdz",
-      "amount": 500
-    }
-  ]
-}]
+[
+  {
+    "estateId": "vsv",
+    "estateAddress": "Tumanyan 29, bn 4",
+    "amount": 700,
+    "debts": [
+      {
+        "debtId": "zd1",
+        "amount": 399.5
+      },
+      {
+        "debtId": "zd3",
+        "amount": 299.5
+      }
+    ]
+  },
+  {
+    "estateId": "vsd",
+    "estateAddress": "Tumanyan 29, bn 5",
+    "amount": 1000.5,
+    "debts": [
+      {
+        "debtId": "zd4",
+        "amount": 500.5
+      },
+      {
+        "debtId": "zdz",
+        "amount": 500
+      }
+    ]
+  }
+]
 ```
 
 ### 1.6.5. Debt Commission
@@ -254,28 +254,38 @@ To use the API, you must have a registered user account in the system. It's cruc
 - **Request:**
 
 ```json
-[
-  {
-    "estateId": "vs1",
-    "amount": 452.25,
-    "outerPaymentId": "3fa85f64",
-    "debtId": ""
-  }
-]
-"commission": 10
+{
+  "debtCommissionRequestModels": [
+    {
+      "estateId": "vs1",
+      "amount": 452.25,
+      "debtId": ""
+    }
+  ],
+  "outerPaymentId": "3fa85f64",
+  "commission": 10
+}
 ```
 
 - **Response:**
 
 ```json
-[
-  {
-    "transactionId": "l3",
-    "date": "2023-10-18T11:21:43.757Z",
-    "bank": "Ameriabank",
-    "bankAccount": "1500016548794561"
-  }
-]
+{
+  "debtCommissionRequestModels": [
+    {
+      "estateId": "vs1",
+      "debtId": "",
+      "amount": 452.25,
+
+      "transactionId": "l3",
+      "date": "2023-10-18T11:21:43.757Z",
+      "bank": "Ameriabank",
+      "bankAccount": "1500016548794561"
+    }
+  ],
+  "outerPaymentId": "3fa85f64",
+  "commission": 10
+}
 ```
 
 ### 1.6.7. Search Condominium Association
@@ -350,15 +360,15 @@ To use the API, you must have a registered user account in the system. It's cruc
 }
 ```
 
-### 1.6.10. Contributing
+## 1.7. Contributing
 
 We encourage contributions to improve our API documentation. If you have suggestions or corrections, please feel free to open a pull request or an issue.
 
-### 1.6.11. Issues and Support
+## 1.8. Issues and Support
 
 If you encounter any problems or have questions regarding a specific API, please use the 'Issues' section of this repository. Our team will do its best to assist you.
 
-## 1.7. Stay Updated
+## 1.9. Stay Updated
 
 We regularly update our API documentation to reflect the latest changes and improvements. Keep an eye on this repository for the most current information.
 
