@@ -40,9 +40,9 @@ application for event querying, ticket purchasing, and management functionalitie
 
 - **Test Environment:**
 
-  - Access APIs at [https://test.events.easypay.am](https://test.events.easypay.am).
-  - Access Swagger UI and OpenAPI specifications at [https://test.events.easypay.am/swagger/integration](https://test.events.easypay.am/swagger/integration)
-  - Access IFrame at [https://test.iframe.easyevents.com](https://test.iframe.easypay.am)
+  - Access APIs at [https://qabeevents.easypay.am](https://qabeevents.easypay.am).
+  - Access Swagger UI and OpenAPI specifications at [https://qabeevents.easypay.am/swagger/integration](https://qabeevents.easypay.am/swagger/integration)
+  - Access IFrame at [https://qaiframe.easypay.am](https://qaiframe.easypay.am)
 
 - **Production Environment:**
   - Access APIs at [https://events.easypay.am](https://events.easypay.am)
