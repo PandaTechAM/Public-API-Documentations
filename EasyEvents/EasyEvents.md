@@ -17,12 +17,14 @@
     - [1.6.4. Sync and Login](#164-sync-and-login)
     - [1.6.5. Ticket order](#165-ticket-order)
     - [1.6.6. Payment](#166-payment)
+    - [1.6.7. Ticket order cancel](#167-ticket-order-cancel)
   - [1.7. IFrame Integration](#17-iframe-integration)
     - [1.7.1. Implementation Steps](#171-implementation-steps)
     - [1.7.2. Xamarin.Forms WebView Example](#172-xamarinforms-webview-example)
   - [1.8. Contributing](#18-contributing)
   - [1.9. Issues and Support](#19-issues-and-support)
   - [1.10. Stay Updated](#110-stay-updated)
+
 
 # 1. EasyEvents API Documentation V1.0
 
@@ -344,10 +346,10 @@ token is not related to the server's token and will be refreshed by the IFrame.
 
 ### 1.6.5. Ticket order
 
-- **Path:** `/api/v1/integration/ticket/order/{ticketOrderId}`
+- **Path:** `/api/v1/integration/order/{ticketOrderId}`
 - **Method:** `GET`
 - **Description:** After a user clicks the order button in the IFrame, a `TicketOrderId` will be sent in the return message from the IFrame. This ID should be provided to this endpoint by the server to retrieve the order details. For more information about the IFrame, please refer to the section below.
-- **Request:** /api/v1/integration/ticket/order/s1ed
+- **Request:** /api/v1/integration/order/asd
 - **Response:**
   ```json
   {
@@ -391,7 +393,7 @@ token is not related to the server's token and will be refreshed by the IFrame.
 
 ### 1.6.6. Payment
 
-- **Path:** `/api/v1/integration/ticket/payment`
+- **Path:** `/api/v1/integration/payment`
 - **Method:** `POST`
 - **Description:** After the user successfully pays the order in full, the payment information should be sent to this endpoint. `ExternalSystemPaymentId` is a unique identifier for the payment in your system.
 - **Request Body:**
@@ -406,11 +408,23 @@ token is not related to the server's token and will be refreshed by the IFrame.
 ```
 
 - **Response:** The response will only include a status code.
--
+
 - **Possible Errors:**
   - `400 Bad Request` - Invalid price. Please try again with actual price
   - `400 Bad Request` - Invalid commission. Please try again with actual commission
   - `400 Bad Request` - Duplicate `ExternalSystemPaymentId`
+
+### 1.6.7. Ticket order cancel
+
+- **Path:** `/api/v1/integration/order/{ticketOrderId}`
+- **Method:** `DELETE`
+- **Description:** This endpoint is designed to cancel an existing ticket order identified by the `{ticketOrderId}`. It is particularly useful in scenarios where a user decides not to proceed with the ticket purchase or exits the payment process prematurely. Upon successful execution, the endpoint releases any seats reserved as part of the order, making them available for future purchases. This action is irreversible; once an order is canceled, it cannot be reinstated.
+- **Request:** /api/v1/integration/order/asd
+- **Response:** `200` Ok
+
+- **Possible Errors:**
+  - `400 Bad Request` - It's impossible to cancel already paid ticket order.
+  - `404 Not Found`
 
 ## 1.7. IFrame Integration
 
@@ -514,18 +528,18 @@ async Task Start()
                     CloseIFrame();
                     return; // this will also stop the task. you can use cancellation token instead.
                 default:
-                    HandelOrder(message);
+                    HandleOrder(message);
                     return; // this will also stop the task. you can use cancellation token instead.
             }
         }
         catch (Exception e)
         {
-            // handel exceptions.
+            // handle exceptions.
         }
     }
 }
 
-void HandelOrder(string orderNumber)
+void HandleOrder(string orderNumber)
 {
     // get order details from server (e.g. total price and so on)
     // and navigate to payment page
