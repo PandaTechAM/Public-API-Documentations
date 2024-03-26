@@ -236,7 +236,7 @@ To use the API, you must have a registered user account in the system. It's cruc
   "input2": null,
   "input3": null,
   "input4": null,
-  "sessionID": 3fa85f64-5717-4562-b3fc-2c963f66afa6 
+  "sessionID": "3fa85f64-5717-4562-b3fc-2c963f66afa6" 
 }
 ```
 
