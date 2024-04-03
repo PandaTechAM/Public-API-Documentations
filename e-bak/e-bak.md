@@ -168,16 +168,15 @@ To use the API, you must have a registered user account in the system. It's cruc
 
 ```json
 {
-  "partnerId": "a1",
-  "estateId": 100286,
-  "estateAddress": "Tumanyan 29, bn 4",
-  "balance": 5000,
+  "partnerId": "8a",
+  "estateId": 1000270,
+  "estateAddress": "Գյուլբենկյան 33, 1",
+  "balance": -4900,
   "debts": [
     {
-      "debtId": "a1",
-      "amount": 451.25,
-      "balance": 5000,
-      "date": "2023-10-18T11:21:43.757Z"
+      "debtId": "75",
+      "balance": -4900,
+      "date": "2024-04-01T00:00:00Z"
     }
   ]
 }
@@ -191,48 +190,45 @@ To use the API, you must have a registered user account in the system. It's cruc
 - **Response:**
 
 ```json
-[
-  {
-    "partnerId": "a1",
-    "estateId": 100333,
-    "estateAddress": "Tumanyan 29, bn 4",
-    "balance": 700,
-    "debts": [
-      {
-        "debtId": "zd1",
-        "amount": 399.5,
-        "balance": 700,
-        "date": "2023-10-18T11:21:43.757Z"
-      },
-      {
-        "debtId": "zd3",
-        "amount": 299.5,
-        "balance": 300,
-        "date": "2023-10-18T11:21:43.757Z"
-      }
-    ]
-  },
-  {
-    "partnerId": "a1",
-    "estateId": 100333,
-    "estateAddress": "Tumanyan 29, bn 5",
-    "balance": 1000.5,
-    "debts": [
-      {
-        "debtId": "zd4",
-        "amount": 500.5,
-        "balance": 1000.5,
-        "date": "2023-10-18T11:21:43.757Z"
-      },
-      {
-        "debtId": "zdz",
-        "amount": 500,
-        "balance": 500,
-        "date": "2023-10-18T11:21:43.757Z"
-      }
-    ]
-  }
-]
+{
+  "partnerId": "8c",
+  "estates": [
+    {
+      "estateId": 1000270,
+      "estateAddress": "Գյուլբենկյան 1, 1",
+      "balance": -5000,
+      "debts": [
+        {
+          "debtId": "1a",
+          "balance": -4900,
+          "date": "2024-04-01T00:00:00Z"
+        },
+        {
+          "debtId": "20",
+          "balance": -100,
+          "date": "2024-04-01T00:00:00Z"
+        }
+      ]
+    },
+    {
+      "estateId": 1000271,
+      "estateAddress": "Գյուլբենկյան 2, 1",
+      "balance": -15000,
+      "debts": [
+        {
+          "debtId": "7",
+          "balance": -8000,
+          "date": "2024-04-01T00:00:00Z"
+        },
+        {
+          "debtId": "5d",
+          "balance": -7000,
+          "date": "2024-04-01T00:00:00Z"
+        }
+      ]
+    }
+  ]
+}
 ```
 
 ### 1.6.5. Debt Commission
