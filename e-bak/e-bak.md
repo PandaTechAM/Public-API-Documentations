@@ -168,12 +168,16 @@ To use the API, you must have a registered user account in the system. It's cruc
 
 ```json
 {
-  "estateId": "vs1",
-  "amount": 451.25,
+  "partnerId": "a1",
+  "estateId": 100286,
+  "estateAddress": "Tumanyan 29, bn 4",
+  "balance": 5000,
   "debts": [
     {
       "debtId": "a1",
-      "amount": 451.25
+      "amount": 451.25,
+      "balance": 5000,
+      "date": "2023-10-18T11:21:43.757Z"
     }
   ]
 }
@@ -189,32 +193,42 @@ To use the API, you must have a registered user account in the system. It's cruc
 ```json
 [
   {
-    "estateId": "vsv",
+    "partnerId": "a1",
+    "estateId": 100333,
     "estateAddress": "Tumanyan 29, bn 4",
-    "amount": 700,
+    "balance": 700,
     "debts": [
       {
         "debtId": "zd1",
-        "amount": 399.5
+        "amount": 399.5,
+        "balance": 700,
+        "date": "2023-10-18T11:21:43.757Z"
       },
       {
         "debtId": "zd3",
-        "amount": 299.5
+        "amount": 299.5,
+        "balance": 300,
+        "date": "2023-10-18T11:21:43.757Z"
       }
     ]
   },
   {
-    "estateId": "vsd",
+    "partnerId": "a1",
+    "estateId": 100333,
     "estateAddress": "Tumanyan 29, bn 5",
-    "amount": 1000.5,
+    "balance": 1000.5,
     "debts": [
       {
         "debtId": "zd4",
-        "amount": 500.5
+        "amount": 500.5,
+        "balance": 1000.5,
+        "date": "2023-10-18T11:21:43.757Z"
       },
       {
         "debtId": "zdz",
-        "amount": 500
+        "amount": 500,
+        "balance": 500,
+        "date": "2023-10-18T11:21:43.757Z"
       }
     ]
   }
