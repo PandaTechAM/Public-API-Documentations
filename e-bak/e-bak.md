@@ -169,6 +169,7 @@ To use the API, you must have a registered user account in the system. It's cruc
 ```json
 {
   "partnerId": "8a",
+  "partnerName": "Անուն Ազգանուն",
   "estateId": 1000270,
   "estateAddress": "Գյուլբենկյան 33, 1",
   "balance": -4900,
@@ -191,9 +192,10 @@ To use the API, you must have a registered user account in the system. It's cruc
 
 ```json
 {
-  "partnerId": "8c",
   "estates": [
     {
+      "partnerId": "8c",
+      "partnerName": "Անուն Ազգանուն",
       "estateId": 1000270,
       "estateAddress": "Գյուլբենկյան 1, 1",
       "balance": -5000,
@@ -211,6 +213,8 @@ To use the API, you must have a registered user account in the system. It's cruc
       ]
     },
     {
+      "partnerId": "8a",
+      "partnerName": "Անուն Ազգանուն",
       "estateId": 1000271,
       "estateAddress": "Գյուլբենկյան 2, 1",
       "balance": -15000,
