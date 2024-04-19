@@ -232,6 +232,8 @@ To use the API, you must have a registered user account in the system. It's cruc
       ]
     },
     {
+      "partnerId": "8a",
+      "partnerName": "Անուն Ազգանուն",
       "estateId": 1000272,
       "estateAddress": "Գյուլբենկյան 2, 1",
       "balance": 0,
