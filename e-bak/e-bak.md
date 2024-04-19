@@ -226,6 +226,12 @@ To use the API, you must have a registered user account in the system. It's cruc
           "date": "2024-04-01T00:00:00Z"
         }
       ]
+    },
+    {
+      "estateId": 1000272,
+      "estateAddress": "Գյուլբենկյան 2, 1",
+      "balance": 0,
+      "debts": []
     }
   ]
 }
