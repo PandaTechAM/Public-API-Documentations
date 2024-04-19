@@ -107,7 +107,7 @@ To use the API, you must have a registered user account in the system. It's cruc
 
 ### 1.5.2. Obtaining an Access Token
 
-- To receive an access token, make a call to the `api/v1/login` endpoint using your credentials.
+- To receive an access token, make a call to the `api/v1/integration/login` endpoint using your credentials.
 - Upon successful authentication, you will receive a token.
 
 ### 1.5.3. Using the Token
@@ -119,7 +119,7 @@ To use the API, you must have a registered user account in the system. It's cruc
 
 - The token is not valid indefinitely. Over time, it will expire.
 - If you receive a `401 Unauthorized` error, it indicates that your token has expired.
-- In case of a `401` error, you should re-authenticate using the `api/v1/login` endpoint to obtain a new token and proceed with your API calls.
+- In case of a `401` error, you should re-authenticate using the `api/v1/integration/login` endpoint to obtain a new token and proceed with your API calls.
 
 ## 1.6. API Endpoints
 
@@ -138,7 +138,7 @@ To use the API, you must have a registered user account in the system. It's cruc
 
 ### 1.6.2. Login
 
-- **Path:** `/api/v1/login`
+- **Path:** `/api/v1/integration/login`
 - **Method:** `/POST`
 - **Description:** Login for authentication and authorization retrieval.
 - **Request**
@@ -161,7 +161,7 @@ To use the API, you must have a registered user account in the system. It's cruc
 
 ### 1.6.3. Debt retrieval by Estate
 
-- **Path:** `/api/v1/debts/{estateId}`
+- **Path:** `/api/v1/integration/debts/{estateId}`
 - **Method:** `/GET`
 - **Description:** Retrieves estate related all outstanding debts.
 - **Response:**
@@ -185,7 +185,7 @@ To use the API, you must have a registered user account in the system. It's cruc
 
 ### 1.6.4. Debt retrieval by estate owner unique identifier
 
-- **Path:** `/api/v1/debts/owner/{ownerId}`
+- **Path:** `/api/v1/integration/debts/owner/{ownerId}`
 - **Method:** `/GET`
 - **Description:** Retrieves estate related all outstanding debts by estate owner unique identifier. Unique identifier can be SSN or Tax Code
 - **Response:**
@@ -245,7 +245,7 @@ To use the API, you must have a registered user account in the system. It's cruc
 
 ### 1.6.5. Debt Commission
 
-- **Path:** `/api/v1/debts/commission`
+- **Path:** `/api/v1/integration/debts/commission`
 - **Method:** `/POST`
 - **Description:** Commission for repayment of debts. The commission is calculated based on the amount with commission percentage for each estate. The commission is calculated and returned in the response.
 - **Request:**
@@ -270,7 +270,7 @@ To use the API, you must have a registered user account in the system. It's cruc
 
 ### 1.6.6. Debt repayment
 
-- **Path:** `/api/v1/debts/payments`
+- **Path:** `/api/v1/integration/debts/payments`
 - **Method:** `/POST`
 - **Description:** Repaying Debts by Estate: When a payment is made for an estate, the e-bak system initiates the repayment of debts following the First-In-First-Out (FIFO) method. To target a specific debt for repayment, include its `debtId` in your request. If the `debtId` is left blank (i.e., `""`), the system defaults to the FIFO method, repaying the oldest debt first and then proceeding sequentially. Additionally, include your system's unique identifier in the request to ensure accurate tracking and processing of the payment.
 - **Request:**
@@ -312,7 +312,7 @@ To use the API, you must have a registered user account in the system. It's cruc
 
 ### 1.6.7. Search Condominium Association
 
-- **Path:** `/api/v1/search/condominium-associations`
+- **Path:** `/api/v1/integration/search/condominium-associations`
 - **Method:** `/GET`
 - **Description:** `Retrieves all condominiums. The request uses pagination and the total count in response is the total number of objects.`
 - **Request:** https://becapublicapi.pandatech.it/api/v1/search/counterparties?Page=1&PageSize=4
@@ -344,7 +344,7 @@ To use the API, you must have a registered user account in the system. It's cruc
 
 ### 1.6.8. Search Buildings Within a Condominium Association
 
-- **Path:** `/api/v1/search/buildings`
+- **Path:** `/api/v1/integration/search/buildings`
 - **Method:** `/GET`
 - **Description:** `Retrieves all buildings within the condominium association. The request uses pagination and the total count in response is the total number of objects.`
 - **Request:** https://becapublicapi.pandatech.it/api/v1/search/buildings?CounterpartyId=a1&Page=1&PageSize=1
@@ -364,7 +364,7 @@ To use the API, you must have a registered user account in the system. It's cruc
 
 ### 1.6.9. Search Estates Within a Building
 
-- **Path:** `/api/v1/search/estates`
+- **Path:** `/api/v1/integration/search/estates`
 - **Method:** `/GET`
 - **Description:** `Retrieves all estates within the building. The request uses pagination and the total count in response is the total number of objects.`
 - **Request:** https://becapublicapi.pandatech.it/api/v1/search/estates?BuildingId=jk2&Page=1&PageSize=1
