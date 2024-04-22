@@ -35,8 +35,8 @@ The e-bak API provides programmatic access to our service, allowing users to ret
 ### 1.2.1. Environments
 
 - **Test Environment:** Make all API requests to the base
-  URL: [https://becapublicapi.pandatech.it](https://becapublicapi.pandatech.it). Access Swagger UI and OpenAPI specifications at
-  [https://becapublicapi.pandatech.it/swagger](https://becapublicapi.pandatech.it/swagger)
+  URL: [https://be-ca.pandatech.it](https://be-ca.pandatech.it). Access Swagger UI and OpenAPI specifications at
+  [https://be-ca.pandatech.it/swagger/integration](https://be-ca.pandatech.it/swagger/integration)
 - **Production Environment:** API requests should be directed to the base URL:
   [https://be.e-bak.am](https://be.e-bak.am)
 
