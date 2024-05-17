@@ -25,7 +25,6 @@
   - [1.9. Issues and Support](#19-issues-and-support)
   - [1.10. Stay Updated](#110-stay-updated)
 
-
 # 1. EasyEvents API Documentation V1.0
 
 ## 1.1. Overview
@@ -452,10 +451,11 @@ window.localStorage.setItem("token", JSON.stringify(  {
     accessTokenExpiration: "Date";
     refreshToken: "string";
     refreshTokenExpirationTime: "Date";
+    deviceId "string";
   }));
 ```
 
-3. **Closing the IFrame:** To close the IFrame, either when a user completes an action or chooses to exit, your application should listen for a specific message or trigger from the IFrame. This can be done using the `window.postMessage` API for secure cross-origin communication. When the IFrame needs to be closed, it will send a message (`-1` or a predefined string ID), which your application will listen for and act upon by removing or hiding the IFrame.
+1. **Closing the IFrame:** To close the IFrame, either when a user completes an action or chooses to exit, your application should listen for a specific message or trigger from the IFrame. This can be done using the `window.postMessage` API for secure cross-origin communication. When the IFrame needs to be closed, it will send a message (`-1` or a predefined string ID), which your application will listen for and act upon by removing or hiding the IFrame.
 
 ```js
 function startPollingMessages() {
@@ -465,7 +465,7 @@ function startPollingMessages() {
 
     if (message !== undefined) {
       switch (message) {
-        case "-1":
+        case '-1':
           // User decided not to buy a ticket, close the IFrame
           closeIFrame();
           clearInterval(intervalId); // Stop the polling
@@ -484,15 +484,15 @@ function startPollingMessages() {
 
 function closeIFrame() {
   // Logic to close or hide the IFrame
-  const iframe = document.getElementById("easyEventsIframe");
+  const iframe = document.getElementById('easyEventsIframe');
   if (iframe) {
-    iframe.style.display = "none"; // or use iframe.remove() to remove it from the DOM
+    iframe.style.display = 'none'; // or use iframe.remove() to remove it from the DOM
   }
 }
 
 function handleOrder(orderId) {
   // Handle the order based on orderId
-  console.log("Handle order with ID:", orderId);
+  console.log('Handle order with ID:', orderId);
   // Implement the order handling logic here
 }
 
@@ -566,6 +566,7 @@ public class Token
     public DateTime accessTokenExpiration { get; set; }
     public string refreshToken { get; set; }
     public DateTime refreshTokenExpirationTime { get; set; }
+    public string deviceId { get; set; }
 }
 ```
 
