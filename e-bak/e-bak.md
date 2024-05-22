@@ -17,9 +17,10 @@
     - [1.6.4. Debt retrieval by estate owner unique identifier](#164-debt-retrieval-by-estate-owner-unique-identifier)
     - [1.6.5. Debt Commission](#165-debt-commission)
     - [1.6.6. Debt repayment](#166-debt-repayment)
-    - [1.6.7. Search Condominium Association](#167-search-condominium-association)
-    - [1.6.8. Search Buildings Within a Condominium Association](#168-search-buildings-within-a-condominium-association)
-    - [1.6.9. Search Estates Within a Building](#169-search-estates-within-a-building)
+    - [1.6.7. Search Cities](#167-search-cities)
+    - [1.6.8. Search Condominium Association](#168-search-condominium-association)
+    - [1.6.9. Search Buildings Within a Condominium Association](#169-search-buildings-within-a-condominium-association)
+    - [1.6.10. Search Estates Within a Building](#1610-search-estates-within-a-building)
   - [1.7. Contributing](#17-contributing)
   - [1.8. Issues and Support](#18-issues-and-support)
   - [1.9. Stay Updated](#19-stay-updated)
@@ -318,7 +319,6 @@ To use the API, you must have a registered user account in the system. It's cruc
 }
 ```
 
-
 ### 1.6.7. Search Cities
 
 - **Path:** `/api/v1/integration/search/cities`
@@ -350,7 +350,7 @@ To use the API, you must have a registered user account in the system. It's cruc
 }
 ```
 
-### 1.6.7. Search Condominium Association
+### 1.6.8. Search Condominium Association
 
 - **Path:** `/api/v1/integration/search/condominium-associations`
 - **Method:** `/GET`
@@ -382,7 +382,7 @@ To use the API, you must have a registered user account in the system. It's cruc
 }
 ```
 
-### 1.6.8. Search Buildings Within a Condominium Association
+### 1.6.9. Search Buildings Within a Condominium Association
 
 - **Path:** `/api/v1/integration/search/buildings`
 - **Method:** `/GET`
@@ -402,7 +402,7 @@ To use the API, you must have a registered user account in the system. It's cruc
 }
 ```
 
-### 1.6.9. Search Estates Within a Building
+### 1.6.10. Search Estates Within a Building
 
 - **Path:** `/api/v1/integration/search/estates`
 - **Method:** `/GET`
