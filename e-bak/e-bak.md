@@ -354,7 +354,7 @@ To use the API, you must have a registered user account in the system. It's cruc
 
 - **Path:** `/api/v1/integration/search/condominium-associations`
 - **Method:** `/GET`
-- **Description:** `Retrieves all condominiums. The request usesa a filter with city, pagination and the total count in response is the total number of objects.`
+- **Description:** `Retrieves all condominiums. The request uses a filter with city, pagination and the total count in response is the total number of objects.`
 - **Request:** https://becapublicapi.pandatech.it/api/v1/search/counterparties?cityId=1Page=1&PageSize=4
 - **Response:**
 
