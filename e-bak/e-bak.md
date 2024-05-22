@@ -172,6 +172,8 @@ To use the API, you must have a registered user account in the system. It's cruc
   "partnerName": "Անուն Ազգանուն",
   "estateId": 1000270,
   "estateAddress": "Գյուլբենկյան 33, 1",
+  "primaryEstateOwnerFullName": "Անուն Ազգանուն",
+  "estateType": 0,
   "balance": -4900,
   "debts": [
     {
@@ -198,6 +200,8 @@ To use the API, you must have a registered user account in the system. It's cruc
       "partnerName": "Անուն Ազգանուն",
       "estateId": 1000270,
       "estateAddress": "Գյուլբենկյան 1, 1",
+      "primaryEstateOwnerFullName": "Անուն Ազգանուն",
+      "estateType": 0,
       "balance": -5000,
       "debts": [
         {
@@ -217,6 +221,8 @@ To use the API, you must have a registered user account in the system. It's cruc
       "partnerName": "Անուն Ազգանուն",
       "estateId": 1000271,
       "estateAddress": "Գյուլբենկյան 2, 1",
+      "primaryEstateOwnerFullName": "Անուն Ազգանուն",
+      "estateType": 0,
       "balance": -15000,
       "debts": [
         {
@@ -236,6 +242,8 @@ To use the API, you must have a registered user account in the system. It's cruc
       "partnerName": "Անուն Ազգանուն",
       "estateId": 1000272,
       "estateAddress": "Գյուլբենկյան 2, 1",
+      "primaryEstateOwnerFullName": "Անուն Ազգանուն",
+      "estateType": 0,
       "balance": 0,
       "debts": []
     }
@@ -310,12 +318,44 @@ To use the API, you must have a registered user account in the system. It's cruc
 }
 ```
 
+
+### 1.6.7. Search Cities
+
+- **Path:** `/api/v1/integration/search/cities`
+- **Method:** `/GET`
+- **Description:** Retrieves all cities.
+- **Request:** https://be-ca.pandatech.it/api/v1/integration/search/cities
+- **Response:**
+
+```json
+{
+  "values": [
+    {
+      "id": "1",
+      "name": "Երևան"
+    },
+    {
+      "id": "2",
+      "name": "Աբովյան"
+    },
+    {
+      "id": "3",
+      "name": "Ագարակ"
+    },
+    {
+      "id": "4",
+      "name": "Ալավերդի"
+    }
+  ]
+}
+```
+
 ### 1.6.7. Search Condominium Association
 
 - **Path:** `/api/v1/integration/search/condominium-associations`
 - **Method:** `/GET`
-- **Description:** `Retrieves all condominiums. The request uses pagination and the total count in response is the total number of objects.`
-- **Request:** https://becapublicapi.pandatech.it/api/v1/search/counterparties?Page=1&PageSize=4
+- **Description:** `Retrieves all condominiums. The request usesa a filter with city, pagination and the total count in response is the total number of objects.`
+- **Request:** https://becapublicapi.pandatech.it/api/v1/search/counterparties?cityId=1Page=1&PageSize=4
 - **Response:**
 
 ```json
