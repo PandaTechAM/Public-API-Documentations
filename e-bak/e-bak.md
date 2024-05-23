@@ -17,9 +17,10 @@
     - [1.6.4. Debt retrieval by estate owner unique identifier](#164-debt-retrieval-by-estate-owner-unique-identifier)
     - [1.6.5. Debt Commission](#165-debt-commission)
     - [1.6.6. Debt repayment](#166-debt-repayment)
-    - [1.6.7. Search Condominium Association](#167-search-condominium-association)
-    - [1.6.8. Search Buildings Within a Condominium Association](#168-search-buildings-within-a-condominium-association)
-    - [1.6.9. Search Estates Within a Building](#169-search-estates-within-a-building)
+    - [1.6.7. Search Cities](#167-search-cities)
+    - [1.6.8. Search Condominium Association](#168-search-condominium-association)
+    - [1.6.9. Search Buildings Within a Condominium Association](#169-search-buildings-within-a-condominium-association)
+    - [1.6.10. Search Estates Within a Building](#1610-search-estates-within-a-building)
   - [1.7. Contributing](#17-contributing)
   - [1.8. Issues and Support](#18-issues-and-support)
   - [1.9. Stay Updated](#19-stay-updated)
@@ -35,8 +36,8 @@ The e-bak API provides programmatic access to our service, allowing users to ret
 ### 1.2.1. Environments
 
 - **Test Environment:** Make all API requests to the base
-  URL: [https://becapublicapi.pandatech.it](https://becapublicapi.pandatech.it). Access Swagger UI and OpenAPI specifications at
-  [https://becapublicapi.pandatech.it/swagger](https://becapublicapi.pandatech.it/swagger)
+  URL: [https://be-ca.pandatech.it](https://be-ca.pandatech.it). Access Swagger UI and OpenAPI specifications at
+  [https://be-ca.pandatech.it/swagger/integration](https://be-ca.pandatech.it/swagger/integration)
 - **Production Environment:** API requests should be directed to the base URL:
   [https://be.e-bak.am](https://be.e-bak.am)
 
@@ -187,7 +188,7 @@ public enum EstateTypes
   "estateId": 1000270,
   "estateType": "Apartment",
   "estateAddress": "Գյուլբենկյան 33, 1",
-  "primaryEstateOwnerFullName": "Կարապետ Կիրակոսյան",
+  "primaryEstateOwnerFullName": "Անուն Ազգանուն",
   "balance": -4900,
   "debts": [
     {
@@ -215,7 +216,7 @@ public enum EstateTypes
       "estateId": 1000270,
       "estateType": "Apartment",
       "estateAddress": "Գյուլբենկյան 1, 1",
-      "primaryEstateOwnerFullName": "Կարապետ Կիրակոսյան",
+      "primaryEstateOwnerFullName": "Անուն Ազգանուն",
       "balance": -5000,
       "debts": [
         {
@@ -236,7 +237,7 @@ public enum EstateTypes
       "estateId": 1000271,
       "estateType": "Apartment",
       "estateAddress": "Գյուլբենկյան 2, 1",
-      "primaryEstateOwnerFullName": "Կարապետ Կիրակոսյան",
+      "primaryEstateOwnerFullName": "Անուն Ազգանուն",
       "balance": -15000,
       "debts": [
         {
@@ -257,7 +258,7 @@ public enum EstateTypes
       "estateId": 1000272,
       "estateType": "Apartment",
       "estateAddress": "Գյուլբենկյան 2, 1",
-      "primaryEstateOwnerFullName": "Կարապետ Կիրակոսյան",
+      "primaryEstateOwnerFullName": "Անուն Ազգանուն",
       "balance": 0,
       "debts": []
     }
@@ -331,12 +332,43 @@ public enum EstateTypes
 }
 ```
 
-### 1.6.7. Search Condominium Association
+### 1.6.7. Search Cities
+
+- **Path:** `/api/v1/integration/search/cities`
+- **Method:** `/GET`
+- **Description:** Retrieves all cities.
+- **Request:** https://be-ca.pandatech.it/api/v1/integration/search/cities
+- **Response:**
+
+```json
+{
+  "values": [
+    {
+      "id": "1",
+      "name": "Երևան"
+    },
+    {
+      "id": "2",
+      "name": "Աբովյան"
+    },
+    {
+      "id": "3",
+      "name": "Ագարակ"
+    },
+    {
+      "id": "4",
+      "name": "Ալավերդի"
+    }
+  ]
+}
+```
+
+### 1.6.8. Search Condominium Association
 
 - **Path:** `/api/v1/integration/search/condominium-associations`
 - **Method:** `/GET`
-- **Description:** `Retrieves all condominiums. The request uses pagination and the total count in response is the total number of objects.`
-- **Request:** https://becapublicapi.pandatech.it/api/v1/search/counterparties?Page=1&PageSize=4
+- **Description:** `Retrieves all condominiums. The request uses a filter with city, pagination and the total count in response is the total number of objects.`
+- **Request:** https://becapublicapi.pandatech.it/api/v1/search/counterparties?cityId=1Page=1&PageSize=4
 - **Response:**
 
 ```json
@@ -363,7 +395,7 @@ public enum EstateTypes
 }
 ```
 
-### 1.6.8. Search Buildings Within a Condominium Association
+### 1.6.9. Search Buildings Within a Condominium Association
 
 - **Path:** `/api/v1/integration/search/buildings`
 - **Method:** `/GET`
@@ -383,7 +415,7 @@ public enum EstateTypes
 }
 ```
 
-### 1.6.9. Search Estates Within a Building
+### 1.6.10. Search Estates Within a Building
 
 - **Path:** `/api/v1/integration/search/estates`
 - **Method:** `/GET`
