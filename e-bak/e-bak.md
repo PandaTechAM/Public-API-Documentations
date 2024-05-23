@@ -124,7 +124,13 @@ To use the API, you must have a registered user account in the system. It's cruc
 
 ## 1.6. API Endpoints
 
-For Debt retrieval is used the following ENUM, which has possible 6 values:
+When calling to APIs there are 3 possible languages which can be set via `Accept-Language` header.
+
+- **Armenian** - "hy-AM"
+- **Russian** - "ru-RU" 
+- **English** - "en-US" 
+
+For Debts retrieval used the following ENUM, which has possible 6 values:
 
 ```csharp
 public enum EstateTypes
@@ -181,6 +187,8 @@ public enum EstateTypes
 - **Description:** Retrieves estate related all outstanding debts.
 - **Response:**
 
+`primaryEstateOwnerFullName` is returned in case of having estate to owner mapping, otherwise the received value is `null`. 
+
 ```json
 {
   "partnerId": "8a",
@@ -206,6 +214,8 @@ public enum EstateTypes
 - **Method:** `/GET`
 - **Description:** Retrieves estate related all outstanding debts by estate owner unique identifier. Unique identifier can be SSN or Tax Code
 - **Response:**
+
+`primaryEstateOwnerFullName` is returned in case of having estate to owner mapping, otherwise the received value is `null`.
 
 ```json
 {
