@@ -123,6 +123,20 @@ To use the API, you must have a registered user account in the system. It's cruc
 
 ## 1.6. API Endpoints
 
+For Debt retrieval is used the following ENUM, which has possible 6 values:
+
+```csharp
+public enum EstateTypes
+{
+   Apartment,
+   CommercialArea,
+   ParkingArea,
+   Basement,
+   House,
+   Other
+}
+```
+
 ### 1.6.1. Ping
 
 - **Path:** `/ping`
@@ -171,7 +185,9 @@ To use the API, you must have a registered user account in the system. It's cruc
   "partnerId": "8a",
   "partnerName": "Անուն Ազգանուն",
   "estateId": 1000270,
+  "estateType": "Apartment",
   "estateAddress": "Գյուլբենկյան 33, 1",
+  "primaryEstateOwnerFullName": "Կարապետ Կիրակոսյան",
   "balance": -4900,
   "debts": [
     {
@@ -197,7 +213,9 @@ To use the API, you must have a registered user account in the system. It's cruc
       "partnerId": "8c",
       "partnerName": "Անուն Ազգանուն",
       "estateId": 1000270,
+      "estateType": "Apartment",
       "estateAddress": "Գյուլբենկյան 1, 1",
+      "primaryEstateOwnerFullName": "Կարապետ Կիրակոսյան",
       "balance": -5000,
       "debts": [
         {
@@ -216,7 +234,9 @@ To use the API, you must have a registered user account in the system. It's cruc
       "partnerId": "8a",
       "partnerName": "Անուն Ազգանուն",
       "estateId": 1000271,
+      "estateType": "Apartment",
       "estateAddress": "Գյուլբենկյան 2, 1",
+      "primaryEstateOwnerFullName": "Կարապետ Կիրակոսյան",
       "balance": -15000,
       "debts": [
         {
@@ -235,7 +255,9 @@ To use the API, you must have a registered user account in the system. It's cruc
       "partnerId": "8a",
       "partnerName": "Անուն Ազգանուն",
       "estateId": 1000272,
+      "estateType": "Apartment",
       "estateAddress": "Գյուլբենկյան 2, 1",
+      "primaryEstateOwnerFullName": "Կարապետ Կիրակոսյան",
       "balance": 0,
       "debts": []
     }
@@ -298,7 +320,6 @@ To use the API, you must have a registered user account in the system. It's cruc
       "estateId": "vs1",
       "debtId": "",
       "amount": 452.25,
-
       "transactionId": "l3",
       "date": "2023-10-18T11:21:43.757Z",
       "bank": "Ameriabank",
