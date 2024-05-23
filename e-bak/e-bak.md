@@ -135,12 +135,12 @@ For Debts retrieval used the following ENUM, which has possible 6 values:
 ```csharp
 public enum EstateTypes
 {
-   Apartment,
-   CommercialArea,
-   ParkingArea,
-   Basement,
-   House,
-   Other
+   Apartment = 0,
+   CommercialArea = 1,
+   ParkingArea = 2,
+   Basement = 3,
+   House = 4,
+   Other = 5
 }
 ```
 
@@ -194,7 +194,7 @@ public enum EstateTypes
   "partnerId": "8a",
   "partnerName": "Անուն Ազգանուն",
   "estateId": 1000270,
-  "estateType": "Apartment",
+  "estateType": 5,
   "estateAddress": "Գյուլբենկյան 33, 1",
   "primaryEstateOwnerFullName": "Անուն Ազգանուն",
   "balance": -4900,
@@ -224,7 +224,7 @@ public enum EstateTypes
       "partnerId": "8c",
       "partnerName": "Անուն Ազգանուն",
       "estateId": 1000270,
-      "estateType": "Apartment",
+      "estateType": 3,
       "estateAddress": "Գյուլբենկյան 1, 1",
       "primaryEstateOwnerFullName": "Անուն Ազգանուն",
       "balance": -5000,
@@ -245,7 +245,7 @@ public enum EstateTypes
       "partnerId": "8a",
       "partnerName": "Անուն Ազգանուն",
       "estateId": 1000271,
-      "estateType": "Apartment",
+      "estateType": 0,
       "estateAddress": "Գյուլբենկյան 2, 1",
       "primaryEstateOwnerFullName": "Անուն Ազգանուն",
       "balance": -15000,
@@ -266,7 +266,7 @@ public enum EstateTypes
       "partnerId": "8a",
       "partnerName": "Անուն Ազգանուն",
       "estateId": 1000272,
-      "estateType": "Apartment",
+      "estateType": 4,
       "estateAddress": "Գյուլբենկյան 2, 1",
       "primaryEstateOwnerFullName": "Անուն Ազգանուն",
       "balance": 0,
