@@ -14,11 +14,17 @@
     - [1.6.1. Ping](#161-ping)
     - [1.6.2. Login](#162-login)
     - [1.6.3. Debt retrieval by Estate](#163-debt-retrieval-by-estate)
+      - [1.6.3.1 V1](#1631-v1)
+      - [1.6.3.2 V2 with estateType and primaryEstateOwnerFullName](#1632-v2-with-estateType-and-primaryEstateOwnerFullName)
     - [1.6.4. Debt retrieval by estate owner unique identifier](#164-debt-retrieval-by-estate-owner-unique-identifier)
+      - [1.6.4.1 V1](#1641-v1)
+      - [1.6.4.2 V2_with estateType and primaryEstateOwnerFullName](#1642-v2-with-estateType-and-primaryEstateOwnerFullName)
     - [1.6.5. Debt Commission](#165-debt-commission)
     - [1.6.6. Debt repayment](#166-debt-repayment)
     - [1.6.7. Search Cities](#167-search-cities)
     - [1.6.8. Search Condominium Association](#168-search-condominium-association)
+      - [1.6.8.1 V1](#1681-v1)
+      - [1.6.8.2 V2 with query parameter cityid](#1681-v2-with-query-parameter-cityid)
     - [1.6.9. Search Buildings Within a Condominium Association](#169-search-buildings-within-a-condominium-association)
     - [1.6.10. Search Estates Within a Building](#1610-search-estates-within-a-building)
   - [1.7. Contributing](#17-contributing)
@@ -182,12 +188,41 @@ public enum EstateTypes
 
 ### 1.6.3. Debt retrieval by Estate
 
+There are two versions for this call: `v1` and `v2`.
+THe difference between them is retrieval of more data related to estate and it's primary owner.
+
+#### 1.6.3.1 V1
+
 - **Path:** `/api/v1/integration/debts/{estateId}`
 - **Method:** `/GET`
 - **Description:** Retrieves estate related all outstanding debts.
 - **Response:**
 
-`primaryEstateOwnerFullName` is returned in case of having estate to owner mapping, otherwise the received value is `null`. 
+```json
+{
+  "partnerId": "8a",
+  "partnerName": "Անուն Ազգանուն",
+  "estateId": 1000270,
+  "estateAddress": "Գյուլբենկյան 33, 1",
+  "balance": -4900,
+  "debts": [
+    {
+      "debtId": "75",
+      "balance": -4900,
+      "date": "2024-04-01T00:00:00Z"
+    }
+  ]
+}
+```
+
+#### 1.6.3.2 V2 with estateType and primaryEstateOwnerFullName
+
+- **Path:** `/api/v2/integration/debts/{estateId}`
+- **Method:** `/GET`
+- **Description:** Retrieves estate related all outstanding debts.
+- **Response:**
+
+`primaryEstateOwnerFullName` is returned in case of having estate to owner mapping, otherwise the received value is `null`.
 
 ```json
 {
@@ -210,7 +245,72 @@ public enum EstateTypes
 
 ### 1.6.4. Debt retrieval by estate owner unique identifier
 
+There are two versions for this call: `v1` and `v2`. 
+THe difference between them is retrieval of more data related to estate and it's primary owner.
+
+#### 1.6.4.1 V1
+
 - **Path:** `/api/v1/integration/debts/owner/{ownerId}`
+- **Method:** `/GET`
+- **Description:** Retrieves estate related all outstanding debts by estate owner unique identifier. Unique identifier can be SSN or Tax Code
+- **Response:**
+
+```json
+{
+  "estates": [
+    {
+      "partnerId": "8c",
+      "partnerName": "Անուն Ազգանուն",
+      "estateId": 1000270,
+      "estateAddress": "Գյուլբենկյան 1, 1",
+      "balance": -5000,
+      "debts": [
+        {
+          "debtId": "1a",
+          "balance": -4900,
+          "date": "2024-04-01T00:00:00Z"
+        },
+        {
+          "debtId": "20",
+          "balance": -100,
+          "date": "2024-04-01T00:00:00Z"
+        }
+      ]
+    },
+    {
+      "partnerId": "8a",
+      "partnerName": "Անուն Ազգանուն",
+      "estateId": 1000271,
+      "estateAddress": "Գյուլբենկյան 2, 1",
+      "balance": -15000,
+      "debts": [
+        {
+          "debtId": "7",
+          "balance": -8000,
+          "date": "2024-04-01T00:00:00Z"
+        },
+        {
+          "debtId": "5d",
+          "balance": -7000,
+          "date": "2024-04-01T00:00:00Z"
+        }
+      ]
+    },
+    {
+      "partnerId": "8a",
+      "partnerName": "Անուն Ազգանուն",
+      "estateId": 1000272,
+      "estateAddress": "Գյուլբենկյան 2, 1",
+      "balance": 0,
+      "debts": []
+    }
+  ]
+}
+```
+
+#### 1.6.4.2 V2 with estateType and primaryEstateOwnerFullName
+
+- **Path:** `/api/v2/integration/debts/owner/{ownerId}`
 - **Method:** `/GET`
 - **Description:** Retrieves estate related all outstanding debts by estate owner unique identifier. Unique identifier can be SSN or Tax Code
 - **Response:**
@@ -375,11 +475,15 @@ public enum EstateTypes
 
 ### 1.6.8. Search Condominium Association
 
+#### 1.6.8.1 V1
+
 - **Path:** `/api/v1/integration/search/condominium-associations`
 - **Method:** `/GET`
 - **Description:** `Retrieves all condominiums. The request uses a filter with city, pagination and the total count in response is the total number of objects.`
 - **Request:** https://becapublicapi.pandatech.it/api/v1/search/counterparties?cityId=1Page=1&PageSize=4
 - **Response:**
+
+Retrieves only condominium associations related to Yerevan.
 
 ```json
 {
@@ -404,6 +508,42 @@ public enum EstateTypes
   "totalCount": 78
 }
 ```
+
+#### 1.6.8.1 V2 with query parameter `cityId`
+
+- **Path:** `/api/v2/integration/search/condominium-associations`
+- **Method:** `/GET`
+- **Description:** `Retrieves all condominiums. The request uses a filter with city, pagination and the total count in response is the total number of objects.`
+- **Request:** https://becapublicapi.pandatech.it/api/v1/search/counterparties?cityId=1Page=1&PageSize=4
+- **Response:**
+
+Added query parameter `cityId` to filter out condominium associations based on given city id.
+
+```json
+{
+  "values": [
+    {
+      "id": "a1",
+      "name": "A LLC"
+    },
+    {
+      "id": "f",
+      "name": "B LLC"
+    },
+    {
+      "id": "22a",
+      "name": "C LLC"
+    },
+    {
+      "id": "3l",
+      "name": "D LLC"
+    }
+  ],
+  "totalCount": 78
+}
+```
+
+
 
 ### 1.6.9. Search Buildings Within a Condominium Association
 
