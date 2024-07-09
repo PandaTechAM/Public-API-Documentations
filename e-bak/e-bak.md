@@ -514,7 +514,7 @@ Retrieves only condominium associations related to Yerevan.
 - **Path:** `/api/v2/integration/search/condominium-associations`
 - **Method:** `/GET`
 - **Description:** `Retrieves all condominiums. The request uses a filter with city, pagination and the total count in response is the total number of objects.`
-- **Request:** https://becapublicapi.pandatech.it/api/v1/search/counterparties?cityId=1Page=1&PageSize=4
+- **Request:** https://becapublicapi.pandatech.it/api/v2/search/counterparties?cityId=1Page=1&PageSize=4
 - **Response:**
 
 Added query parameter `cityId` to filter out condominium associations based on given city id.
@@ -567,6 +567,7 @@ Added query parameter `cityId` to filter out condominium associations based on g
 
 ### 1.6.10. Search Estates Within a Building
 
+#### 1.6.10.1. V1
 - **Path:** `/api/v1/integration/search/estates`
 - **Method:** `/GET`
 - **Description:** `Retrieves all estates within the building. The request uses pagination and the total count in response is the total number of objects.`
@@ -582,6 +583,27 @@ Added query parameter `cityId` to filter out condominium associations based on g
     }
   ],
   "totalCount": 132
+}
+```
+
+#### 1.6.10.2. V2 with Estate Type
+
+- **Path:** `/api/v2/integration/search/estates`
+- **Method:** `/GET`
+- **Description:** `Retrieves all estates within the building with types. The request uses pagination and the total count in response is the total number of objects.`
+- **Request:** https://becapublicapi.pandatech.it/api/v2/search/estates?BuildingId=jk2&Page=1&PageSize=1
+- **Response:**
+
+```json
+{
+  "values": [
+    {
+      "type": 0,
+      "id": "vd2",
+      "address": "21/2"
+    }
+  ],
+  "totalCount": 150
 }
 ```
 
