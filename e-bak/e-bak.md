@@ -40,8 +40,8 @@ This API is designed to be RESTful and is intended to be used by developers to i
 ### 1.2.1. Environments
 
 - **Test Environment:** Make all API requests to the base
-  URL: [https://be-ca.pandatech.it](https://be-ca.pandatech.it). Access Swagger UI and OpenAPI specifications at
-  [https://be-ca.pandatech.it/swagger/integration](https://be-ca.pandatech.it/swagger/integration)
+  URL: [https://qabe-ca.pandatech.it](https://qabe-ca.pandatech.it). Access Swagger UI and OpenAPI specifications at
+  [https://qabe-ca.pandatech.it/swagger/integration](https://qabe-ca.pandatech.it/swagger/integration)
 - **Production Environment:** API requests should be directed to the base URL:
   [https://be.e-bak.am](https://be.e-bak.am)
 
