@@ -183,7 +183,7 @@ public enum EstateTypes
 
 ### 1.6.5. Debt retrieval by Estate
 
-- **Path:** `/api/v2/integration/debts/{estateId}`
+- **Path:** `/api/v3/integration/debts/{estateId}`
 - **Method:** `/GET`
 - **Description:** Retrieves estate related all outstanding debts.
 - **Note:** `primaryEstateOwnerFullName` can be `null`
@@ -191,7 +191,7 @@ public enum EstateTypes
 
 ```json
 {
-  "partnerId": "8a",
+  "partnerId": 8,
   "partnerName": "Անուն Ազգանուն",
   "estateId": 1000270,
   "estateType": 5,
@@ -200,7 +200,7 @@ public enum EstateTypes
   "balance": -4900,
   "debts": [
     {
-      "debtId": "75",
+      "debtId": 75,
       "balance": -4900,
       "date": "2024-04-01T00:00:00Z"
     }
@@ -210,7 +210,7 @@ public enum EstateTypes
 
 ### 1.6.6. Debt retrieval by estate owner unique identifier
 
-- **Path:** `/api/v2/integration/debts/owner/{ownerId}`
+- **Path:** `/api/v3/integration/debts/owner/{uniqueDocumentId}`
 - **Method:** `/GET`
 - **Description:** Retrieves all outstanding debts by estate owner unique identifier (SSN or Tax Code).
 - **Note:** `primaryEstateOwnerFullName` can be `null`
@@ -220,7 +220,7 @@ public enum EstateTypes
 {
   "estates": [
     {
-      "partnerId": "8c",
+      "partnerId": 8,
       "partnerName": "Անուն Ազգանուն",
       "estateId": 1000270,
       "estateType": 3,
@@ -229,19 +229,19 @@ public enum EstateTypes
       "balance": -5000,
       "debts": [
         {
-          "debtId": "1a",
+          "debtId": 1,
           "balance": -4900,
           "date": "2024-04-01T00:00:00Z"
         },
         {
-          "debtId": "20",
+          "debtId": 20,
           "balance": -100,
           "date": "2024-04-01T00:00:00Z"
         }
       ]
     },
     {
-      "partnerId": "8a",
+      "partnerId": 8,
       "partnerName": "Անուն Ազգանուն",
       "estateId": 1000271,
       "estateType": 0,
@@ -250,19 +250,19 @@ public enum EstateTypes
       "balance": -15000,
       "debts": [
         {
-          "debtId": "7",
+          "debtId": 7,
           "balance": -8000,
           "date": "2024-04-01T00:00:00Z"
         },
         {
-          "debtId": "5d",
+          "debtId": 5,
           "balance": -7000,
           "date": "2024-04-01T00:00:00Z"
         }
       ]
     },
     {
-      "partnerId": "8a",
+      "partnerId": 8,
       "partnerName": "Անուն Ազգանուն",
       "estateId": 1000272,
       "estateType": 4,
@@ -277,7 +277,7 @@ public enum EstateTypes
 
 ### 1.6.7. Debt Commission
 
-- **Path:** `/api/v1/integration/debts/commission`
+- **Path:** `/api/v2/integration/debts/commission`
 - **Method:** `/POST`
 - **Description:** Commission for repayment of debts. The commission is calculated based on the amount with commission percentage for each estate. The commission is calculated and returned in the response.
 - **Request:**
@@ -285,9 +285,9 @@ public enum EstateTypes
 ```json
 [
   {
-    "estateId": "1000182",
+    "estateId": 1000182,
     "amount": 1000,
-    "debtId": ""
+    "debtId": null
   }
 ]
 ```
@@ -302,7 +302,7 @@ public enum EstateTypes
 
 ### 1.6.8. Debt repayment
 
-- **Path:** `/api/v1/integration/debts/payments`
+- **Path:** `/api/v2/integration/debts/payments`
 - **Method:** `/POST`
 - **Description:** Repaying Debts by Estate. The e-bak system initiates the repayment of debts following the First-In-First-Out (FIFO) method. To target a specific debt for repayment, include its `debtId` in your request. If the `debtId` is left blank, the system defaults to the FIFO method, repaying the oldest debt first and then proceeding sequentially.
 
@@ -312,9 +312,9 @@ public enum EstateTypes
 {
   "debtCommissionRequestModels": [
     {
-      "estateId": "vs1",
+      "estateId": 1654896,
       "amount": 452.25,
-      "debtId": ""
+      "debtId": 24
     }
   ],
   "outerPaymentId": "3fa85f64",
@@ -328,10 +328,10 @@ public enum EstateTypes
 {
   "debtCommissionRequestModels": [
     {
-      "estateId": "vs1",
-      "debtId": "",
+      "estateId": 1654896,
+      "debtId": 42,
       "amount": 452.25,
-      "transactionId": "l3",
+      "transactionId": 443,
       "date": "2023-10-18T11:21:43.757Z",
       "bank": "Ameriabank",
       "bankAccount": "1500016548794561"
@@ -344,29 +344,29 @@ public enum EstateTypes
 
 ### 1.6.9. Search Cities
 
-- **Path:** `/api/v1/integration/search/cities`
+- **Path:** `/api/v2/integration/search/cities`
 - **Method:** `/GET`
 - **Description:** Retrieves all cities.
-- **Request:** https://be-ca.pandatech.it/api/v1/integration/search/cities
+- **Request:** https://be-ca.pandatech.it/api/v2/integration/search/cities
 - **Response:**
 
 ```json
 {
   "values": [
     {
-      "id": "1",
+      "id": 1,
       "name": "Երևան"
     },
     {
-      "id": "2",
+      "id": 2,
       "name": "Աբովյան"
     },
     {
-      "id": "3",
+      "id": 3,
       "name": "Ագարակ"
     },
     {
-      "id": "4",
+      "id": 4,
       "name": "Ալավերդի"
     }
   ]
@@ -375,30 +375,26 @@ public enum EstateTypes
 
 ### 1.6.10. Search Condominium Association
 
-- **Path:** `/api/v2/integration/search/condominium-associations`
+- **Path:** `/api/v3/integration/search/condominium-associations`
 - **Method:** `/GET`
 - **Description:** Retrieves all condominiums with city query, pagination, and total count.
-- **Request:** https://becapublicapi.pandatech.it/api/v2/search/condominium-associations?cityId=1Page=1&PageSize=4
+- **Request:** https://becapublicapi.pandatech.it/api/v3/search/condominium-associations?cityId=1Page=1&PageSize=4
 - **Response:**
 
 ```json
 {
   "values": [
     {
-      "id": "a1",
+      "id": 1,
       "name": "A LLC"
     },
     {
-      "id": "f",
+      "id": 2,
       "name": "B LLC"
     },
     {
-      "id": "22a",
+      "id": 3,
       "name": "C LLC"
-    },
-    {
-      "id": "3l",
-      "name": "D LLC"
     }
   ],
   "totalCount": 78
@@ -407,17 +403,17 @@ public enum EstateTypes
 
 ### 1.6.11. Search Buildings Within a Condominium Association
 
-- **Path:** `/api/v1/integration/search/buildings`
+- **Path:** `/api/v2/integration/search/buildings`
 - **Method:** `/GET`
 - **Description:** Retrieves all buildings within the condominium association with pagination and total count.
-- **Request:** https://becapublicapi.pandatech.it/api/v1/search/buildings?PartnerId=a1&Page=1&PageSize=1
+- **Request:** https://becapublicapi.pandatech.it/api/v2/search/buildings?PartnerId=a1&Page=1&PageSize=1
 - **Response:**
 
 ```json
 {
   "values": [
     {
-      "id": "jk2",
+      "id": 3,
       "address": "Tumanyan 27"
     }
   ],
@@ -438,7 +434,7 @@ public enum EstateTypes
   "values": [
     {
       "type": 0,
-      "id": "vd2",
+      "id": 13548785,
       "address": "21/2"
     }
   ],
