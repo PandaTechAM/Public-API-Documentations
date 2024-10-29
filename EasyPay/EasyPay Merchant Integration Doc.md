@@ -175,6 +175,8 @@ Accept-Language: ru-RU
   ]
 }
 ```
+> Important Notice: To ensure smooth processing and avoid duplicate payments, please store the `OrderId` in your database and enforce a unique index constraint on it. This will prevent duplication issues and facilitate efficient payment reconciliation during the accounting process.
+
 
 **Response Example:**
 
