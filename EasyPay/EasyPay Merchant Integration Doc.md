@@ -10,6 +10,7 @@
     - [1.6.2. Make Payment](#162-make-payment)
   - [1.7. Security Recommendation](#17-security-recommendation)
   - [1.8. Summary](#18-summary)
+    - [Key Takeaways:](#key-takeaways)
 
 # 1. EasyPay Merchant Integration Guide
 
@@ -27,12 +28,11 @@ This document provides detailed instructions on how merchants can integrate with
 
 ### 1.3.1. HMAC Authentication
 
-1. **Algorithm:** HMAC-SHA256 is required to authenticate requests.
-2. **Key Storage:** Store the HMAC key securely (e.g., AES-256 encryption) in a vault or encrypted database, not in code.
+1. **Algorithm:** Use HMAC-SHA256 for authentication.
+2. **Key Storage:** Store securely in vaults or encrypted databases (not in code).
 3. **Headers:**
-   - **Authorization:** Format - `Authorization: HMAC <HMAC hash of concatenated parameters>`
-   - **Nonce:** Format - `Nonce: <UUIDv4>`
-     > Note: Ensure the string representation of UUIDv4 is used to avoid encoding errors.
+   - **Authorization:** HMAC <HMAC hash of concatenated parameters>`
+   - **Nonce:** UUIDv4 string format
 4. **Language Header:** Optional but recommended for multi-language support:
    - `Accept-Language`: Set to `hy-AM` (Armenian), `en-US` (English), or `ru-RU` (Russian) based on the response language preference.
 
@@ -167,7 +167,7 @@ Accept-Language: ru-RU
 {
   "OrderId": "434dd03f-ede8-4e55-b71f-f81cb4120cba",
   "Amount": 500.75,
-  "BalanceInquiryId": 12345,
+  "BalanceInquiryId": 12345, // Not required/nullable
   "MerchantServiceIdentifierId": 67890,
   "Inputs": [
     { "TechnicalIndex": 1, "Type": 1, "Value": "12345" },
@@ -175,8 +175,17 @@ Accept-Language: ru-RU
   ]
 }
 ```
-> Important Notice: To ensure smooth processing and avoid duplicate payments, please store the `OrderId` in your database and enforce a unique index constraint on it. This will prevent duplication issues and facilitate efficient payment reconciliation during the accounting process.
 
+> **⚠️ Important Notice:**  
+> We **highly recommend** storing the `OrderId` in your database with a **unique index constraint**. Failing to do so may lead to **duplicate payment issues**.
+
+Duplicate payments can occur due to several reasons:
+
+- **Timeouts** and improper **timeout handling**
+- **Networking issues** causing multiple retries
+- **Replay attacks** where the same request is maliciously or accidentally reused
+
+In case of a duplicate `OrderId`, **return the original `PaymentId`** associated with it instead of generating an error or processing the payment again. This approach ensures safe handling and prevents unintended multiple payments.
 
 **Response Example:**
 
@@ -197,10 +206,21 @@ Authorization: HMAC 4Q3soI9dTLuCLl3kWnVqPcCnayHwreKYUBwtLor3LRI=
 
 ## 1.7. Security Recommendation
 
-Merchants should persist HMAC signatures temporarily to detect duplicate or replay attacks. If a subsequent request arrives with the same signature, it should be treated as a duplicate request or a potential replay attack, and appropriate action should be taken (e.g., rejecting the request and logging the incident).
+- Merchants should persist HMAC signatures temporarily to detect duplicate or replay attacks. If a subsequent request arrives with the same signature, it should be treated as a duplicate request or a potential replay attack, and appropriate action should be taken (e.g., rejecting the request and logging the incident).
+- Merchants **must handle timeouts gracefully**. If a timeout occurs, **all pending operations within the request scope must be terminated immediately** to prevent inconsistencies.
+  - A request timeout indicates that **no further actions related to the request should proceed**.
+  - **Ensure all cancellable operations** (e.g., database transactions, API calls) are aborted promptly to avoid data corruption or partial processing.
+  - EasyPay enforces an **8-second timeout policy**. After this limit, a **timeout error** is returned. Merchants should use this as a trigger to rollback or cancel any ongoing operations effectively.
 
 ## 1.8. Summary
 
-This document outlines how to integrate and securely communicate with EasyPay's platform using HMAC-based authentication. Following the instructions ensures robust security and smooth interoperability between systems.
+This guide provides the necessary steps to integrate and communicate securely with EasyPay's platform using **HMAC-based authentication**. The APIs covered in this documentation ensure seamless **balance inquiry** and **payment processing**.
 
-For further assistance, contact your integration manager at EasyPay.
+### Key Takeaways:
+
+- **HMAC Authentication**: Protects data integrity and authenticity.
+- **Timeout Handling**: Ensure rollback of operations if the 8-second timeout limit is exceeded.
+- **Duplicate Requests**: Store `OrderId` with a unique index to prevent multiple payments.
+- **Replay Protection**: Use temporary storage of HMAC signatures to detect and block potential replay attacks.
+
+Following these guidelines ensures **robust security** and **efficient interaction** with the EasyPay system. For further assistance, reach out to your designated EasyPay integration manager.
