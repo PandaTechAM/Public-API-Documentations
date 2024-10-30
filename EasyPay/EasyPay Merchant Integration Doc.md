@@ -60,10 +60,10 @@ Example Input:
 ```
 
 **Concatenation for HMAC:**
-Inputs should be concatenated in the format `Type:Value:TechnicalIndex`, separated by colons.
+Inputs should be concatenated in the format `Type:Value:TechnicalIndex:`, separated by colons.
 
 **Result:**
-`16:12345:1:3:98765:2`
+`16:12345:1:3:98765:2:`
 
 > Usage: The concatenated string forms part of the HMAC calculation, ensuring message integrity.
 
