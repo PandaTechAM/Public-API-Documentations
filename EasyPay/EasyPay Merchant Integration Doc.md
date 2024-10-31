@@ -8,6 +8,7 @@
   - [1.6. API Endpoints](#16-api-endpoints)
     - [1.6.1. Balance Inquiry](#161-balance-inquiry)
     - [1.6.2. Make Payment](#162-make-payment)
+    - [1.6.3. Ping](#163-ping)
   - [1.7. Security Recommendation](#17-security-recommendation)
   - [1.8. Summary](#18-summary)
     - [Key Takeaways:](#key-takeaways)
@@ -203,6 +204,21 @@ Authorization: HMAC 4Q3soI9dTLuCLl3kWnVqPcCnayHwreKYUBwtLor3LRI=
 
 **HMAC Calculation For Response:**
 `HMAC(PaymentId + Request's Nonce)`
+
+### 1.6.3. Ping
+
+**Endpoint:**
+`GET /api/ping`
+
+This endpoint is used to check the availability of the services. It does not require any headers or body.
+
+**Response:**
+
+```json
+{
+  "Status": "OK"
+}
+```
 
 ## 1.7. Security Recommendation
 
