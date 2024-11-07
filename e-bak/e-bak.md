@@ -15,14 +15,15 @@
     - [1.6.2. Estate Types](#162-estate-types)
     - [1.6.3. Ping](#163-ping)
     - [1.6.4. Login](#164-login)
-    - [1.6.5. Debt retrieval by Estate](#165-debt-retrieval-by-estate)
-    - [1.6.6. Debt retrieval by estate owner unique identifier](#166-debt-retrieval-by-estate-owner-unique-identifier)
-    - [1.6.7. Debt Commission](#167-debt-commission)
-    - [1.6.8. Debt repayment](#168-debt-repayment)
-    - [1.6.9. Search Cities](#169-search-cities)
-    - [1.6.10. Search Condominium Association](#1610-search-condominium-association)
-    - [1.6.11. Search Buildings Within a Condominium Association](#1611-search-buildings-within-a-condominium-association)
-    - [1.6.12. Search Estates Within a Building](#1612-search-estates-within-a-building)
+    - [1.6.5. Check Commission Types](#165-check-commission-types)
+    - [1.6.6. Debt retrieval by Estate](#166-debt-retrieval-by-estate)
+    - [1.6.7. Debt retrieval by estate owner unique identifier](#167-debt-retrieval-by-estate-owner-unique-identifier)
+    - [1.6.8. Debt Commission](#168-debt-commission)
+    - [1.6.9. Debt repayment](#169-debt-repayment)
+    - [1.6.10. Search Cities](#1610-search-cities)
+    - [1.6.11. Search Condominium Association](#1611-search-condominium-association)
+    - [1.6.12. Search Buildings Within a Condominium Association](#1612-search-buildings-within-a-condominium-association)
+    - [1.6.13. Search Estates Within a Building](#1613-search-estates-within-a-building)
   - [1.7. Contributing](#17-contributing)
   - [1.8. Issues and Support](#18-issues-and-support)
   - [1.9. Stay Updated](#19-stay-updated)
@@ -181,9 +182,19 @@ public enum EstateTypes
 }
 ```
 
-### 1.6.5. Debt retrieval by Estate
+### 1.6.5. Check Commission Types
 
-- **Path:** `/api/v3/integration/debts/{estateId}`
+```csharp
+public enum CheckCommission
+{
+   Yes = 1,
+   No = 2
+}
+```
+
+### 1.6.6. Debt retrieval by Estate
+
+- **Path:** `/api/v4/integration/debts/{estateId}`
 - **Method:** `/GET`
 - **Description:** Retrieves estate related all outstanding debts.
 - **Note:** `primaryEstateOwnerFullName` can be `null`
@@ -197,6 +208,7 @@ public enum EstateTypes
   "estateType": 5,
   "estateAddress": "Գյուլբենկյան 33, 1",
   "primaryEstateOwnerFullName": "Անուն Ազգանուն",
+  "checkCommission": 1,
   "balance": -4900,
   "debts": [
     {
@@ -208,9 +220,9 @@ public enum EstateTypes
 }
 ```
 
-### 1.6.6. Debt retrieval by estate owner unique identifier
+### 1.6.7. Debt retrieval by estate owner unique identifier
 
-- **Path:** `/api/v3/integration/debts/owner/{uniqueDocumentId}`
+- **Path:** `/api/v4/integration/debts/owner/{uniqueDocumentId}`
 - **Method:** `/GET`
 - **Description:** Retrieves all outstanding debts by estate owner unique identifier (SSN or Tax Code).
 - **Note:** `primaryEstateOwnerFullName` can be `null`
@@ -226,6 +238,7 @@ public enum EstateTypes
       "estateType": 3,
       "estateAddress": "Գյուլբենկյան 1, 1",
       "primaryEstateOwnerFullName": "Անուն Ազգանուն",
+      "checkCommission": 1,
       "balance": -5000,
       "debts": [
         {
@@ -247,6 +260,7 @@ public enum EstateTypes
       "estateType": 0,
       "estateAddress": "Գյուլբենկյան 2, 1",
       "primaryEstateOwnerFullName": "Անուն Ազգանուն",
+      "checkCommission": 1,
       "balance": -15000,
       "debts": [
         {
@@ -268,6 +282,7 @@ public enum EstateTypes
       "estateType": 4,
       "estateAddress": "Գյուլբենկյան 2, 1",
       "primaryEstateOwnerFullName": "Անուն Ազգանուն",
+      "checkCommission": 2,
       "balance": 0,
       "debts": []
     }
@@ -275,7 +290,7 @@ public enum EstateTypes
 }
 ```
 
-### 1.6.7. Debt Commission
+### 1.6.8. Debt Commission
 
 - **Path:** `/api/v2/integration/debts/commission`
 - **Method:** `/POST`
@@ -300,7 +315,7 @@ public enum EstateTypes
 }
 ```
 
-### 1.6.8. Debt repayment
+### 1.6.9. Debt repayment
 
 - **Path:** `/api/v2/integration/debts/payments`
 - **Method:** `/POST`
@@ -342,7 +357,7 @@ public enum EstateTypes
 }
 ```
 
-### 1.6.9. Search Cities
+### 1.6.10. Search Cities
 
 - **Path:** `/api/v2/integration/search/cities`
 - **Method:** `/GET`
@@ -373,7 +388,7 @@ public enum EstateTypes
 }
 ```
 
-### 1.6.10. Search Condominium Association
+### 1.6.11. Search Condominium Association
 
 - **Path:** `/api/v3/integration/search/condominium-associations`
 - **Method:** `/GET`
@@ -401,7 +416,7 @@ public enum EstateTypes
 }
 ```
 
-### 1.6.11. Search Buildings Within a Condominium Association
+### 1.6.12. Search Buildings Within a Condominium Association
 
 - **Path:** `/api/v2/integration/search/buildings`
 - **Method:** `/GET`
@@ -421,7 +436,7 @@ public enum EstateTypes
 }
 ```
 
-### 1.6.12. Search Estates Within a Building
+### 1.6.13. Search Estates Within a Building
 
 - **Path:** `/api/v2/integration/search/estates`
 - **Method:** `/GET`
