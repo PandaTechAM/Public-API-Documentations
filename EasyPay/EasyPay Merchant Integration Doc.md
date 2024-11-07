@@ -97,6 +97,35 @@ Inputs should be concatenated in the format `Type:Value:TechnicalIndex:`, separa
 24: Surname
 ```
 
+HMAC Calculation Example:
+
+```http
+HMAC(12345 + 67890 + 16:12345:1:3:98765:2: + 69f77f9c-b9b5-43ac-9e6b-516863b8a451)
+key = "your HMAC secret key"
+```
+
+Follow these steps to calculate the HMAC:
+
+1. Combine the provided inputs into a single string:
+```json
+"123456789016:12345:1:3:98765:2:69f77f9c-b9b5-43ac-9e6b-516863b8a451"
+```
+2. Use the HMAC-SHA256 algorithm and apply the secret key:
+```json
+"your HMAC secret key"
+```
+
+3. After computing the HMAC hash from the concatenated string and key, 
+convert the resulting byte array into a Base64-encoded string.
+```json
+"EQiqUTkEQOGNkfcW4MU6XooOm+rL1REz5njbkvq40bA="
+```
+
+> **Note:** To test the HMAC calculation, you can use online tools that support HMAC-SHA256 encryption.
+>>For example https://www.devglan.com/online-tools/hmac-sha256-online
+>
+> Ensure the key and input values are correctly formatted and match the expected output.
+
 ## 1.6. API Endpoints
 
 ### 1.6.1. Balance Inquiry
