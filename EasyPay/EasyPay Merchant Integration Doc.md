@@ -99,7 +99,7 @@ Inputs should be concatenated in the format `Type:Value:TechnicalIndex:`, separa
 
 HMAC Calculation Example:
 
-```http
+```json
 HMAC(12345 + 67890 + 16:12345:1:3:98765:2: + 69f77f9c-b9b5-43ac-9e6b-516863b8a451)
 key = "your HMAC secret key"
 ```
