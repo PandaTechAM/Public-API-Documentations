@@ -394,7 +394,7 @@ public enum CheckCommission
 - **Path:** `/api/v3/integration/search/condominium-associations`
 - **Method:** `/GET`
 - **Description:** Retrieves all condominiums with city query, pagination, and total count.
-- **Request:** https://becapublicapi.pandatech.it/api/v3/integration/search/condominium-associations?cityId=1Page=1&PageSize=4
+- **Request:** https://becapublicapi.pandatech.it/api/v3/integration/search/condominium-associations?cityId=1&Page=1&PageSize=4
 - **Response:**
 
 ```json
@@ -430,9 +430,9 @@ All 3 parameters are optional and can't be null simultaneously. At least 1 of th
 - **Method:** `/GET`
 - **Description:** Retrieves all buildings within the condominium association or city/village or district with pagination and total count.
 - **Request variations:** 
-  1. https://becapublicapi.pandatech.it/api/v2/integration/search/buildings?PartnerId=a1&Page=1&PageSize=1
-  2. https://becapublicapi.pandatech.it/api/v2/integration/search/buildings?CityId=a1&Page=1&PageSize=1
-  3. https://becapublicapi.pandatech.it/api/v2/integration/search/buildings?DistrictId=a1&Page=1&PageSize=1
+  1. https://becapublicapi.pandatech.it/api/v2/integration/search/buildings?PartnerId=1&Page=1&PageSize=1
+  2. https://becapublicapi.pandatech.it/api/v2/integration/search/buildings?CityId=1&Page=1&PageSize=1
+  3. https://becapublicapi.pandatech.it/api/v2/integration/search/buildings?DistrictId=1&Page=1&PageSize=1
 - **Response:**
 
 ```json
@@ -473,7 +473,7 @@ All 3 parameters are optional and can't be null simultaneously. At least 1 of th
 - **Path:** `/api/v2/integration/search/estates`
 - **Method:** `/GET`
 - **Description:** Retrieves all estates within the building with types, pagination, and total count.
-- **Request:** https://becapublicapi.pandatech.it/api/v2/search/estates?BuildingId=jk2&Page=1&PageSize=1
+- **Request:** https://becapublicapi.pandatech.it/api/v2/search/estates?BuildingId=1&Page=1&PageSize=1
 - **Response:**
 
 ```json
