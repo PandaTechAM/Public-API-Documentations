@@ -23,7 +23,8 @@
     - [1.6.10. Search Cities](#1610-search-cities)
     - [1.6.11. Search Condominium Association](#1611-search-condominium-association)
     - [1.6.12. Search Buildings Within a Condominium Association](#1612-search-buildings-within-a-condominium-association)
-    - [1.6.13. Search Estates Within a Building](#1613-search-estates-within-a-building)
+    - [1.6.13. Search Districts Within a City](#1613-search-districts-within-a-city)
+    - [1.6.14. Search Estates Within a Building](#1614-search-estates-within-a-building)
   - [1.7. Contributing](#17-contributing)
   - [1.8. Issues and Support](#18-issues-and-support)
   - [1.9. Stay Updated](#19-stay-updated)
@@ -393,7 +394,7 @@ public enum CheckCommission
 - **Path:** `/api/v3/integration/search/condominium-associations`
 - **Method:** `/GET`
 - **Description:** Retrieves all condominiums with city query, pagination, and total count.
-- **Request:** https://becapublicapi.pandatech.it/api/v3/search/condominium-associations?cityId=1Page=1&PageSize=4
+- **Request:** https://becapublicapi.pandatech.it/api/v3/integration/search/condominium-associations?cityId=1Page=1&PageSize=4
 - **Response:**
 
 ```json
@@ -418,10 +419,20 @@ public enum CheckCommission
 
 ### 1.6.12. Search Buildings Within a Condominium Association
 
+The API accepts 3 query parameters beside the filtering:
+- PartnerId
+- CityVillageId
+- DistrictId
+
+All 3 parameters are optional and can't be null simultaneously. At least 1 of them must be provider.
+
 - **Path:** `/api/v2/integration/search/buildings`
 - **Method:** `/GET`
-- **Description:** Retrieves all buildings within the condominium association with pagination and total count.
-- **Request:** https://becapublicapi.pandatech.it/api/v2/search/buildings?PartnerId=a1&Page=1&PageSize=1
+- **Description:** Retrieves all buildings within the condominium association or city/village or district with pagination and total count.
+- **Request variations:** 
+  1. https://becapublicapi.pandatech.it/api/v2/integration/search/buildings?PartnerId=a1&Page=1&PageSize=1
+  2. https://becapublicapi.pandatech.it/api/v2/integration/search/buildings?CityId=a1&Page=1&PageSize=1
+  3. https://becapublicapi.pandatech.it/api/v2/integration/search/buildings?DistrictId=a1&Page=1&PageSize=1
 - **Response:**
 
 ```json
@@ -436,7 +447,28 @@ public enum CheckCommission
 }
 ```
 
-### 1.6.13. Search Estates Within a Building
+### 1.6.13. Search Districts Within a City
+
+- **Path:** `/api/v1/integration/search/districts`
+- **Method:** `/GET`
+- **Description:** Retrieves all districts within city.
+- **Request:** https://becapublicapi.pandatech.it/api/v1/integration/search/districts?CityId=1
+- **Response:**
+
+```json
+{
+  "values": [
+    {
+      "type": 0,
+      "id": 13548785,
+      "address": "21/2"
+    }
+  ],
+  "totalCount": 150
+}
+```
+
+### 1.6.14. Search Estates Within a Building
 
 - **Path:** `/api/v2/integration/search/estates`
 - **Method:** `/GET`
