@@ -358,6 +358,32 @@ public enum CheckCommission
 }
 ```
 
+Bank property is an enum which has the following values:
+
+```csharp
+public enum Bank
+{
+   AcbaBank = 0,
+   AraratBank = 1,
+   Ameriabank = 2,
+   AmioBank = 3,
+   IDBank = 4,
+   Ardshinbank = 5,
+   Armswissbank = 6,
+   Artsakhbank = 7,
+   BiblosBankArmenia = 8,
+   HSBCBankArmenia = 9,
+   Evocabank = 10,
+   Inecobank = 11,
+   ConverseBank = 12,
+   Armeconombank = 13,
+   MellatBank = 14,
+   Unibank = 15,
+   VTBArmeniaBank = 16,
+   FastBank = 17
+}
+```
+
 ### 1.6.10. Search Cities
 
 - **Path:** `/api/v2/integration/search/cities`
