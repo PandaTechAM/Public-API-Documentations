@@ -41,9 +41,9 @@ With these endpoints, you can seamlessly integrate condominium fee management fu
 **Language Support:**
 Requests should include an `Accept-Language` header with a supported ISO language code. Valid options include:
 
-`en-US` for English (US)
-`hy-AM` for Armenian (default if none specified or invalid)
-`ru-RU` for Russian
+- `en-US` for English (US)
+- `hy-AM` for Armenian (default if none specified or invalid)
+- `ru-RU` for Russian
 
 ## 1.2. Environments
 
