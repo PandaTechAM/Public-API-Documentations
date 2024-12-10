@@ -1,50 +1,64 @@
-- [1. EasyEvents API Documentation V1.0](#1-easyevents-api-documentation-v10)
-    - [1.1. Overview](#11-overview)
-    - [1.2. Configuration Details](#12-configuration-details)
-        - [1.2.1. Environments](#121-environments)
-    - [1.3. Common Response Codes](#13-common-response-codes)
-    - [1.4. Error Handling](#14-error-handling)
-        - [1.4.1. Key Points](#141-key-points)
-    - [1.5. Authentication \& Authorization](#15-authentication--authorization)
-        - [1.5.1. Headers](#151-headers)
-        - [1.5.2. Authentication Process](#152-authentication-process)
-            - [1.5.2.1. User Authentication](#1521-user-authentication)
-            - [1.5.2.2 HMAC base64 signature Calculation](#1522-hmac-base64-signature-calculation)
-    - [1.6. API Endpoints](#16-api-endpoints)
-        - [1.6.1. Ping](#161-ping)
-        - [1.6.2. Sync and Login](#162-sync-and-login)
-        - [1.6.3. Ticket order](#163-ticket-order)
-        - [1.6.4. Payment](#164-payment)
-        - [1.6.5. Ticket order cancel](#165-ticket-order-cancel)
-    - [1.7. IFrame Integration](#17-iframe-integration)
-        - [1.7.1. Implementation Steps](#171-implementation-steps)
-        - [1.7.2. Xamarin.Forms WebView Example](#172-xamarinforms-webview-example)
-    - [1.8. Contributing](#18-contributing)
-    - [1.9. Issues and Support](#19-issues-and-support)
-    - [1.10. Stay Updated](#110-stay-updated)
+- [1. EasyEvents API Documentation](#1-easyevents-api-documentation)
+  - [1.1. Overview](#11-overview)
+  - [1.2. Environments](#12-environments)
+  - [1.3. Common Response Codes](#13-common-response-codes)
+  - [1.4. Error Handling](#14-error-handling)
+  - [1.5. Authentication \& Authorization](#15-authentication--authorization)
+    - [1.5.1 Server Authentication](#151-server-authentication)
+    - [1.5.2 HMAC-SHA256 Signature Calculation](#152-hmac-sha256-signature-calculation)
+  - [1.6. API Endpoints](#16-api-endpoints)
+    - [1.6.1. Ping](#161-ping)
+    - [1.6.2. Sync and Login](#162-sync-and-login)
+    - [1.6.3. Ticket order](#163-ticket-order)
+    - [1.6.4. Payment](#164-payment)
+    - [1.6.5. Ticket order cancel](#165-ticket-order-cancel)
+  - [1.7. IFrame Integration](#17-iframe-integration)
+    - [1.7.1. Implementation Steps](#171-implementation-steps)
+    - [1.7.2. Xamarin.Forms WebView Example](#172-xamarinforms-webview-example)
+  - [1.8. Contributing](#18-contributing)
+  - [1.9. Issues and Support](#19-issues-and-support)
+  - [1.10. Stay Updated](#110-stay-updated)
 
-# 1. EasyEvents API Documentation V1.0
+# 1. EasyEvents API Documentation
 
 ## 1.1. Overview
 
-This document outlines the integration process with EasyEvents, focusing on the backend authentication and authorization
-mechanisms. Integration is twofold: utilizing API endpoints for secure access and embedding an IFrame within your
-application for event querying, ticket purchasing, and management functionalities.
+This documentation describes how to integrate your backend and frontend applications with the EasyEvents platform. Integration is twofold:
 
-## 1.2. Configuration Details
+1. **Backend Integration:** Use the provided endpoints to securely authenticate, authorize, and manage orders and payments.
+2. **IFrame Integration:** Embed an EasyEvents IFrame into your application to allow event searching, ticket purchasing, and order handling directly within your UI.
 
-### 1.2.1. Environments
+**Language Note:**
+All requests should include an `Accept-Language` header using an ISO language code. Supported languages:
 
-- **Test Environment:**
+`en-US` for English (US)
+`hy-AM` for Armenian
+`ru-RU` for Russian
 
-    - Access APIs at [https://qabeevents.easypay.am](https://qabeevents.easypay.am).
-    - Access Swagger UI and OpenAPI specifications
-      at [https://qabeevents.easypay.am/swagger/integration](https://qabeevents.easypay.am/swagger/integration)
-    - Access IFrame at [https://qaiframe.easypay.am](https://qaiframe.easypay.am)
+If the header is not provided or is invalid, the default language will be used.
+## 1.2. Environments
 
-- **Production Environment:**
-    - Access APIs at [https://events.easypay.am](https://events.easypay.am)
-    - Access IFrame at [https://iframe.easypay.com](https://iframe.easypay.com)
+**Test Environment**
+
+- **API Base URL:**
+  [https://qabeevents.easypay.am](https://qabeevents.easypay.am).
+- **IFrame Base URL:**
+  [https://qaiframe.easypay.am](https://qaiframe.easypay.am)
+- **OpenAPI Specification:**
+  [https://qabeevents.easypay.am/openapi/integration-v1.json](https://qabeevents.easypay.am/openapi/integration-v1.json)
+- **Scalar UI (Test Only):**
+  [https://qabeevents.easypay.am/scalar/integration-v1](https://qabeevents.easypay.am/docs/integration-v1)
+- **Swagger UI (Test Only):**
+  [https://qabeevents.easypay.am/swagger/integration-v1](https://qabeevents.easypay.am/swagger/integration-v1)
+
+> **Note:** Scalar UI and Swagger UI are not available in the production environment.
+
+**Production Environment**
+
+- **API Base URL:**
+  [https://events.easypay.am](https://events.easypay.am)
+- **IFrame Base URL**
+  [https://iframe.easypay.com](https://iframe.easypay.com)
 
 ## 1.3. Common Response Codes
 
@@ -57,14 +71,15 @@ application for event querying, ticket purchasing, and management functionalitie
 
 ## 1.4. Error Handling
 
-Errors return a standardized JSON structure for consistency and ease of debugging:
+All errors return a standardized JSON structure to aid in debugging:
 
 ```json
 {
-  "TraceId": "Unique request identifier",
-  "Instance": "API call context",
-  "StatusCode": "HTTP status code",
-  "Type": "Error type",
+  "RequestId": "Unique request identifier",
+  "TraceId": "Unique distributed trace identifier",
+  "Instance": "Contextual information about the API call",
+  "StatusCode": 400,
+  "Type": "Error type (e.g., BadRequestException)",
   "Errors": {
     "field": "Error message"
   },
@@ -72,238 +87,128 @@ Errors return a standardized JSON structure for consistency and ease of debuggin
 }
 ```
 
-Real-world example:
+**Key Fields:**
 
-```json
-{
-  "TraceId": "0HMVFE0A284AM:00000001",
-  "Instance": "POST - 164.54.144.23:443/users/register",
-  "StatusCode": 400,
-  "Type": "BadRequestException",
-  "Errors": {
-    "email": "email_address_is_not_in_a_valid_format",
-    "password": "password_must_be_at_least_8_characters_long"
-  },
-  "Message": "the_request_was_invalid_or_cannot_be_otherwise_served."
-}
-```
+- **RequestId / TraceId:** Unique identifiers for tracing and debugging requests.
+- **Instance:** Context of the API call, including method and endpoint.
+- **StatusCode:** Corresponding HTTP status code.
+- **Type:** A short descriptor of the error (eg., `BadRequestException`).
+- **Errors:** Detailed error messages per field.
+- **Message:** General high-level error description.
 
-### 1.4.1. Key Points
-
-- **TraceId:** A unique identifier for the request, useful for debugging and tracing the request flow.
-- **Instance:** Provides context about the API call, including the HTTP method, the client's IP address, and the
-  endpoint accessed.
-- **StatusCode:** The HTTP status code associated with the error (e.g., `400` for bad requests).
-- **Type:** A brief description of the error type, such as `BadRequestException`.
-- **Errors:** A detailed breakdown of specific errors encountered. This section can include multiple key-value pairs,
-  with each key representing a field that caused an error and its corresponding error message.
-- **Note:** The `Errors` object can contain multiple entries, and the fields listed will depend on the nature of the
-  error.
-- **Message:** A general message describing the error, often indicating why the request was invalid or could not be
-  processed.
-
-Ensure to check the `StatusCode` and `Errors` object for debugging and resolving issues. Utilize the `TraceId` when
-seeking support.
+Use `RequestId` and `TraceId` for troubleshooting and when contacting support.
 
 ## 1.5. Authentication & Authorization
 
-### 1.5.1. Headers
+EasyEvents requires server-level authentication and user-level tokens for secure operation.
 
-Our Identity server relies on specific headers for authentication and contextual information. Below is a detailed
-explanation of each header and its usage:
+### 1.5.1 Server Authentication
 
-| Header Name       | Type        | Description                                                                           | Example                                |
-|-------------------|-------------|---------------------------------------------------------------------------------------|----------------------------------------|
-| `Client-Type`     | Required    | Identifies the client device type. Accepts predefined numeric values.                 | `4` (Windows)                          |
-| `Authorization`   | Conditional | Required unless `Client-Type` is `1`. Contains the access token signature.            | `4bba6963-0bc4-4e6c-a17d-71fd1582c59a` |
-| `Refresh-Token`   | Conditional | Required unless `Client-Type` is `1`. Contains the refresh token signature.           | `4bba6963-0bc4-4e6c-a17d-71fd1582c59a` |
-| `Device`          | Conditional | Required unless `Client-Type` is `1`. Unique identifier for the client device.        | `4e6c-0bc4` (Any unique id)            |
-| `Device-Name`     | Optional    | Name of the client device. Provides additional context for analytics.                 | `Iphone 15 Pro Max`                    |
-| `Latitude`        | Optional    | Geographic latitude of the client device. Used for location-based services.           | `42.231`                               |
-| `Longitude`       | Optional    | Geographic longitude of the client device. Used for location-based services.          | `42.231`                               |
-| `Accuracy`        | Optional    | Geolocation accuracy of the client device. Enhances the reliability of location data. | `29.2`                                 |
-| `Accept-Language` | Optional    | Preferred language for the client. Defaults to Armenian if not specified.             | `en-US`                                |
+1. **Server Setup:**
+   EasyEvents registers an external user (your server) and provides an API key and a secret key. For each server-to-server request, include the `Authorization` header in the format:
+   `HMAC <API_KEY>:<BASE64_SIGNATURE>`
 
-- `Client-Type` header accepts values from 1 to 7 only.
+The signature is an HMAC-SHA256 hash computed from relevant request data and your secret key.
 
-1. Browser
-2. Ios
-3. Android
-4. Windows
-5. Mac
-6. Linux
-7. Other
+2. **External User Sync/Login (User-Level Authentication):**
+   Send a `POST` request to `/api/v1/integration/authentication/sync-and-login` with user details. This updates user info on EasyEvents and returns user-specific access and refresh tokens.
 
-- `Client-Type`: This header is crucial for identifying the type of client that is making the request. Valid values
-  range from 1 to 7 as shown above, each representing a different platform. In browser contexts (`Client-Type` 1),
-  authentication tokens are managed via `Secure` and `HttpOnly` cookies, negating the need for explicit `Authorization`,
-  `Refresh-Token`, and `Device` headers.
+3. **Token Management:**
+   Pass these user-level tokens to your client application. The client will use them (via the IFrame) to access APIs related to events, tickets, and more. The IFrame handles token refresh automatically.
 
-- `Authorization` and `Refresh-Token`: These headers are pivotal for managing session lifecycles. The `Authorization`
-  header carries the access token for authenticating API requests, while the `Refresh-Token` header is used when
-  requesting new access tokens upon expiry.
+This design ensures secure interaction at both the server and user levels.
 
-- `Device`, `Device-name`, `Latitude`, `Longitude`, and `Accuracy`: These headers provide additional context about the
-  client device, enhancing the API's ability to deliver personalized and location-aware responses. While optional,
-  providing these details can improve user experience and service quality.
+### 1.5.2 HMAC-SHA256 Signature Calculation
 
-- `Accept-Language:` This header allows the client to specify a preferred language, enabling localized responses from
-  the API. The API currently supports Armenian (`hy-AM`), Russian (`ru-RU`), and English (`en-US`), with Armenian as the
-  default language if this header is not provided.
+To compute the HMAC-SHA256 signature:
 
-Please ensure these headers are correctly implemented in your API requests to ensure seamless authentication and a
-tailored user experience with us.
+1. Concatenate relevant fields (e.g., `externalUserId`, `phoneNumber`, `email`) into a single string.
+2. Hash this string using the secret key with HMAC-SHA256.
+3. Base64-encode the resulting hash to form the `BASE64_SIGNATURE`.
 
-### 1.5.2. Authentication Process
+Example:
 
-The authentication process is essential for securing access to the API and is designed to ensure that both
-your server and your system's users can interact securely with the API.
-
-#### 1.5.2.1. User Authentication
-
-To authenticate your system's users, follow these steps:
-
-1. **Server Prerequisite** Ensure that your authorization header is correctly set up with the necessary API key and
-   secret key provided by EasyEvents.
-   In this case, the `Authorization` header should contain the HMAC signature of the request body, calculated using the
-externalId, phoneNumber and email.
-   Authorization: "HMAC <API_KEY>:<BASE64_SIGNATURE">
-2. **User Login** Send a `POST` request to `/api/v1/integration/authentication/sync-and-login` with the user's full
-   information. with the necessary user information. This step keeps the user's details up-to-date in the EasyEvents
-   system. The response includes user-specific access and refresh tokens.
-3. **Token Management** Transfer the user-specific tokens securely to your client application. The client application
-   will provide these tokens to the IFrame, enabling it to make API requests on behalf of the user, such as querying
-   events, purchasing tickets, and managing ticket views.
-4. **IFrame Integration** The IFrame, embedded in your application, will handle token refreshes for user sessions,
-   ensuring uninterrupted access to EasyEvents functionalities.
-
-This authentication workflow ensures a secure and seamless integration with EasyEvents, allowing both your server and
-your users to interact with the API confidently. For more detailed information on API endpoints and additional
-functionalities, refer to the respective sections below.
-
-### 1.5.2.2 HMAC base64 signature Calculation
-
-To calculate the HMAC base64 signature for the `Authorization` header, follow these steps:
-
-HMAC Calculation Example:
-
-```json
-HMAC("Asdkfj123!zax" + "(374)12345678" + "useremail@gmail.com")
-key = "your HMAC secret key"
+```text
+apiKey = "ABCD123"
+hmacSecret = "Secret"
+input = "5464eeaa-df9b-473a-af12-a036b3dfdab2(374)12345678useremail@gmail.com"
 ```
 
-Follow these steps to calculate the HMAC:
+With your secret key, compute the HMAC hash and then Base64-encode it, finally add it in `Authorization` header:
 
-1. Combine the externalUserId, phoneNumber, and email values into a single string:
-```json
-"Asdkfj123!zax(374)12345678useremail@gmail.com"
-```
-2. Use the HMAC-SHA256 algorithm and apply the secret key:
-```json
-"your HMAC secret key"
+```text
+Authorization = HMAC ABCD123:ccXVrWSaE243axjtQnMUAYyWNMAlv/VzdKNAkzDPvqs=
 ```
 
-3. After computing the HMAC hash from the concatenated string and key,
-   convert the resulting byte array into a Base64-encoded string.
-```json
-"zrRe9oin1MUJOjj5+x3py1zW2q4z5J0HtQYC69em53s="
-```
-
-> **Note:** To test the HMAC calculation, you can use online tools that support HMAC-SHA256 encryption.
->>For example https://www.devglan.com/online-tools/hmac-sha256-online
->
-> Ensure the key and input values are correctly formatted and match the expected output.
+> You can verify results with an online HMAC-SHA256 generator (e.g., [https://easypay.am/hmac-generator](https://easypay.am/hmac-generator)).
 
 ## 1.6. API Endpoints
 
 ### 1.6.1. Ping
 
-- **Path:** `/above-board/ping`
-- **Method:** `GET`
-- **Description:** For monitoring connection with the server
-- **Response:**
-
-```text
-"pong"
-```
+- **Endpoint:** `GET /above-board/ping`
+- **Description:** Checks connectivity
+- **Response:** `"pong"`
 
 ### 1.6.2. Sync and Login
 
-- **Path:** `/api/v1/integration/authentication/sync-and-login`
-- **Method:** `POST`
-- **Description:** Login for authentication and authorization retrieval and update your user in EasyEvents
+- **Endpoint:** `POST /api/v1/integration/authentication/sync-and-login`
+- **Description:** Synchronizes and logs in users, returning user-specific tokens for use by the IFrame.
 - **Request:**
+  Include at least `externalUserId` and either `phoneNumber` or `email`. Also provide `Authorization` header with the HMAC signature.
 
-```json
-{
-  "externalUserId": "Asdkfj123!zax",
-  "phoneNumber": "(374)93919101",
-  "email": "vardan.vardanyan@gmail.com",
-  "firstName": "Vardan",
-  "lastName": "Vardanyan",
-  "middleName": "Vazgeni",
-  "socialSecurityNumber": "1234567891",
-  "address": "ք․ Երևան, Վարդանի փ․, բն․ Վազգեն",
-  "dateOfBirth": "1985-02-22T00:00:00.000Z",
-  "gender": 1,
-  "device": {
-    "clientType": 2,
-    "name": "Iphone 11 Pro",
-    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
-    "uniqueIdPerDevice": "077cc5f5-337a-46bf-a815-a2ea90ec24f2"
-  },
-  "authenticationHistory": {
-    "latitude": "44.456",
-    "longitude": "46.584",
-    "accuracy": 1.5,
-    "userNetworkAddress": "143.156.250.11",
-    "forwardedData": "X-Forwarded-For: 143.156.250.11, 198.51.100.1"
+  Example:
+
+  ```json
+  {
+    "externalUserId": "Asdkfj123!zax",
+    "phoneNumber": "(374)93919101",
+    "email": "vardan.vardanyan@gmail.com",
+    "firstName": "Vardan",
+    "lastName": "Vardanyan",
+    "middleName": "Vazgeni",
+    "socialSecurityNumber": "1234567891",
+    "address": "ք․ Երևան, Վարդանի փ․, բն․ Վազգեն",
+    "dateOfBirth": "1985-02-22T00:00:00.000Z",
+    "gender": 1,
+    "device": {
+      "clientType": 2,
+      "name": "Iphone 11 Pro",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+      "uniqueIdPerDevice": "077cc5f5-337a-46bf-a815-a2ea90ec24f2"
+    },
+    "authenticationHistory": {
+      "latitude": "44.456",
+      "longitude": "46.584",
+      "accuracy": 1.5,
+      "userNetworkAddress": "143.156.250.11",
+      "forwardedData": "X-Forwarded-For: 143.156.250.11, 198.51.100.1"
+    }
   }
-}
-```
-
-Required fields in the request:
-
-- `externalUserId` - Unique identifier of the user in your system
-- `phoneNumber` or `email` - At least one of them is required. Note that PhoneNumber should be formatted as
-  `(374)93919101` and email should be in a valid format.
-- `firstName` - User's first name
-- `lastName` - User's last name
-- `middleName` - User's father name
-- `clientType` - Client device type. Accepts values from 1 to 7 only. Refer values in the `Supported headers` section
-- `authorization` - For authorization, you need to calculate hmac-sha256 of the request body with the secret key and
-  api key. The secret key and api key will be provided by EasyEvents. The calculated value should be set in the
-  `Authorization` header.
-- `uniqueIdPerDevice` - Client device unique identifier
-
-All other fields are optional.
+  ```
 
 - **Response:**
 
-```json
-{
-  "accessTokenSignature": "132d5e92-a17f-427e-b5fd-d1892c95eaf7",
-  "accessTokenExpiration": "2024-02-22T12:36:17.6088053Z",
-  "refreshTokenSignature": "e384b714-86e3-4cde-a658-00a321045735",
-  "refreshTokenExpiration": "2024-02-23T05:06:17.6088053Z"
-}
-```
+  ```json
+  {
+    "accessTokenSignature": "132d5e92-a17f-427e-b5fd-d1892c95eaf7",
+    "accessTokenExpiration": "2024-02-22T12:36:17.6088053Z",
+    "refreshTokenSignature": "e384b714-86e3-4cde-a658-00a321045735",
+    "refreshTokenExpiration": "2024-02-23T05:06:17.6088053Z"
+  }
+  ```
 
-- **Possible Errors:**
-    - `400 Bad Request` - Invalid phone number format.
-    - `400 Bad Request` - Invalid email format.
-    - `400 Bad Request` - Either Email or Phone Number is required.
-    - `400 Bad Request` - Invalid Armenian SSN format.
-    - `400 Bad Request` - user_is_disabled_or_deleted.
-    - `400 Bad Request` - you_cannot_login_with_this_device.
-
-Note: Access token and refresh token is required to be transferred to your client which will provide it to IFrame. This
-token is not related to the server's token and will be refreshed by the IFrame.
+- **Common Errors:**
+  - `400 Bad Request` - Invalid phone number format.
+  - `400 Bad Request` - Invalid email format.
+  - `400 Bad Request` - Either Email or Phone Number is required.
+  - `400 Bad Request` - Invalid Armenian SSN format.
+  - `400 Bad Request` - user_is_disabled_or_deleted.
+  - `400 Bad Request` - you_cannot_login_with_this_device.
 
 ### 1.6.3. Ticket order
 
-- **Path:** `/api/v1/integration/order/{ticketOrderId}`
-- **Method:** `GET`
+- **Endpoint:** `GET /api/v1/integration/order/{ticketOrderId}`
 - **Description:** After a user clicks the order button in the IFrame, a `TicketOrderId` will be sent in the return
   message from the IFrame. This ID should be provided to this endpoint by the server to retrieve the order details. For
   more information about the IFrame, please refer to the section below.
@@ -320,166 +225,138 @@ token is not related to the server's token and will be refreshed by the IFrame.
   ```
 - **BankName enum:**
 
-```csharp
+  ```csharp
   public enum BankType
-{
-  [Description("ԱԿԲԱ ԲԱՆԿ")] AcbaBank,
-  [Description("ԱՐԱՐԱՏԲԱՆԿ")] AraratBank,
-  [Description("ԱՄԵՐԻԱԲԱՆԿ")] Ameriabank,
-  [Description("ԱՄԻՕ ԲԱՆԿ")] AmioBank,
-  [Description("ԱՅԴԻ ԲԱՆԿ")] IDBank,
-  [Description("ԱՐԴՇԻՆԲԱՆԿ")] Ardshinbank,
-  [Description("ԱՐՄՍՎԻՍԲԱՆԿ")] Armswissbank,
-  [Description("ԱՐՑԱԽԲԱՆԿ")] Artsakhbank,
-  [Description("ԲԻԲԼՈՍ ԲԱՆԿ ԱՐՄԵՆԻԱ")] BiblosBankArmenia,
-
-  [Description("ԷՅՉ-ԷՍ-ԲԻ-ՍԻ ԲԱՆԿ ՀԱՅԱՍՏԱՆ")]
-  HSBCBankArmenia,
-  [Description("ԷՎՈԿԱԲԱՆԿ")] Evocabank,
-  [Description("ԻՆԵԿՈԲԱՆԿ")] Inecobank,
-  [Description("ԿՈՆՎԵՐՍ ԲԱՆԿ")] ConverseBank,
-  [Description("ՀԱՅԷԿՈՆՈՄԲԱՆԿ")] Armeconombank,
-  [Description("ՄԵԼԼԱԹ ԲԱՆԿ")] MellatBank,
-  [Description("ՅՈՒՆԻԲԱՆԿ")] Unibank,
-  [Description("ՎՏԲ-ՀԱՅԱՍՏԱՆ ԲԱՆԿ")] VTBArmeniaBank,
-  [Description("ՖԱՍԹ ԲԱՆԿ")] FastBank,
-}
-```
+  {
+    [Description("ԱԿԲԱ ԲԱՆԿ")] AcbaBank,
+    [Description("ԱՐԱՐԱՏԲԱՆԿ")] AraratBank,
+    [Description("ԱՄԵՐԻԱԲԱՆԿ")] Ameriabank,
+    [Description("ԱՄԻՕ ԲԱՆԿ")] AmioBank,
+    [Description("ԱՅԴԻ ԲԱՆԿ")] IDBank,
+    [Description("ԱՐԴՇԻՆԲԱՆԿ")] Ardshinbank,
+    [Description("ԱՐՄՍՎԻՍԲԱՆԿ")] Armswissbank,
+    [Description("ԱՐՑԱԽԲԱՆԿ")] Artsakhbank,
+    [Description("ԲԻԲԼՈՍ ԲԱՆԿ ԱՐՄԵՆԻԱ")] BiblosBankArmenia,
+    [Description("ԷՅՉ-ԷՍ-ԲԻ-ՍԻ ԲԱՆԿ ՀԱՅԱՍՏԱՆ")] HSBCBankArmenia,
+    [Description("ԷՎՈԿԱԲԱՆԿ")] Evocabank,
+    [Description("ԻՆԵԿՈԲԱՆԿ")] Inecobank,
+    [Description("ԿՈՆՎԵՐՍ ԲԱՆԿ")] ConverseBank,
+    [Description("ՀԱՅԷԿՈՆՈՄԲԱՆԿ")] Armeconombank,
+    [Description("ՄԵԼԼԱԹ ԲԱՆԿ")] MellatBank,
+    [Description("ՅՈՒՆԻԲԱՆԿ")] Unibank,
+    [Description("ՎՏԲ-ՀԱՅԱՍՏԱՆ ԲԱՆԿ")] VTBArmeniaBank,
+    [Description("ՖԱՍԹ ԲԱՆԿ")] FastBank,
+  }
+  ```
 
 - **Possible Errors:**
-    - `404 Not Found`
+  - `404 Not Found`
 
 ### 1.6.4. Payment
 
-- **Path:** `/api/v1/integration/payment`
-- **Method:** `POST`
-- **Description:** After the user successfully pays the order in full, the payment information should be sent to this
-  endpoint. `ExternalSystemPaymentId` is a unique identifier for the payment in your system.
+- **Endpoint:** `POST /api/v1/integration/payment`
+- **Description:** Submit payment details after the user completes a ticket purchase. `ExternalSystemPaymentId` is a unique identifier for the payment in your system.
 - **Request Body:**
 
-```json
-{
-  "ticketOrderId": "asd",
-  "price": 12000,
-  "commission": 200,
-  "externalSystemPaymentId": "d97cf534-a7cd-473a-ba86-71bbeb31b872"
-}
-```
+  ```json
+  {
+    "ticketOrderId": "asd",
+    "price": 12000,
+    "commission": 200,
+    "externalSystemPaymentId": "d97cf534-a7cd-473a-ba86-71bbeb31b872"
+  }
+  ```
 
 - **Response:** The response will only include a status code.
 
-- **Possible Errors:**
-    - `400 Bad Request` - Invalid price. Please try again with actual price
-    - `400 Bad Request` - Invalid commission. Please try again with actual commission
-    - `400 Bad Request` - Duplicate `ExternalSystemPaymentId`
+- **Common Errors:**
+  - `400 Bad Request` - Invalid price. Please try again with actual price
+  - `400 Bad Request` - Invalid commission. Please try again with actual commission
+  - `400 Bad Request` - Duplicate `ExternalSystemPaymentId`
 
 ### 1.6.5. Ticket order cancel
 
-- **Path:** `/api/v1/integration/order/{ticketOrderId}`
-- **Method:** `DELETE`
-- **Description:** This endpoint is designed to cancel an existing ticket order identified by the `{ticketOrderId}`. It
-  is particularly useful in scenarios where a user decides not to proceed with the ticket purchase or exits the payment
+- **Endpoint:** `DELETE /api/v1/integration/order/{ticketOrderId}`
+- **Description:** Cancels a pending ticket order, releasing reserved seats. It is particularly useful in scenarios where a user decides not to proceed with the ticket purchase or exits the payment
   process prematurely. Upon successful execution, the endpoint releases any seats reserved as part of the order, making
   them available for future purchases. This action is irreversible; once an order is canceled, it cannot be reinstated.
 - **Request:** /api/v1/integration/order/asd
-- **Response:** `200` Ok
+- **Response:** The response will only include a status code.
 
 - **Possible Errors:**
-    - `400 Bad Request` - It's impossible to cancel already paid ticket order.
-    - `404 Not Found`
+  - `400 Bad Request` - It's impossible to cancel already paid ticket order.
+  - `404 Not Found`
 
 ## 1.7. IFrame Integration
 
+Integrate the EasyEvents IFrame into your front-end application to let users browse events, select tickets, and make purchases without leaving your interface.
+
 ### 1.7.1. Implementation Steps
 
-Integrating an IFrame within your application provides a seamless experience for event querying, ticket purchasing, and
-management functionalities. This section focuses on the implementation details of embedding the IFrame and ensuring
-smooth interaction between your application and the IFrame content.
+1. **Embedding the IFrame:**
+   Insert the IFrame into your application's UI, setting the `src` to the appropriate IFrame URL.
 
-1. **Embedding the IFrame:** Insert the IFrame into your application's designated UI component. Ensure the IFrame's`src`
-   attribute points to the correct URL provided by EasyEvents. Adjust the width and height to fit your UI design.
+   ```html
+   <iframe
+     id="easyEventsIframe"
+     src="https://iframe.easyevents.com"
+     style="width:100%; height:100%; border:none;"
+   ></iframe>
+   ```
 
-```html
-<!-- Example HTML snippet for embedding the IFrame -->
-<iframe
-        id="easyEventsIframe"
-        src="https://iframe.easyevents.com"
-        style="width:100%; height:100%; border:none;"
-></iframe>
-```
+2. **Setting Access Token:**
+   Store tokens in IFrame-local storage for secure access. This allows the IFrame to make authorized requests.
 
-2. **Setting the Access Token:** Prioritize security by storing the access token in the local storage of the IFrame
-   rather than sending it through postMessage. This ensures the token is securely communicated and accessible by the
-   IFrame for authorization purposes.
+   ```js
+   window.localStorage.setItem("token", JSON.stringify({
+       accessToken: "string";
+       accessTokenExpiration: "Date";
+       refreshToken: "string";
+       refreshTokenExpirationTime: "Date";
+       deviceId: "string";
+   }));
+   ```
 
-```js
-// Example JavaScript code for setting the access token in the IFrame's local storage
-window.localStorage.setItem("token", JSON.stringify({
-    accessToken: "string";
-    accessTokenExpiration: "Date";
-    refreshToken: "string";
-    refreshTokenExpirationTime: "Date";
-    deviceId "string";
-}));
-```
+3. **Closing the IFrame & Handling Responses:**
+   The IFrame uses `postMessage` or a `polling` mechanism to communicate back to your application. Messages might contain:
 
-1. **Closing the IFrame:** To close the IFrame, either when a user completes an action or chooses to exit, your
-   application should listen for a specific message or trigger from the IFrame. This can be done using the
-   `window.postMessage` API for secure cross-origin communication. When the IFrame needs to be closed, it will send a
-   message (`-1` or a predefined string ID), which your application will listen for and act upon by removing or hiding
-   the IFrame.
+   - `"-1"` indicating the user canceled the transaction.
+   - An order ID for a successfully initiated ticket order.
 
-```js
-function startPollingMessages() {
-    const intervalId = setInterval(() => {
-        // Assuming 'getMessage' retrieves and clears the first message from the queue
-        const message = window.getMessage();
+   In response, hide or remove the IFrame if the user cancels, or handle the order if an ID is received.
 
-        if (message !== undefined) {
-            switch (message) {
-                case '-1':
-                    // User decided not to buy a ticket, close the IFrame
-                    closeIFrame();
-                    clearInterval(intervalId); // Stop the polling
-                    break;
-                default:
-                    // Handle the order based on the message (e.g., order ID)
-                    handleOrder(message);
-                    clearInterval(intervalId); // Stop the polling
-                    break;
-            }
-        }
-    }, 100); // Polling every 100ms
+   **Example JavaScript for Polling:**
 
-    return () => clearInterval(intervalId); // Return a cleanup function to stop polling when needed
-}
+   ```js
+   function startPollingMessages() {
+     const intervalId = setInterval(() => {
+       const message = window.getMessage(); // Custom function retrieving messages
+       if (message !== undefined) {
+         if (message === '-1') {
+           closeIFrame();
+         } else {
+           handleOrder(message);
+         }
+         clearInterval(intervalId);
+       }
+     }, 100);
+   }
 
-function closeIFrame() {
-    // Logic to close or hide the IFrame
-    const iframe = document.getElementById('easyEventsIframe');
-    if (iframe) {
-        iframe.style.display = 'none'; // or use iframe.remove() to remove it from the DOM
-    }
-}
+   function closeIFrame() {
+     const iframe = document.getElementById('easyEventsIframe');
+     if (iframe) iframe.style.display = 'none';
+   }
 
-function handleOrder(orderId) {
-    // Handle the order based on orderId
-    console.log('Handle order with ID:', orderId);
-    // Implement the order handling logic here
-}
-
-// Start polling for messages from the IFrame
-const stopPolling = startPollingMessages();
-
-// Later, if you need to stop polling for messages
-// stopPolling();
-```
+   function handleOrder(orderId) {
+     console.log('Handle order with ID:', orderId);
+     // Implement order handling logic
+   }
+   ```
 
 ### 1.7.2. Xamarin.Forms WebView Example
 
-For applications developed using Xamarin.Forms, integrating the IFrame can be achieved using the `WebView` control.
-Below is an example that demonstrates how to embed the IFrame within a Xamarin.Forms page and interact with it. This
-example is **not** following Xamarin best coding practices its only for illustration purposes:
+For Xamarin.Forms, use a `WebView` to embed and interact with the IFrame.
+(This example is for illustration only, not best-practice code.)
 
 ```csharp
 async Task Start()
@@ -546,18 +423,15 @@ public class Token
 
 ## 1.8. Contributing
 
-We encourage contributions to improve our API documentation. If you have suggestions or corrections, please feel free to
-open a pull request or an issue.
+We welcome contributions and improvements to this documentation. Submit a pull request or open an issue for suggestions.
 
 ## 1.9. Issues and Support
 
-If you encounter any problems or have questions regarding a specific API, please use the 'Issues' section of this
-repository. Our team will do its best to assist you.
+For issues or support inquiries, use the repository's “Issues” section. Our team will respond to help resolve your problem.
 
 ## 1.10. Stay Updated
 
-We regularly update our API documentation to reflect the latest changes and improvements. Keep an eye on this repository
-for the most current information.
+We regularly update this documentation. Check the repository for the latest changes, new features, and improvements.
 
 ---
 
