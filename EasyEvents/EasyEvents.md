@@ -28,23 +28,22 @@ This documentation describes how to integrate your backend and frontend applicat
 1. **Backend Integration:** Use the provided endpoints to securely authenticate, authorize, and manage orders and payments.
 2. **IFrame Integration:** Embed an EasyEvents IFrame into your application to allow event searching, ticket purchasing, and order handling directly within your UI.
 
-**Language Note:**
-All requests should include an `Accept-Language` header using an ISO language code. Supported languages:
+**Language Support:**
+Requests should include an `Accept-Language` header with a supported ISO language code. Valid options include:
 
 `en-US` for English (US)
-`hy-AM` for Armenian
+`hy-AM` for Armenian (default if none specified or invalid)
 `ru-RU` for Russian
 
-If the header is not provided or is invalid, the default language will be used.
 ## 1.2. Environments
 
-**Test Environment**
+**Test Environment (for development and QA)**
 
-- **API Base URL:**
+- **Base URL:**
   [https://qabeevents.easypay.am](https://qabeevents.easypay.am).
 - **IFrame Base URL:**
   [https://qaiframe.easypay.am](https://qaiframe.easypay.am)
-- **OpenAPI Specification:**
+- **OpenAPI Spec:**
   [https://qabeevents.easypay.am/openapi/integration-v1.json](https://qabeevents.easypay.am/openapi/integration-v1.json)
 - **Scalar UI (Test Only):**
   [https://qabeevents.easypay.am/scalar/integration-v1](https://qabeevents.easypay.am/docs/integration-v1)
@@ -55,19 +54,21 @@ If the header is not provided or is invalid, the default language will be used.
 
 **Production Environment**
 
-- **API Base URL:**
+- **Base URL:**
   [https://events.easypay.am](https://events.easypay.am)
 - **IFrame Base URL**
   [https://iframe.easypay.com](https://iframe.easypay.com)
 
+Use the test environment for initial integration and testing. Once stable and production-ready, switch your base URL to the production environment.
+
 ## 1.3. Common Response Codes
 
-- `200 OK` - The request was successful.
-- `400 Bad Request` - The request was improperly formatted or contained invalid parameters.
+- `200 OK` - Request succeeded.
+- `400 Bad Request` - Invalid request format or parameters.
 - `401 Unauthorized` - Authentication failed.
-- `403 Forbidden` - The user does not have permission to access the requested resource.
-- `404 Not Found` - The requested resource was not found.
-- `500 Internal Server Error` - An error occurred in the server.
+- `403 Forbidden` - Insufficient permissions.
+- `404 Not Found` - Resource not found.
+- `500 Internal Server Error` - An unexpected server-side error occurred.
 
 ## 1.4. Error Handling
 
@@ -75,11 +76,11 @@ All errors return a standardized JSON structure to aid in debugging:
 
 ```json
 {
-  "RequestId": "Unique request identifier",
-  "TraceId": "Unique distributed trace identifier",
-  "Instance": "Contextual information about the API call",
+  "RequestId": "Unique request ID",
+  "TraceId": "Unique trace ID",
+  "Instance": "API context info",
   "StatusCode": 400,
-  "Type": "Error type (e.g., BadRequestException)",
+  "Type": "Error type (e.g. BadRequestException)",
   "Errors": {
     "field": "Error message"
   },
@@ -89,14 +90,14 @@ All errors return a standardized JSON structure to aid in debugging:
 
 **Key Fields:**
 
-- **RequestId / TraceId:** Unique identifiers for tracing and debugging requests.
-- **Instance:** Context of the API call, including method and endpoint.
-- **StatusCode:** Corresponding HTTP status code.
-- **Type:** A short descriptor of the error (eg., `BadRequestException`).
-- **Errors:** Detailed error messages per field.
-- **Message:** General high-level error description.
+- **RequestId / TraceId:** Use these IDs for debugging and support requests.
+- **Instance:** Provides contextual details about the API operation.
+- **StatusCode:** Matches the HTTP status code.
+- **Type:** A short error descriptor.
+- **Errors:** Field-specific error details.
+- **Message:** A general explanation of the problem.
 
-Use `RequestId` and `TraceId` for troubleshooting and when contacting support.
+Use `RequestId` and `TraceId` when contacting support to help with troubleshooting.
 
 ## 1.5. Authentication & Authorization
 

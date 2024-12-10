@@ -1,71 +1,92 @@
 - [1. e-bak API Documentation](#1-e-bak-api-documentation)
   - [1.1. Overview](#11-overview)
-  - [1.2. Configuration Details](#12-configuration-details)
-    - [1.2.1. Environments](#121-environments)
+  - [1.2. Environments](#12-environments)
   - [1.3. Common Response Codes](#13-common-response-codes)
   - [1.4. Error Handling](#14-error-handling)
-    - [1.4.1. Key Points](#141-key-points)
   - [1.5. Authentication \& Authorization](#15-authentication--authorization)
     - [1.5.1. User Authentication](#151-user-authentication)
     - [1.5.2. Obtaining an Access Token](#152-obtaining-an-access-token)
     - [1.5.3. Using the Token](#153-using-the-token)
     - [1.5.4. Token Expiration and Renewal](#154-token-expiration-and-renewal)
   - [1.6. API Endpoints](#16-api-endpoints)
-    - [1.6.1. Languages](#161-languages)
-    - [1.6.2. Estate Types](#162-estate-types)
-    - [1.6.3. Ping](#163-ping)
-    - [1.6.4. Login](#164-login)
-    - [1.6.5. Check Commission Types](#165-check-commission-types)
-    - [1.6.6. Debt retrieval by Estate](#166-debt-retrieval-by-estate)
-    - [1.6.7. Debt retrieval by estate owner unique identifier](#167-debt-retrieval-by-estate-owner-unique-identifier)
-    - [1.6.8. Debt Commission](#168-debt-commission)
-    - [1.6.9. Debt repayment](#169-debt-repayment)
-    - [1.6.10. Search Cities](#1610-search-cities)
-    - [1.6.11. Search Condominium Association](#1611-search-condominium-association)
-    - [1.6.12. Search Buildings Within a Condominium Association](#1612-search-buildings-within-a-condominium-association)
-    - [1.6.13. Search Districts Within a City](#1613-search-districts-within-a-city)
-    - [1.6.14. Search Estates Within a Building](#1614-search-estates-within-a-building)
+    - [1.6.1. Ping](#161-ping)
+    - [1.6.2. Login](#162-login)
+    - [1.6.3. Common models](#163-common-models)
+    - [1.6.4. Debt Retrieval by Estate](#164-debt-retrieval-by-estate)
+    - [1.6.5. Debt Retrieval by Owner Unique Identifier](#165-debt-retrieval-by-owner-unique-identifier)
+    - [1.6.6. Debt Commission Calculation](#166-debt-commission-calculation)
+    - [1.6.7. Debt Repayment](#167-debt-repayment)
+    - [1.6.8. Search Cities](#168-search-cities)
+    - [1.6.9. Search Condominium Association](#169-search-condominium-association)
+    - [1.6.10. Search Buildings](#1610-search-buildings)
+    - [1.6.11. Search Districts](#1611-search-districts)
+    - [1.6.12. Search Estates](#1612-search-estates)
   - [1.7. Contributing](#17-contributing)
   - [1.8. Issues and Support](#18-issues-and-support)
   - [1.9. Stay Updated](#19-stay-updated)
-
 
 # 1. e-bak API Documentation
 
 ## 1.1. Overview
 
-The e-bak API provides programmatic access to our service, allowing users to retrieve debts and repay condominium association fees.
-This API is designed to be RESTful and is intended to be used by developers to integrate e-bak's capabilities into their applications.
+The e-bak API allows secure and programmatic access to condominium association debt retrieval and repayment functionalities. This RESTful interface enables you to:
 
-## 1.2. Configuration Details
+- Retrieve outstanding debts for a specific estate or owner.
+- Calculate and apply commissions on debts.
+- Process debt repayment transactions.
+- Search and query related information such as cities, buildings, districts, and more.
 
-### 1.2.1. Environments
+With these endpoints, you can seamlessly integrate condominium fee management functionality into your own applications.
 
-- **Test Environment:** Make all API requests to the base
-  URL: [https://qabe-ca.pandatech.it](https://qabe-ca.pandatech.it). Access Swagger UI and OpenAPI specifications at
-  [https://qabe-ca.pandatech.it/swagger/integration](https://qabe-ca.pandatech.it/swagger/integration)
-- **Production Environment:** API requests should be directed to the base URL:
+**Language Support:**
+Requests should include an `Accept-Language` header with a supported ISO language code. Valid options include:
+
+`en-US` for English (US)
+`hy-AM` for Armenian (default if none specified or invalid)
+`ru-RU` for Russian
+
+## 1.2. Environments
+
+**Test Environment (for development and QA)**
+
+- **Base URL:**
+  [https://qabe-ca.pandatech.it](https://qabe-ca.pandatech.it).
+- **OpenAPI Spec:**
+  [https://qabe-ca.pandatech.it/openapi/integration-v1.json](https://qabe-ca.pandatech.it/openapi/integration-v1.json)
+- **Scalar UI (Test Only):**
+  [https://qabe-ca.pandatech.it/scalar/integration-v1](https://qabe-ca.pandatech.it/docs/integration-v1)
+- **Swagger UI (Test Only):**
+  [https://qabe-ca.pandatech.it/swagger/integration-v1](https://qabe-ca.pandatech.it/swagger/integration-v1)
+
+> **Note:** Scalar UI and Swagger UI are not available in the production environment.
+
+**Production Environment**
+
+- **Base URL:**
   [https://be.e-bak.am](https://be.e-bak.am)
+
+Use the test environment for initial integration and testing. Once stable and production-ready, switch your base URL to the production environment.
 
 ## 1.3. Common Response Codes
 
-- `200 OK` - The request was successful.
-- `400 Bad Request` - The request was improperly formatted or contained invalid parameters.
+- `200 OK` - Request succeeded.
+- `400 Bad Request` - Invalid request format or parameters.
 - `401 Unauthorized` - Authentication failed.
-- `403 Forbidden` - The user does not have permission to access the requested resource.
-- `404 Not Found` - The requested resource was not found.
-- `500 Internal Server Error` - An error occurred in the server.
+- `403 Forbidden` - Insufficient permissions.
+- `404 Not Found` - Resource not found.
+- `500 Internal Server Error` - An unexpected server-side error occurred.
 
 ## 1.4. Error Handling
 
-Errors return a standardized JSON structure for consistency and ease of debugging:
+All errors return a standardized JSON structure to aid in debugging:
 
 ```json
 {
-  "TraceId": "Unique request identifier",
-  "Instance": "API call context",
-  "StatusCode": "HTTP status code",
-  "Type": "Error type",
+  "RequestId": "Unique request ID",
+  "TraceId": "Unique trace ID",
+  "Instance": "API context info",
+  "StatusCode": 400,
+  "Type": "Error type (e.g. BadRequestException)",
   "Errors": {
     "field": "Error message"
   },
@@ -73,67 +94,67 @@ Errors return a standardized JSON structure for consistency and ease of debuggin
 }
 ```
 
-**Example:**
+**Key Fields:**
 
-```json
-{
-  "TraceId": "0HMVFE0A284AM:00000001",
-  "Instance": "POST - 164.54.144.23:443/users/register",
-  "StatusCode": 400,
-  "Type": "BadRequestException",
-  "Errors": {
-    "email": "email_address_is_not_in_a_valid_format",
-    "password": "password_must_be_at_least_8_characters_long"
-  },
-  "Message": "the_request_was_invalid_or_cannot_be_otherwise_served."
-}
-```
+- **RequestId / TraceId:** Use these IDs for debugging and support requests.
+- **Instance:** Provides contextual details about the API operation.
+- **StatusCode:** Matches the HTTP status code.
+- **Type:** A short error descriptor.
+- **Errors:** Field-specific error details.
+- **Message:** A general explanation of the problem.
 
-### 1.4.1. Key Points
-
-- **TraceId:** A unique identifier for the request, useful for debugging and tracing the request flow.
-- **Instance:** Provides context about the API call, including the HTTP method, the client's IP address, and the endpoint accessed.
-- **StatusCode:** The HTTP status code associated with the error (e.g., `400` for bad requests).
-- **Type:** A brief description of the error type, such as `BadRequestException`.
-- **Errors:** A detailed breakdown of specific errors encountered. This section can include multiple key-value pairs, with each key representing a field that caused an error and its corresponding error message.
-- **Message:** A general message describing the error, often indicating why the request was invalid or could not be processed.
-
-Ensure to check the `StatusCode` and `Errors` object for debugging and resolving issues. Utilize the `TraceId` when seeking support.
-
+Use `RequestId` and `TraceId` when contacting support to help with troubleshooting.
 
 ## 1.5. Authentication & Authorization
 
+Valid user credentials and an access token are required to interact with most endpoints.
+
 ### 1.5.1. User Authentication
 
-To use the API, you must have a registered user account in the system. It's crucial to store your credentials securely.
+Obtain and **securely** store user credentials. You must have a valid user account to request a token.
 
 ### 1.5.2. Obtaining an Access Token
 
-- To receive an access token, make a call to the `api/v1/integration/login` endpoint using your credentials.
-- Upon successful authentication, you will receive a token.
+Make a `POST` request to `/api/v1/integration/login` with your credentials. A successful response includes an `accessToken` and an `expirationDate`.
 
 ### 1.5.3. Using the Token
 
-- Include this token in the header of each API call.
-- The token is refreshed automatically with each API call, extending its validity.
+Include the token in the `Authorization` header for subsequent requests. Tokens refresh automatically with each successful API call, so active usage extends token validity.
 
 ### 1.5.4. Token Expiration and Renewal
 
-- The token will expire over time.
-- If you receive a `401 Unauthorized` error, it indicates that your token has expired.
-- In case of a `401` error, you should re-authenticate using the `api/v1/integration/login` endpoint to obtain a new token and proceed with your API calls.
+If you receive a `401 Unauthorized` error, your token may have expired. Re-authenticate via `/api/v1/integration/login` to obtain a new token before retrying your request.
 
 ## 1.6. API Endpoints
 
-### 1.6.1. Languages
+### 1.6.1. Ping
 
-Specify the language via the `Accept-Language` header:
+- **Endpoint:** `GET /above-board/ping`
+- **Description:** Checks connectivity
+- **Response:** `"pong"`
 
-- **Armenian** - "hy-AM"
-- **Russian** - "ru-RU"
-- **English** - "en-US"
+### 1.6.2. Login
 
-### 1.6.2. Estate Types
+- **Endpoint:** `POST /api/v1/integration/login`
+- **Description:** Authenticates a user and returns an access token.
+- **Request:**
+  ```json
+  {
+    "login": "easypay@easypay.am",
+    "password": "Qwerty123!"
+  }
+  ```
+- **Response:**
+  ```json
+  {
+    "accessToken": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "expirationDate": "2023-12-21T08:34:20.996Z"
+  }
+  ```
+
+### 1.6.3. Common models
+
+**Estate Type Enum**
 
 ```csharp
 public enum EstateTypes
@@ -147,43 +168,8 @@ public enum EstateTypes
 }
 ```
 
-### 1.6.3. Ping
-
-- **Path:** `/ping`
-- **Method:** `/GET`
-- **Description:** For monitoring connection with the server
-- **Response Example:**
-
-```json
-  {
-     "pong"
-  }
-```
-
-### 1.6.4. Login
-
-- **Path:** `/api/v1/integration/login`
-- **Method:** `/POST`
-- **Description:** Login for authentication and authorization retrieval.
-- **Request**
-
-```json
-{
-  "login": "easypay@easypay.am",
-  "password": "Qwerty123!"
-}
-```
-
-- **Response**
-
-```json
-{
-  "accessToken": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "expirationDate": "2023-12-21T08:34:20.996Z"
-}
-```
-
-### 1.6.5. Check Commission Types
+**
+Check Commission Enum**
 
 ```csharp
 public enum CheckCommission
@@ -193,172 +179,161 @@ public enum CheckCommission
 }
 ```
 
-### 1.6.6. Debt retrieval by Estate
+### 1.6.4. Debt Retrieval by Estate
 
-- **Path:** `/api/v4/integration/debts/{estateId}`
-- **Method:** `/GET`
-- **Description:** Retrieves estate related all outstanding debts.
-- **Note:** `primaryEstateOwnerFullName` can be `null`
+- **Endpoint:** `GET /api/v4/integration/debts/{estateId}`
+- **Description:** Retrieves all outstanding debts for a given estate.
+- **Note:**
 - **Response:**
-
-```json
-{
-  "partnerId": 8,
-  "partnerName": "Անուն Ազգանուն",
-  "estateId": 1000270,
-  "estateType": 5,
-  "estateAddress": "Գյուլբենկյան 33, 1",
-  "primaryEstateOwnerFullName": "Անուն Ազգանուն",
-  "checkCommission": 1,
-  "balance": -4900,
-  "debts": [
-    {
-      "debtId": 75,
-      "balance": -4900,
-      "date": "2024-04-01T00:00:00Z"
-    }
-  ]
-}
-```
-
-### 1.6.7. Debt retrieval by estate owner unique identifier
-
-- **Path:** `/api/v4/integration/debts/owner/{uniqueDocumentId}`
-- **Method:** `/GET`
-- **Description:** Retrieves all outstanding debts by estate owner unique identifier (SSN or Tax Code).
-- **Note:** `primaryEstateOwnerFullName` can be `null`
-- **Response:**
-
-```json
-{
-  "estates": [
-    {
-      "partnerId": 8,
-      "partnerName": "Անուն Ազգանուն",
-      "estateId": 1000270,
-      "estateType": 3,
-      "estateAddress": "Գյուլբենկյան 1, 1",
-      "primaryEstateOwnerFullName": "Անուն Ազգանուն",
-      "checkCommission": 1,
-      "balance": -5000,
-      "debts": [
-        {
-          "debtId": 1,
-          "balance": -4900,
-          "date": "2024-04-01T00:00:00Z"
-        },
-        {
-          "debtId": 20,
-          "balance": -100,
-          "date": "2024-04-01T00:00:00Z"
-        }
-      ]
-    },
-    {
-      "partnerId": 8,
-      "partnerName": "Անուն Ազգանուն",
-      "estateId": 1000271,
-      "estateType": 0,
-      "estateAddress": "Գյուլբենկյան 2, 1",
-      "primaryEstateOwnerFullName": "Անուն Ազգանուն",
-      "checkCommission": 1,
-      "balance": -15000,
-      "debts": [
-        {
-          "debtId": 7,
-          "balance": -8000,
-          "date": "2024-04-01T00:00:00Z"
-        },
-        {
-          "debtId": 5,
-          "balance": -7000,
-          "date": "2024-04-01T00:00:00Z"
-        }
-      ]
-    },
-    {
-      "partnerId": 8,
-      "partnerName": "Անուն Ազգանուն",
-      "estateId": 1000272,
-      "estateType": 4,
-      "estateAddress": "Գյուլբենկյան 2, 1",
-      "primaryEstateOwnerFullName": "Անուն Ազգանուն",
-      "checkCommission": 2,
-      "balance": 0,
-      "debts": []
-    }
-  ]
-}
-```
-
-### 1.6.8. Debt Commission
-
-- **Path:** `/api/v2/integration/debts/commission`
-- **Method:** `/POST`
-- **Description:** Commission for repayment of debts. The commission is calculated based on the amount with commission percentage for each estate. The commission is calculated and returned in the response.
-- **Request:**
-
-```json
-[
+  ```json
   {
-    "estateId": 1000182,
-    "amount": 1000,
-    "debtId": null
+    "partnerId": 8,
+    "partnerName": "Անուն Ազգանուն",
+    "estateId": 1000270,
+    "estateType": 5,
+    "estateAddress": "Գյուլբենկյան 33, 1",
+    "primaryEstateOwnerFullName": "Անուն Ազգանուն",
+    "checkCommission": 1,
+    "balance": -4900,
+    "debts": [
+      {
+        "debtId": 75,
+        "balance": -4900,
+        "date": "2024-04-01T00:00:00Z"
+      }
+    ]
   }
-]
-```
+  ```
+  > `primaryEstateOwnerFullName` may be `null` if not available
 
+### 1.6.5. Debt Retrieval by Owner Unique Identifier
+
+- **Endpoint:** `GET /api/v4/integration/debts/owner/{uniqueDocumentId}`
+- **Description:** Retrieves all outstanding debts associated with an owner identified by SSN or Tax Code.
 - **Response:**
+  ```json
+  {
+    "estates": [
+      {
+        "partnerId": 8,
+        "partnerName": "Անուն Ազգանուն",
+        "estateId": 1000270,
+        "estateType": 3,
+        "estateAddress": "Գյուլբենկյան 1, 1",
+        "primaryEstateOwnerFullName": "Անուն Ազգանուն",
+        "checkCommission": 1,
+        "balance": -5000,
+        "debts": [
+          {
+            "debtId": 1,
+            "balance": -4900,
+            "date": "2024-04-01T00:00:00Z"
+          },
+          {
+            "debtId": 20,
+            "balance": -100,
+            "date": "2024-04-01T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "partnerId": 8,
+        "partnerName": "Անուն Ազգանուն",
+        "estateId": 1000271,
+        "estateType": 0,
+        "estateAddress": "Գյուլբենկյան 2, 1",
+        "primaryEstateOwnerFullName": "Անուն Ազգանուն",
+        "checkCommission": 1,
+        "balance": -15000,
+        "debts": [
+          {
+            "debtId": 7,
+            "balance": -8000,
+            "date": "2024-04-01T00:00:00Z"
+          },
+          {
+            "debtId": 5,
+            "balance": -7000,
+            "date": "2024-04-01T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "partnerId": 8,
+        "partnerName": "Անուն Ազգանուն",
+        "estateId": 1000272,
+        "estateType": 4,
+        "estateAddress": "Գյուլբենկյան 2, 1",
+        "primaryEstateOwnerFullName": "Անուն Ազգանուն",
+        "checkCommission": 2,
+        "balance": 0,
+        "debts": []
+      }
+    ]
+  }
+  ```
+  > `primaryEstateOwnerFullName` may be `null` if not available
 
-```json
-{
-  "commission": 10
-}
-```
+### 1.6.6. Debt Commission Calculation
 
-### 1.6.9. Debt repayment
+- **Endpoint:** `POST /api/v2/integration/debts/commission`
+- **Description:** Calculates commissions for the specified debts.
+- **Request:**
+  ```json
+  [
+    {
+      "estateId": 1000182,
+      "amount": 1000,
+      "debtId": null
+    }
+  ]
+  ```
+- **Response:**
+  ```json
+  {
+    "commission": 10
+  }
+  ```
 
-- **Path:** `/api/v2/integration/debts/payments`
-- **Method:** `/POST`
-- **Description:** Repaying Debts by Estate. The e-bak system initiates the repayment of debts following the First-In-First-Out (FIFO) method. To target a specific debt for repayment, include its `debtId` in your request. If the `debtId` is left blank, the system defaults to the FIFO method, repaying the oldest debt first and then proceeding sequentially.
+### 1.6.7. Debt Repayment
+
+- **Path:** `POST /api/v2/integration/debts/payments`
+- **Description:** Repays debts using a FIFO approach unless a specific `debtId` is provided. Provide an `outerPaymentId` for tracking this payment in your system.
 
 - **Request:**
-
-```json
-{
-  "debtCommissionRequestModels": [
-    {
-      "estateId": 1654896,
-      "amount": 452.25,
-      "debtId": 24
-    }
-  ],
-  "outerPaymentId": "3fa85f64",
-  "commission": 10
-}
-```
-
+  ```json
+  {
+    "debtCommissionRequestModels": [
+      {
+        "estateId": 1654896,
+        "amount": 452.25,
+        "debtId": 24
+      }
+    ],
+    "outerPaymentId": "3fa85f64",
+    "commission": 10
+  }
+  ```
 - **Response:**
+  ```json
+  {
+    "debtCommissionRequestModels": [
+      {
+        "estateId": 1654896,
+        "debtId": 42,
+        "amount": 452.25,
+        "transactionId": 443,
+        "date": "2023-10-18T11:21:43.757Z",
+        "bank": "Ameriabank",
+        "bankAccount": "1500016548794561"
+      }
+    ],
+    "outerPaymentId": "3fa85f64",
+    "commission": 10
+  }
+  ```
 
-```json
-{
-  "debtCommissionRequestModels": [
-    {
-      "estateId": 1654896,
-      "debtId": 42,
-      "amount": 452.25,
-      "transactionId": 443,
-      "date": "2023-10-18T11:21:43.757Z",
-      "bank": "Ameriabank",
-      "bankAccount": "1500016548794561"
-    }
-  ],
-  "outerPaymentId": "3fa85f64",
-  "commission": 10
-}
-```
-
-Bank property is an enum which has the following values:
+**Bank Enum Values:**
 
 ```csharp
 public enum Bank
@@ -384,148 +359,131 @@ public enum Bank
 }
 ```
 
-### 1.6.10. Search Cities
+### 1.6.8. Search Cities
 
-- **Path:** `/api/v2/integration/search/cities`
-- **Method:** `/GET`
+- **Endpoint:** `GET /api/v2/integration/search/cities`
 - **Description:** Retrieves all cities.
-- **Request:** https://be-ca.pandatech.it/api/v2/integration/search/cities
+- **Request:** https://qabe-ca.pandatech.it/api/v2/integration/search/cities
 - **Response:**
+  ```json
+  {
+    "values": [
+      {
+        "id": 1,
+        "name": "Երևան"
+      },
+      {
+        "id": 2,
+        "name": "Աբովյան"
+      },
+      {
+        "id": 3,
+        "name": "Ագարակ"
+      },
+      {
+        "id": 4,
+        "name": "Ալավերդի"
+      }
+    ]
+  }
+  ```
 
-```json
-{
-  "values": [
-    {
-      "id": 1,
-      "name": "Երևան"
-    },
-    {
-      "id": 2,
-      "name": "Աբովյան"
-    },
-    {
-      "id": 3,
-      "name": "Ագարակ"
-    },
-    {
-      "id": 4,
-      "name": "Ալավերդի"
-    }
-  ]
-}
-```
+### 1.6.9. Search Condominium Association
 
-### 1.6.11. Search Condominium Association
-
-- **Path:** `/api/v3/integration/search/condominium-associations`
-- **Method:** `/GET`
-- **Description:** Retrieves all condominiums with city query, pagination, and total count.
-- **Request:** https://becapublicapi.pandatech.it/api/v3/integration/search/condominium-associations?cityId=1&Page=1&PageSize=4
+- **Endpoint:** `GET /api/v3/integration/search/condominium-associations?cityId={cityId}&Page={page}&PageSize={pageSize}`
+- **Description:** Retrieves condominium associations filtered by city, with pagination.
+- **Request:** https://qabe-ca.pandatech.it/api/v3/integration/search/condominium-associations?cityId=1&Page=1&PageSize=4
 - **Response:**
+  ```json
+  {
+    "values": [
+      {
+        "id": 1,
+        "name": "A LLC"
+      },
+      {
+        "id": 2,
+        "name": "B LLC"
+      },
+      {
+        "id": 3,
+        "name": "C LLC"
+      }
+    ],
+    "totalCount": 78
+  }
+  ```
 
-```json
-{
-  "values": [
-    {
-      "id": 1,
-      "name": "A LLC"
-    },
-    {
-      "id": 2,
-      "name": "B LLC"
-    },
-    {
-      "id": 3,
-      "name": "C LLC"
-    }
-  ],
-  "totalCount": 78
-}
-```
+### 1.6.10. Search Buildings
 
-### 1.6.12. Search Buildings Within a Condominium Association
-
-The API accepts 3 query parameters beside the filtering:
-- PartnerId
-- CityVillageId
-- DistrictId
-
-All 3 parameters are optional and can't be null simultaneously. At least 1 of them must be provider.
-
-- **Path:** `/api/v2/integration/search/buildings`
-- **Method:** `/GET`
-- **Description:** Retrieves all buildings within the condominium association or city/village or district with pagination and total count.
-- **Request variations:** 
-  1. https://becapublicapi.pandatech.it/api/v2/integration/search/buildings?PartnerId=1&Page=1&PageSize=1
-  2. https://becapublicapi.pandatech.it/api/v2/integration/search/buildings?CityId=1&Page=1&PageSize=1
-  3. https://becapublicapi.pandatech.it/api/v2/integration/search/buildings?DistrictId=1&Page=1&PageSize=1
+- **Endpoint:** `GET /api/v2/integration/search/buildings...`
+- **Description:** Retrieves buildings based on one of the following filters: `PartnerId`, `CityId`, or `DistrictId`. At least one of these parameters is required. Also supports pagination.
+- **Request Examples:**
+  1. https://qabe-ca.pandatech.it/api/v2/integration/search/buildings?PartnerId=1&Page=1&PageSize=1
+  2. https://qabe-ca.pandatech.it/api/v2/integration/search/buildings?CityId=1&Page=1&PageSize=1
+  3. https://qabe-ca.pandatech.it/api/v2/integration/search/buildings?DistrictId=1&Page=1&PageSize=1
 - **Response:**
+  ```json
+  {
+    "values": [
+      {
+        "id": 3,
+        "address": "Tumanyan 27"
+      }
+    ],
+    "totalCount": 746
+  }
+  ```
 
-```json
-{
-  "values": [
-    {
-      "id": 3,
-      "address": "Tumanyan 27"
-    }
-  ],
-  "totalCount": 746
-}
-```
+### 1.6.11. Search Districts
 
-### 1.6.13. Search Districts Within a City
-
-- **Path:** `/api/v1/integration/search/districts`
-- **Method:** `/GET`
+- **Endpoint:** `GET /api/v1/integration/search/districts?CityId={cityId}`
 - **Description:** Retrieves all districts within city.
-- **Request:** https://becapublicapi.pandatech.it/api/v1/integration/search/districts?CityId=1
+- **Request:** Retrieves districts in a given city.
 - **Response:**
+  ```json
+  {
+    "values": [
+      {
+        "type": 0,
+        "id": 13548785,
+        "address": "21/2"
+      }
+    ],
+    "totalCount": 150
+  }
+  ```
 
-```json
-{
-  "values": [
-    {
-      "type": 0,
-      "id": 13548785,
-      "address": "21/2"
-    }
-  ],
-  "totalCount": 150
-}
-```
+### 1.6.12. Search Estates
 
-### 1.6.14. Search Estates Within a Building
-
-- **Path:** `/api/v2/integration/search/estates`
-- **Method:** `/GET`
-- **Description:** Retrieves all estates within the building with types, pagination, and total count.
-- **Request:** https://becapublicapi.pandatech.it/api/v2/search/estates?BuildingId=1&Page=1&PageSize=1
+- **Endpoint:** `GET /api/v2/integration/search/estates`
+- **Description:** Retrieves estates within a specific building, including estate types and pagination.
+- **Request:** https://qabe-ca.pandatech.it/api/v2/search/estates?BuildingId=1&Page=1&PageSize=1
 - **Response:**
-
-```json
-{
-  "values": [
-    {
-      "type": 0,
-      "id": 13548785,
-      "address": "21/2"
-    }
-  ],
-  "totalCount": 150
-}
-```
+  ```json
+  {
+    "values": [
+      {
+        "type": 0,
+        "id": 13548785,
+        "address": "21/2"
+      }
+    ],
+    "totalCount": 150
+  }
+  ```
 
 ## 1.7. Contributing
 
-We encourage contributions to improve our API documentation. If you have suggestions or corrections, please feel free to open a pull request or an issue.
+We welcome contributions and improvements to this documentation. Submit a pull request or open an issue for suggestions.
 
 ## 1.8. Issues and Support
 
-If you encounter any problems or have questions regarding a specific API, please use the 'Issues' section of this repository. Our team will do its best to assist you.
+For issues or support inquiries, use the repository's “Issues” section. Our team will respond to help resolve your problem.
 
 ## 1.9. Stay Updated
 
-We regularly update our API documentation to reflect the latest changes and improvements. Keep an eye on this repository for the most current information.
+We regularly update this documentation. Check the repository for the latest changes, new features, and improvements.
 
 ---
 
