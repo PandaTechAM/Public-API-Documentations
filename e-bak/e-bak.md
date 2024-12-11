@@ -52,11 +52,11 @@ Requests should include an `Accept-Language` header with a supported ISO languag
 - **Base URL:**
   [https://qabe-ca.pandatech.it](https://qabe-ca.pandatech.it).
 - **OpenAPI Spec:**
-  [https://qabe-ca.pandatech.it/openapi/integration-v1.json](https://qabe-ca.pandatech.it/openapi/integration-v1.json)
+  [https://qabe-ca.pandatech.it/openapi/integration.json](https://qabe-ca.pandatech.it/openapi/integration-v1.json)
 - **Scalar UI (Test Only):**
-  [https://qabe-ca.pandatech.it/scalar/integration-v1](https://qabe-ca.pandatech.it/docs/integration-v1)
+  [https://qabe-ca.pandatech.it/scalar/integration](https://qabe-ca.pandatech.it/docs/integration-v1)
 - **Swagger UI (Test Only):**
-  [https://qabe-ca.pandatech.it/swagger/integration-v1](https://qabe-ca.pandatech.it/swagger/integration-v1)
+  [https://qabe-ca.pandatech.it/swagger/integration](https://qabe-ca.pandatech.it/swagger/integration-v1)
 
 > **Note:** Scalar UI and Swagger UI are not available in the production environment.
 
