@@ -32,7 +32,7 @@ This document provides detailed instructions on how merchants can integrate with
 1. **Algorithm:** Use HMAC-SHA256 for authentication.
 2. **Key Storage:** Store securely in vaults or encrypted databases (not in code).
 3. **Headers:**
-   - **Authorization:** HMAC <HMAC hash of concatenated parameters>`
+   - **Authorization:** `HMAC <HMAC hash of concatenated parameters>`
    - **Nonce:** UUIDv4 string format
 4. **Language Header:** Optional but recommended for multi-language support:
    - `Accept-Language`: Set to `hy-AM` (Armenian), `en-US` (English), or `ru-RU` (Russian) based on the response language preference.
