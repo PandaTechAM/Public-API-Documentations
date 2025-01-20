@@ -121,9 +121,8 @@ convert the resulting byte array into a Base64-encoded string.
 "EQiqUTkEQOGNkfcW4MU6XooOm+rL1REz5njbkvq40bA="
 ```
 
-> **Note:** To test the HMAC calculation, you can use online tools that support HMAC-SHA256 encryption.
->>For example https://www.devglan.com/online-tools/hmac-sha256-online
->
+> **Note:**
+> You can verify results with an online HMAC-SHA256 generator (e.g., https://easypay.am/hmac-generator).
 > Ensure the key and input values are correctly formatted and match the expected output.
 
 ## 1.6. API Endpoints
