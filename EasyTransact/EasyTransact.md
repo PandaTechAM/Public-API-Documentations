@@ -19,9 +19,10 @@
   - [1.8. Transaction Verification and Payment](#18-transaction-verification-and-payment)
     - [1.8.1. Check](#181-check)
     - [1.8.2. Pay](#182-pay)
-    - [1.8.3. Contributing](#183-contributing)
-    - [1.8.4. Issues and Support](#184-issues-and-support)
-  - [1.9. Stay Updated](#19-stay-updated)
+    - [1.8.3. Balance](#183-balance)
+  - [1.9. Contributing](#19-contributing)
+  - [1.10. Issues and Support](#110-issues-and-support)
+  - [1.11. Stay Updated](#111-stay-updated)
 
 ## 1.1. Overview
 
@@ -240,16 +241,34 @@ To use the API, you must have a registered user account in the system. It's cruc
 }
 ```
 
+### 1.8.3. Balance
 
-### 1.8.3. Contributing
+- **Endpoint:** `Get /api/v1/balance`
+- **Description:** Get agent balance.
+- **Request:**
+```json
+{
+  "responseData": {
+    "data": {
+      "balance": 45348.156,
+    }
+  },
+  "success": true,
+  "message": "",
+  "responseStatus": "Ok"
+}
+```
+
+
+## 1.9. Contributing
 
 We encourage contributions to improve our API documentation. If you have suggestions or corrections, please feel free to open a pull request or an issue.
 
-### 1.8.4. Issues and Support
+## 1.10. Issues and Support
 
 If you encounter any problems or have questions regarding a specific API, please use the 'Issues' section of this repository. Our team will do its best to assist you.
 
-## 1.9. Stay Updated
+## 1.11. Stay Updated
 
 We regularly update our API documentation to reflect the latest changes and improvements. Keep an eye on this repository for the most current information.
 
