@@ -66,7 +66,7 @@ To use the API, you must have a registered user account in the system. It's cruc
 
 ### 1.5.1. Login
 
-- **Endpoint:** `GET /api/v1/login`
+- **Endpoint:** `POST /api/v1/login`
 - **Description:** Authenticate the user and obtain a token for API access.
 - **Request:**
 
@@ -243,7 +243,7 @@ To use the API, you must have a registered user account in the system. It's cruc
 
 ### 1.8.3. Balance
 
-- **Endpoint:** `Get /api/v1/balance`
+- **Endpoint:** `GET /api/v1/balance`
 - **Description:** Get agent balance.
 - **Request:**
 ```json
