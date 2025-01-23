@@ -26,7 +26,9 @@
 
 ## 1.1. Overview
 
-The EasyTransact API provides programmatic access to our service, allowing users to retrieve payment providers and make payments. This API is designed to be RESTful and is intended to be used by developers to integrate EasyTransact's capabilities into their applications.
+The EasyTransact API provides programmatic access to our service, allowing users to retrieve payment providers and make
+payments. This API is designed to be RESTful and is intended to be used by developers to integrate EasyTransact's
+capabilities into their applications.
 
 ## 1.2. Base URL
 
@@ -44,7 +46,8 @@ All API requests should be made to the base URL: [https://betransact.easypay.am]
 
 ### 1.4.1. User Authentication
 
-To use the API, you must have a registered user account in the system. It's crucial to `store your credentials securely`.
+To use the API, you must have a registered user account in the system. It's crucial to
+`store your credentials securely`.
 
 ### 1.4.2. Obtaining an Access Token
 
@@ -60,7 +63,8 @@ To use the API, you must have a registered user account in the system. It's cruc
 
 - The token is not valid indefinitely. Over time, it will expire.
 - If you receive a `401 Unauthorized` error, it indicates that your token has expired.
-- In case of a `401` error, you should re-authenticate using the `api/v1/login` endpoint to obtain a new token and proceed with your API calls.
+- In case of a `401` error, you should re-authenticate using the `api/v1/login` endpoint to obtain a new token and
+  proceed with your API calls.
 
 ## 1.5. Authentication
 
@@ -70,31 +74,31 @@ To use the API, you must have a registered user account in the system. It's cruc
 - **Description:** Authenticate the user and obtain a token for API access.
 - **Request:**
 
-```json
-{
-  "Username": "string",
-  "Password": "string"
-}
-```
+  ```json
+  {
+    "Username": "string",
+    "Password": "string"
+  }
+  ```
 
 - **Response:**
 
-```json
-{
-  "responseData": {
-    "data": {
-      "userId": "61adcbf5-1755-4b64-ae7b-ccbcfa647609",
-      "token": "f6816910-914e-48a1-a40a-06cb6aead7e9",
-      "fullName": "Panda",
-      "username": "Admin",
-      "role": "SuperAdmin"
-    }
-  },
-  "success": true,
-  "message": "",
-  "responseStatus": "Ok"
-}
-```
+  ```json
+  {
+    "responseData": {
+      "data": {
+        "userId": "61adcbf5-1755-4b64-ae7b-ccbcfa647609",
+        "token": "f6816910-914e-48a1-a40a-06cb6aead7e9",
+        "fullName": "Panda",
+        "username": "Admin",
+        "role": "SuperAdmin"
+      }
+    },
+    "success": true,
+    "message": "",
+    "responseStatus": "Ok"
+  }
+  ```
 
 ## 1.6. Transaction Operations
 
@@ -103,7 +107,8 @@ To use the API, you must have a registered user account in the system. It's cruc
 - **Endpoint:** `GET /api/v1/available-user-transactions-export`
 - **Description:** Export user transaction data in following formats: `.csv`, `.xlsx`, `.pdf`.
 - **Query parameters** `dataRequest`, `exportType`
-- **Request** https://betransact.easypay.am/api/v1/user-transactions-export?token=d62266b3-c5bb-4b82-bca4-c22b8e58337a&dataRequest=%7B%7D&exportType=CSV
+- **Request
+  ** https://betransact.easypay.am/api/v1/user-transactions-export?token=d62266b3-c5bb-4b82-bca4-c22b8e58337a&dataRequest=%7B%7D&exportType=CSV
 
 ### 1.6.2. Get Transactions
 
@@ -113,33 +118,33 @@ To use the API, you must have a registered user account in the system. It's cruc
 - **Request** https://betransact.easypay.am/api/v1/available-user-transactions?page=1&pageSize=5000
 - **Response**
 
-```json
-{
-  "success": true,
-  "message": "string",
-  "responseStatus": "Ok",
-  "responseData": {
-    "data": [
-      {
-        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "providerId": 0,
-        "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "inputs": "string",
-        "creationDate": "2023-10-18T11:21:43.757Z",
-        "amount": 0,
-        "comment": "string",
-        "getProviderDto": {
-          "id": 0,
-          "providerName": "string"
+  ```json
+  {
+    "success": true,
+    "message": "string",
+    "responseStatus": "Ok",
+    "responseData": {
+      "data": [
+        {
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "providerId": 0,
+          "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "inputs": "string",
+          "creationDate": "2023-10-18T11:21:43.757Z",
+          "amount": 0,
+          "comment": "string",
+          "getProviderDto": {
+            "id": 0,
+            "providerName": "string"
+          }
         }
-      }
-    ],
-    "page": 0,
-    "pageSize": 0,
-    "totalCount": 0
+      ],
+      "page": 0,
+      "pageSize": 0,
+      "totalCount": 0
+    }
   }
-}
-```
+  ```
 
 ## 1.7. Provider Information
 
@@ -149,49 +154,49 @@ To use the API, you must have a registered user account in the system. It's cruc
 - **Description:** Retrieve information about available providers.
 - **Response:**
 
-```json
-{
-  "responseData": {
-    "data": [
-      {
-        "id": 16256,
-        "input1Object": {
-          "minLength": 16,
-          "maxLength": 16,
-          "regexp": "",
-          "prefix": ""
+  ```json
+  {
+    "responseData": {
+      "data": [
+        {
+          "id": 16256,
+          "input1Object": {
+            "minLength": 16,
+            "maxLength": 16,
+            "regexp": "",
+            "prefix": ""
+          },
+          "input2Object": null,
+          "input3Object": null,
+          "input4Object": null,
+          "isEnabled": true,
+          "maxAmount": 100000,
+          "minAmount": 100,
+          "name": "Փոխանցում քարտին To Card"
         },
-        "input2Object": null,
-        "input3Object": null,
-        "input4Object": null,
-        "isEnabled": true,
-        "maxAmount": 100000,
-        "minAmount": 100,
-        "name": "Փոխանցում քարտին To Card"
-      },
-      {
-        "id": 16878,
-        "input1Object": {
-          "minLength": 12,
-          "maxLength": 12,
-          "regexp": "",
-          "prefix": "+374"
-        },
-        "input2Object": null,
-        "input3Object": null,
-        "input4Object": null,
-        "isEnabled": true,
-        "maxAmount": 200000,
-        "minAmount": 10,
-        "name": "Easy Pay Wallet New ՕԳ"
-      }
-    ]
-  },
-  "success": true,
-  "message": "",
-  "responseStatus": "Ok"
-}
-```
+        {
+          "id": 16878,
+          "input1Object": {
+            "minLength": 12,
+            "maxLength": 12,
+            "regexp": "",
+            "prefix": "+374"
+          },
+          "input2Object": null,
+          "input3Object": null,
+          "input4Object": null,
+          "isEnabled": true,
+          "maxAmount": 200000,
+          "minAmount": 10,
+          "name": "Easy Pay Wallet New ՕԳ"
+        }
+      ]
+    },
+    "success": true,
+    "message": "",
+    "responseStatus": "Ok"
+  }
+  ```
 
 ## 1.8. Transaction Verification and Payment
 
@@ -201,76 +206,111 @@ To use the API, you must have a registered user account in the system. It's cruc
 - **Description:** Perform pre-transaction checks.
 - **Request:**
 
-```json
-{
-  "providerId": 1,
-  "input1": "077777777",
-  "input2": null,
-  "input3": null,
-  "input4": null
-}
-```
+  ```json
+  {
+    "providerId": 1,
+    "input1": "077777777",
+    "input2": null,
+    "input3": null,
+    "input4": null
+  }
+  ```
 
 - **Response:**
 
-```json
-{
-  "success": true,
-  "message": "string",
-  "responseStatus": "Ok",
-  "responseData": {
-    "data": "string"
+  ```json
+  {
+    "success": true,
+    "message": "string",
+    "responseStatus": "Ok",
+    "responseData": {
+      "data": "string"
+    }
   }
-}
-```
+  ```
 
 ### 1.8.2. Pay
 
 - **Endpoint:** `POST /api/v1/pay`
 - **Description:** Process a payment.
 - **Request:**
-```json
-{
-  "amount": 1,
-  "providerId": 1,
-  "input1": "+37477777777",
-  "input2": null,
-  "input3": null,
-  "input4": null,
-  "sessionID": "3fa85f64-5717-4562-b3fc-2c963f66afa6" 
-}
-```
+  ```json
+  {
+    "amount": 1,
+    "providerId": 1,
+    "input1": "+37477777777",
+    "input2": null,
+    "input3": null,
+    "input4": null,
+    "sessionID": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+  }
+  ```
+
+- **Response:**
+  ```json
+  {
+    "success": true,
+    "message": "string",
+    "responseStatus": "Ok",
+    "responseData": {
+    "data": 0
+    }
+  }
+  ```
 
 ### 1.8.3. Balance
 
 - **Endpoint:** `GET /api/v1/balance`
 - **Description:** Get agent balance.
 - **Request:**
-```json
-{
-  "responseData": {
-    "data": {
-      "balance": 45348.156,
-    }
-  },
-  "success": true,
-  "message": "",
-  "responseStatus": "Ok"
-}
-```
 
+  ```json
+  {
+    "responseData": {
+      "data": {
+        "balance": 45348.156
+      }
+    },
+    "success": true,
+    "message": "",
+    "responseStatus": "Ok"
+  }
+  ```
+
+
+### 1.8.4. Get cheque
+
+- **Endpoint:** `GET /api/v1/receipt?transactionId=1`
+- **Description:** Get transaction cheque by transaction id.
+- **Request:**
+  
+  ```json
+  {
+    "success": true,
+    "message": "string",
+    "responseStatus": "Ok",
+    "responseData": {
+      "data": [
+        "string"
+      ]
+    }
+  }
+  ```
 
 ## 1.9. Contributing
 
-We encourage contributions to improve our API documentation. If you have suggestions or corrections, please feel free to open a pull request or an issue.
+We encourage contributions to improve our API documentation. If you have suggestions or corrections, please feel free to
+open a pull request or an issue.
 
 ## 1.10. Issues and Support
 
-If you encounter any problems or have questions regarding a specific API, please use the 'Issues' section of this repository. Our team will do its best to assist you.
+If you encounter any problems or have questions regarding a specific API, please use the 'Issues' section of this
+repository. Our team will do its best to assist you.
 
 ## 1.11. Stay Updated
 
-We regularly update our API documentation to reflect the latest changes and improvements. Keep an eye on this repository for the most current information.
+We regularly update our API documentation to reflect the latest changes and improvements. Keep an eye on this repository
+for the most current information.
 
 ---
 
