@@ -151,50 +151,70 @@ To use the API, you must have a registered user account in the system. It's cruc
 ### 1.7.1. Get Providers
 
 - **Endpoint:** `GET /api/v1/user-providers`
+- **Language:** Provide language in header `language` "am", "ru", "en" to get proper hint
 - **Description:** Retrieve information about available providers.
 - **Response:**
 
   ```json
   {
-    "responseData": {
-      "data": [
-        {
-          "id": 16256,
-          "input1Object": {
-            "minLength": 16,
-            "maxLength": 16,
-            "regexp": "",
-            "prefix": ""
-          },
-          "input2Object": null,
-          "input3Object": null,
-          "input4Object": null,
-          "isEnabled": true,
-          "maxAmount": 100000,
-          "minAmount": 100,
-          "name": "Փոխանցում քարտին To Card"
+  "responseData": {
+    "data": [
+      {
+        "id": 17667,
+        "input1Object": {
+          "hint": "Հեռախոսահամար",
+          "minLength": 12,
+          "maxLength": 12,
+          "regexp": "",
+          "prefix": "+374"
         },
-        {
-          "id": 16878,
-          "input1Object": {
-            "minLength": 12,
-            "maxLength": 12,
-            "regexp": "",
-            "prefix": "+374"
-          },
-          "input2Object": null,
-          "input3Object": null,
-          "input4Object": null,
-          "isEnabled": true,
-          "maxAmount": 200000,
-          "minAmount": 10,
-          "name": "Easy Pay Wallet New ՕԳ"
-        }
-      ]
-    },
-    "success": true,
-    "message": "",
-    "responseStatus": "Ok"
+        "input2Object": null,
+        "input3Object": null,
+        "input4Object": null,
+        "isEnabled": true,
+        "maxAmount": 200000,
+        "minAmount": 10,
+        "name": "Easy Pay Wallet New For Getway"
+      },
+      {
+        "id": 18473,
+        "input1Object": {
+          "hint": "Քարտի համար",
+          "minLength": 16,
+          "maxLength": 16,
+          "regexp": "",
+          "prefix": ""
+        },
+        "input2Object": null,
+        "input3Object": null,
+        "input4Object": null,
+        "isEnabled": true,
+        "maxAmount": 399000,
+        "minAmount": 100,
+        "name": "Փոխանցում քարտին coin - Bitcoin Armenia"
+      },
+      {
+        "id": 18474,
+        "input1Object": {
+          "hint": "Հեռախոսահամար",
+          "minLength": 12,
+          "maxLength": 12,
+          "regexp": "",
+          "prefix": "+374"
+        },
+        "input2Object": null,
+        "input3Object": null,
+        "input4Object": null,
+        "isEnabled": true,
+        "maxAmount": 200000,
+        "minAmount": 10,
+        "name": "Փոխանցում դրամապանակին coin - Bitcoin Armenia"
+      }
+    ]
+  },
+  "success": true,
+  "message": "",
+  "responseStatus": "Ok"
   }
   ```
 
