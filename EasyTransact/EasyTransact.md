@@ -244,10 +244,7 @@ To use the API, you must have a registered user account in the system. It's cruc
     "message": "string",
     "responseStatus": "Ok",
     "responseData": {
-      "data": {
-        "sessionId": "string",
-        "providerId": 0
-      }
+      "data": "string"
     }
   }
   ```
