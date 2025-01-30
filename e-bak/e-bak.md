@@ -458,7 +458,7 @@ public enum Bank
 
 - **Endpoint:** `GET /api/v2/integration/search/estates`
 - **Description:** Retrieves estates within a specific building, including estate types and pagination.
-- **Request:** https://qabe-ca.pandatech.it/api/v2/search/estates?BuildingId=1&Page=1&PageSize=1
+- **Request:** https://qabe-ca.pandatech.it/api/v2/integration/search/estates?BuildingId=1&Page=1&PageSize=1
 - **Response:**
   ```json
   {
