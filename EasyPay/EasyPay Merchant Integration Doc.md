@@ -1,33 +1,34 @@
-- [1. EasyPay Merchant Integration Guide](#1-easypay-merchant-integration-guide)
-  - [1.1. Overview](#11-overview)
-  - [1.2. Prerequisites](#12-prerequisites)
-  - [1.3. Authentication and Security](#13-authentication-and-security)
-    - [1.3.1. HMAC Authentication](#131-hmac-authentication)
-  - [1.4. Standard HTTP Response Codes](#14-standard-http-response-codes)
-  - [1.5. Input Formatting and HMAC Calculation](#15-input-formatting-and-hmac-calculation)
-  - [1.6. API Endpoints](#16-api-endpoints)
-    - [1.6.1. Balance Inquiry](#161-balance-inquiry)
-    - [1.6.2. Make Payment](#162-make-payment)
-    - [1.6.3. Ping](#163-ping)
-  - [1.7. Security Recommendation](#17-security-recommendation)
-  - [1.8. Summary](#18-summary)
+- [EasyPay Merchant Integration Guide](#easypay-merchant-integration-guide)
+  - [Overview](#overview)
+  - [Prerequisites](#prerequisites)
+  - [Authentication and Security](#authentication-and-security)
+    - [HMAC Authentication](#hmac-authentication)
+  - [Standard HTTP Response Codes](#standard-http-response-codes)
+  - [Error Handling](#error-handling)
+  - [Input Formatting and HMAC Calculation](#input-formatting-and-hmac-calculation)
+  - [API Endpoints](#api-endpoints)
+    - [Balance Inquiry](#balance-inquiry)
+    - [Make Payment](#make-payment)
+    - [Ping](#ping)
+  - [Security Recommendation](#security-recommendation)
+  - [Summary](#summary)
     - [Key Takeaways:](#key-takeaways)
 
-# 1. EasyPay Merchant Integration Guide
+# EasyPay Merchant Integration Guide
 
-## 1.1. Overview
+## Overview
 
 This document provides detailed instructions on how merchants can integrate with EasyPay’s system through secure API endpoints. The integration supports balance inquiries and payment processing with standardized security protocols such as `HMAC-based authentication`.
 
-## 1.2. Prerequisites
+## Prerequisites
 
 - **API Base URL**: Provided by the merchant upon registration.
 - **HMAC Key**: A unique key shared securely by EasyPay.
   > **Security Note:** Merchants are advised to whitelist EasyPay’s IP addresses to ensure only trusted requests are processed.
 
-## 1.3. Authentication and Security
+## Authentication and Security
 
-### 1.3.1. HMAC Authentication
+### HMAC Authentication
 
 1. **Algorithm:** Use HMAC-SHA256 for authentication.
 2. **Key Storage:** Store securely in vaults or encrypted databases (not in code).
@@ -37,7 +38,7 @@ This document provides detailed instructions on how merchants can integrate with
 4. **Language Header:** Optional but recommended for multi-language support:
    - `Accept-Language`: Set to `hy-AM` (Armenian), `en-US` (English), or `ru-RU` (Russian) based on the response language preference.
 
-## 1.4. Standard HTTP Response Codes
+## Standard HTTP Response Codes
 
 All API responses must follow standard HTTP status codes:
 
@@ -47,7 +48,39 @@ All API responses must follow standard HTTP status codes:
 - 404: Not Found
 - 500: Internal Server Error
 
-## 1.5. Input Formatting and HMAC Calculation
+## Error Handling
+
+All errors return a standardized JSON structure to aid in debugging:
+
+```json
+{
+  "RequestId": "Unique request ID",
+  "TraceId": "Unique trace ID",
+  "Instance": "API context info",
+  "StatusCode": 400,
+  "Type": "Error type (e.g. BadRequestException)",
+  "Errors": {
+    "field": "Error message"
+  },
+  "Message": "General error description"
+}
+```
+
+**Key Fields:**
+
+- **RequestId / TraceId:** Use these IDs for debugging and support requests.
+- **Instance:** Provides contextual details about the API operation.
+- **StatusCode:** Matches the HTTP status code.
+- **Type:** A short error descriptor.
+- **Errors:** Field-specific error details.
+- **Message:** A general explanation of the problem.
+
+Use `RequestId` and `TraceId` when contacting support to help with troubleshooting.
+
+
+
+
+## Input Formatting and HMAC Calculation
 
 Each input provided must follow the below structure:
 
@@ -125,9 +158,9 @@ convert the resulting byte array into a Base64-encoded string.
 > You can verify results with an online HMAC-SHA256 generator (e.g., https://easypay.am/hmac-generator).
 > Ensure the key and input values are correctly formatted and match the expected output.
 
-## 1.6. API Endpoints
+## API Endpoints
 
-### 1.6.1. Balance Inquiry
+### Balance Inquiry
 
 **Endpoint:**
 `POST /api/balance-inquiry`
@@ -174,7 +207,7 @@ Authorization: HMAC euAmWwAGbPkV1YXQffhpNFBh8/1Y5my3ZsZ+uNmooKo=
 **HMAC Calculation For Response:**
 `HMAC(Debt + Properties.Values + Request's Nonce)`
 
-### 1.6.2. Make Payment
+### Make Payment
 
 **Endpoint:**
 `POST /api/payments`
@@ -233,7 +266,7 @@ Authorization: HMAC 4Q3soI9dTLuCLl3kWnVqPcCnayHwreKYUBwtLor3LRI=
 **HMAC Calculation For Response:**
 `HMAC(PaymentId + Request's Nonce)`
 
-### 1.6.3. Ping
+### Ping
 
 **Endpoint:**
 `GET /api/ping`
@@ -248,7 +281,7 @@ This endpoint is used to check the availability of the services. It does not req
 }
 ```
 
-## 1.7. Security Recommendation
+## Security Recommendation
 
 - Merchants should persist HMAC signatures temporarily to detect duplicate or replay attacks. If a subsequent request arrives with the same signature, it should be treated as a duplicate request or a potential replay attack, and appropriate action should be taken (e.g., rejecting the request and logging the incident).
 - Merchants **must handle timeouts gracefully**. If a timeout occurs, **all pending operations within the request scope must be terminated immediately** to prevent inconsistencies.
@@ -256,7 +289,7 @@ This endpoint is used to check the availability of the services. It does not req
   - **Ensure all cancellable operations** (e.g., database transactions, API calls) are aborted promptly to avoid data corruption or partial processing.
   - EasyPay enforces an **8-second timeout policy**. After this limit, a **timeout error** is returned. Merchants should use this as a trigger to rollback or cancel any ongoing operations effectively.
 
-## 1.8. Summary
+## Summary
 
 This guide provides the necessary steps to integrate and communicate securely with EasyPay's platform using **HMAC-based authentication**. The APIs covered in this documentation ensure seamless **balance inquiry** and **payment processing**.
 
