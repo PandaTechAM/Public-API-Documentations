@@ -154,13 +154,13 @@ Some endpoints require you to compute an HMAC hash over specific parameters. The
  The following list describes payment order statuses.
    | Code | Description |
    | :--- | :------------------------------------------------ |
-   |1||Enqueued|
-   |2||Initialized|
-   |3||Charged|
-   |4||Processing|
-   |5||Canceled|
-   |6||Success|
-   |7||Rejected|
+   |1|Enqueued|
+   |2|Initialized|
+   |3|Charged|
+   |4|Processing|
+   |5|Canceled|
+   |6|Success|
+   |7|Rejected|
 
 > **Note:**
 > You can verify results with an online HMAC-SHA256 generator (e.g., https://easypay.am/hmac-generator).
