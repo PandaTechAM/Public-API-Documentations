@@ -517,15 +517,19 @@ Create a new payment order based on the latest balance inquiry results.
 
 ### 1.9.9. Order Status Check (Drafted only)
 
-Monitor the status of a payment order to confirm whether it was processed successfully.
+Monitor the status of a payment order to confirm whether it was processed successfully and other details such as whether cancel operation permited.
 
-- **URL:** `GET /api/external/v1/orders/{orderId}/status`
+- **URL:** `GET /api/external/v1/orders/{orderId}`
 - **HMAC Calculation:**
   `HMAC(orderId + Nonce)`
 
 - **Response Example:**
   ```json
-  {}
+  {
+  "orderId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "status": 6,
+  "cancelable" : false
+}
   ```
 
 ### 1.9.10. Additional Considerations
