@@ -1,6 +1,33 @@
-﻿# FinHub Payment Gateway Integration Guide
+﻿- [1. FinHub Payment Gateway Integration Guide](#1-finhub-payment-gateway-integration-guide)
+  - [1.1. Introduction](#11-introduction)
+  - [1.2. Key Terminology](#12-key-terminology)
+  - [1.3. Overview](#13-overview)
+  - [1.4. Prerequisites](#14-prerequisites)
+  - [1.5. Security \& Authentication](#15-security--authentication)
+    - [1.5.1. Overview](#151-overview)
+    - [1.5.2. HMAC Calculation](#152-hmac-calculation)
+  - [1.6. Response Codes \& Error Handling](#16-response-codes--error-handling)
+    - [1.6.1. Standard HTTP Response Codes](#161-standard-http-response-codes)
+  - [1.7. Error Response Structure](#17-error-response-structure)
+  - [1.8. Prerequisites](#18-prerequisites)
+  - [1.9. API Endpoints](#19-api-endpoints)
+    - [1.9.1. Connectivity (Ping)](#191-connectivity-ping)
+    - [1.9.2. Terminal Information](#192-terminal-information)
+    - [1.9.3. Agent Balance](#193-agent-balance)
+    - [1.9.4. Merchant Services](#194-merchant-services)
+    - [1.9.5. Merchant Service Details](#195-merchant-service-details)
+    - [1.9.6. Balance Inquiry](#196-balance-inquiry)
+      - [1.9.6.1. Step 1: Initial Inquiry](#1961-step-1-initial-inquiry)
+      - [1.9.6.2. Step 2: Detailed Inquiry (If Needed)](#1962-step-2-detailed-inquiry-if-needed)
+    - [1.9.7. Customer Commission Check](#197-customer-commission-check)
+    - [1.9.8. Payment Order Creation](#198-payment-order-creation)
+    - [1.9.9. Order Status Check (Drafted only)](#199-order-status-check-drafted-only)
+    - [1.9.10. Additional Considerations](#1910-additional-considerations)
+    - [1.9.11. Support \& Troubleshooting](#1911-support--troubleshooting)
 
-## Introduction
+# 1. FinHub Payment Gateway Integration Guide
+
+## 1.1. Introduction
 
 Welcome to FinHub’s Payment Gateway Integration Guide. This document walks you through:
 
@@ -11,7 +38,7 @@ Welcome to FinHub’s Payment Gateway Integration Guide. This document walks you
 
 By following this guide, you’ll seamlessly integrate FinHub’s APIs into your existing or new payment solutions, ensuring secure and efficient payment transactions.
 
-## Key Terminology
+## 1.2. Key Terminology
 
 - **API Base URL:** The root address for all FinHub endpoints. This URL is provided to you upon registration.
 - **API Key:** Identifies your application to FinHub.
@@ -20,11 +47,11 @@ By following this guide, you’ll seamlessly integrate FinHub’s APIs into your
 - **Merchant Service:** Represents a specific service (e.g., mobile top-up) offered via FinHub.
 - **Identifier / Identifier Detail Type:** Fields required by specific merchant services to identify the payment account (e.g., phone number, social security number).
 
-## Overview
+## 1.3. Overview
 
 This guide provides a comprehensive overview of how to integrate with FinHub’s payment gateway. It details the required authentication, input formatting for HMAC calculations, and descriptions of each API endpoint. Whether you are setting up your terminal information or processing payment orders, this document is designed to be clear and accessible.
 
-## Prerequisites
+## 1.4. Prerequisites
 
 Before integrating with FinHub, ensure you have:
 
@@ -41,9 +68,9 @@ Before integrating with FinHub, ensure you have:
    - `hy-AM` (Armenian),
    - `ru-RU` (Russian).
 
-## Security & Authentication
+## 1.5. Security & Authentication
 
-### Overview
+### 1.5.1. Overview
 
 FinHub enforces HMAC-SHA256-based authentication. Every request must include:
 
@@ -56,7 +83,7 @@ HMAC <API_KEY>:<BASE64_SIGNATURE>
 
 > Storage Recommendation: Keep both the API and HMAC keys secure (avoid hardcoding them).
 
-### HMAC Calculation
+### 1.5.2. HMAC Calculation
 
 Some endpoints require you to compute an HMAC hash over specific parameters. The general approach is:
 
@@ -126,9 +153,9 @@ Some endpoints require you to compute an HMAC hash over specific parameters. The
 > **Note:**
 > You can verify results with an online HMAC-SHA256 generator (e.g., https://easypay.am/hmac-generator).
 
-## Response Codes & Error Handling
+## 1.6. Response Codes & Error Handling
 
-### Standard HTTP Response Codes
+### 1.6.1. Standard HTTP Response Codes
 
 | Code | Description                                       |
 | :--- | :------------------------------------------------ |
@@ -140,7 +167,7 @@ Some endpoints require you to compute an HMAC hash over specific parameters. The
 | 404  | Resource not found.                               |
 | 500  | Server encountered an unexpected error.           |
 
-## Error Response Structure
+## 1.7. Error Response Structure
 
 All errors are returned in a standard JSON format to help with troubleshooting:
 
@@ -164,7 +191,7 @@ All errors are returned in a standard JSON format to help with troubleshooting:
 - The `Errors` property gives field-specific details.
 - The `Instance` field offers additional context for the operation.
 
-## Prerequisites
+## 1.8. Prerequisites
 
 Before you begin, ensure you have:
 
@@ -172,11 +199,11 @@ Before you begin, ensure you have:
 - **API Key**: A unique key that identifies your integration.
 - **HMAC Key**: A secret key used as salt for HMAC calculations. Store these keys securely (e.g., in a vault).
 
-## API Endpoints
+## 1.9. API Endpoints
 
 All endpoints assume the base URL provided by FinHub. Every request must include the headers: `Nonce`, `Authorization`, and `Accept-Language`.
 
-### Connectivity (Ping)
+### 1.9.1. Connectivity (Ping)
 
 Validate connectivity.
 
@@ -186,7 +213,7 @@ Validate connectivity.
   "pong"
   ```
 
-### Terminal Information
+### 1.9.2. Terminal Information
 
 Retrieve your terminal details such as currency and limits.
 
@@ -205,7 +232,7 @@ Retrieve your terminal details such as currency and limits.
   }
   ```
 
-### Agent Balance
+### 1.9.3. Agent Balance
 
 Check your current deposit balance.
 
@@ -219,7 +246,7 @@ Check your current deposit balance.
   }
   ```
 
-### Merchant Services
+### 1.9.4. Merchant Services
 
 Retrieve all available merchant services for your terminal.
 
@@ -238,7 +265,7 @@ Retrieve all available merchant services for your terminal.
   ]
   ```
 
-### Merchant Service Details
+### 1.9.5. Merchant Service Details
 
 Fetch detailed configurations, input identifiers, and transaction constraints for a specific merchant service.
 
@@ -283,7 +310,7 @@ Fetch detailed configurations, input identifiers, and transaction constraints fo
 
 > **Note:** When options are provided, restrict input to those values. Similarly, prevent entries that match the blacklist.
 
-### Balance Inquiry
+### 1.9.6. Balance Inquiry
 
 FinHub uses a two-step balance inquiry process when the provided input is not uniquely identifying the account.
 
@@ -291,7 +318,7 @@ FinHub uses a two-step balance inquiry process when the provided input is not un
 - **HMAC Calculation:**
   `HMAC(merchantServiceId + MerchantServiceIdentifierId + Inputs + Nonce)`
 
-#### Step 1: Initial Inquiry
+#### 1.9.6.1. Step 1: Initial Inquiry
 
 - **Request Example:**
   ```json
@@ -347,7 +374,7 @@ FinHub uses a two-step balance inquiry process when the provided input is not un
   }
   ```
 
-#### Step 2: Detailed Inquiry (If Needed)
+#### 1.9.6.2. Step 2: Detailed Inquiry (If Needed)
 
 If the response from Step 1 includes additional inputs (i.e. the `inputs` property is not null), make a second call using the complete set of inputs returned.
 
@@ -407,7 +434,7 @@ If the response from Step 1 includes additional inputs (i.e. the `inputs` proper
 
 > **Tip:** It is uncommon to require the second inquiry, but it is necessary when the initial input does not uniquely identify the account.
 
-### Customer Commission Check
+### 1.9.7. Customer Commission Check
 
 Before processing a payment, determine the commission fee that the customer will incur.
 
@@ -442,7 +469,7 @@ Before processing a payment, determine the commission fee that the customer will
   }
   ```
 
-### Payment Order Creation
+### 1.9.8. Payment Order Creation
 
 Create a new payment order based on the latest balance inquiry results.
 
@@ -483,7 +510,7 @@ Create a new payment order based on the latest balance inquiry results.
 
 > **Note:** Depending on your terminal configuration, a successful order may return HTTP status `200 OK` or `202 Accepted`. If the order is enqueued, call the status endpoint to determine the outcome.
 
-### Order Status Check (Drafted only)
+### 1.9.9. Order Status Check (Drafted only)
 
 Monitor the status of a payment order to confirm whether it was processed successfully.
 
@@ -496,7 +523,7 @@ Monitor the status of a payment order to confirm whether it was processed succes
   {}
   ```
 
-### Additional Considerations
+### 1.9.10. Additional Considerations
 
 - **Unique Order ID Enforcement:**
   FinHub treats the order ID as unique. Reusing an ID will result in a 400 Bad Request with the error message `ORDER_ALREADY_EXISTS`.
@@ -507,7 +534,7 @@ Monitor the status of a payment order to confirm whether it was processed succes
 - **HMAC Integrity:**
   Consistent HMAC validation across endpoints secures your integration. Always verify that all input values and the nonce are correctly concatenated before generating the signature.
 
-### Support & Troubleshooting
+### 1.9.11. Support & Troubleshooting
 
 For additional assistance or to report issues, please contact your designated FinHub integration manager. When troubleshooting, include both the `RequestId` and `TraceId` from the error responses to help expedite the resolution process.
 
