@@ -150,7 +150,7 @@ Some endpoints require you to compute an HMAC hash over specific parameters. The
    |26|Technical Id|
    |27|Unique Document Id|
 
-4. **Payment Order Statuses
+4. **Payment Order Statuses**
  The following list describes payment order statuses.
    | Code | Description |
    | :--- | :------------------------------------------------ |
