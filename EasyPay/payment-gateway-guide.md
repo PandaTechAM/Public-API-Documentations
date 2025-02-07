@@ -217,19 +217,24 @@ Validate connectivity.
 
 Retrieve your terminal details such as currency and limits.
 
-- **URL:** `GET /api/external/v1/terminal`
+- **URL:** `GET /api/external/v1/terminals`
 - **HMAC Calculation:**
   `HMAC(Nonce)`
 - **Response Example:**
   ```json
   {
-    "id": 123,
-    "name": "Terminal Name",
-    "currency": "USD",
-    "monthly_limit": 5000000,
-    "daily_limit": 150000,
-    "hourly_limit": 5000
-  }
+  "id": 123,
+  "name": "Terminal Name",
+  "currencyCode": "USD",
+  "dailyMaxPaymentSum": 11000,
+  "dailyCurrentPaymentSum": 10,
+  "dailyMaxPaymentCount": 50,
+  "dailyCurrentPaymentCount": 2,
+  "monthlyMaxPaymentSum": null,
+  "monthlyCurrentPaymentSum": null,
+  "monthlyMaxPaymentCount": null,
+  "monthlyCurrentPaymentCount": null
+}
   ```
 
 ### 1.9.3. Agent Balance
