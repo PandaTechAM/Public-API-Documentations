@@ -455,28 +455,14 @@ If the response from Step 1 includes additional inputs (i.e. the `inputs` proper
 
 Before processing a payment, determine the commission fee that the customer will incur.
 
-- **URL:** `GET /api/external/v1/commissions`
+- **URL:** `POST api/external/v1/orders/commissions`
 - **HMAC Calculation:**
-  `HMAC(merchantServiceId + MerchantServiceIdentifierId + Inputs + Nonce)`
+  `HMAC(merchantServiceId + amount + Nonce)`
 - **Request Example:**
   ```json
   {
     "merchantServiceId": 123,
-    "merchantServiceIdentifierId": 1,
-    "balanceInquiryId": 12346,
-    "amount": 2450,
-    "inputs": [
-      {
-        "identifierDetailType": 3,
-        "technicalIndex": 1,
-        "value": "+37491234567"
-      },
-      {
-        "identifierDetailType": 10,
-        "technicalIndex": 2,
-        "value": "12345678"
-      }
-    ]
+    "amount": 2450
   }
   ```
 - **Response Example:**
