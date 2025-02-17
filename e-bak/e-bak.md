@@ -295,7 +295,7 @@ public enum CheckCommission
   }
   ```
 
-### 1.6.7. Debt Repayment
+### 1.6.7. Debt Payment
 
 - **Path:** `POST /api/v2/integration/debts/payments`
 - **Description:** Repays debts using a FIFO approach unless a specific `debtId` is provided. Provide an `outerPaymentId` for tracking this payment in your system.
@@ -317,7 +317,7 @@ public enum CheckCommission
 - **Response:**
   ```json
   {
-    "debtCommissionRequestModels": [
+    "transactions": [
       {
         "estateId": 1654896,
         "debtId": 42,
