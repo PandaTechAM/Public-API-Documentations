@@ -15,7 +15,7 @@
     - [1.6.4. Debt Retrieval by Estate](#164-debt-retrieval-by-estate)
     - [1.6.5. Debt Retrieval by Owner Unique Identifier](#165-debt-retrieval-by-owner-unique-identifier)
     - [1.6.6. Debt Commission Calculation](#166-debt-commission-calculation)
-    - [1.6.7. Debt Repayment](#167-debt-repayment)
+    - [1.6.7. Debt Payment](#167-debt-repayment)
     - [1.6.8. Search Cities](#168-search-cities)
     - [1.6.9. Search Condominium Association](#169-search-condominium-association)
     - [1.6.10. Search Buildings](#1610-search-buildings)
