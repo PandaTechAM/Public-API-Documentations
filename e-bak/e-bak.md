@@ -303,7 +303,7 @@ public enum CheckCommission
 - **Request:**
   ```json
   {
-    "debtCommissionRequestModels": [
+    "debtPaymentRequestModels": [
       {
         "estateId": 1654896,
         "amount": 452.25,
