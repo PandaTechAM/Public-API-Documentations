@@ -99,9 +99,11 @@ Some endpoints require you to compute an HMAC hash over specific parameters. The
    ```
 
    **Concatenation Format:**
-   `IdentifierDetailType:Value:TechnicalIndex:`
+   `IdentifierDetailType:Value:TechnicalIndex`
+   **Concatenation symbol:**
+   `:`
    **Result:**
-   `16:12345:1:3:98765:2:`
+   `16:12345:1:3:98765:2`
 
 2. **Calculate the HMAC:**
 
@@ -112,10 +114,10 @@ Some endpoints require you to compute an HMAC hash over specific parameters. The
    - **HMAC Calculation Example:**
      ```txt
      Api Key: ffa5be93-35e6-4186-8b84-44882d6dbb30
-     Combined String: 1234567890 + "16:12345:1:3:98765:2:" + deadd8fc-58fc-4f12-8a57-808711f6319d
+     Combined String: 1234567890 + "16:12345:1:3:98765:2" + deadd8fc-58fc-4f12-8a57-808711f6319d
      Key: your HMAC secret key
      Base64-encoded HMAC: iVGljbFol+xfKGW/uw3B9wxP5timuV5YYyzYkL3cicU=
-     Final Header: "HMAC ffa5be93-35e6-4186-8b84-44882d6dbb30:EQiqUTkEQOGNkfcW4MU6XooOm+rL1REz5njbkvq40bA="
+     Final Header: "HMAC ffa5be93-35e6-4186-8b84-44882d6dbb30:iVGljbFol+xfKGW/uw3B9wxP5timuV5YYyzYkL3cicU="
      ```
 
 3. **Identifier Detail Types:**
