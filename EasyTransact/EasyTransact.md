@@ -38,7 +38,7 @@ All API requests should be made to the base URL: [https://betransact.easypay.am]
 
 - `200 OK` - Request succeeded.
 - `400 Bad Request` - Invalid request format.
-- `401 Unauthorized` - Authentication failed or user doesn’t have permissions for requested operation.
+- `401 Unauthorized` - Authentication failed or user doesn't have permissions for requested operation.
 - `404 Not Found` - Resource not found.
 - `500 Internal Server Error` - An error occurred in the server.
 
@@ -157,64 +157,64 @@ To use the API, you must have a registered user account in the system. It's cruc
 
   ```json
   {
-  "responseData": {
-    "data": [
-      {
-        "id": 17667,
-        "input1Object": {
-          "hint": "Հեռախոսահամար",
-          "minLength": 12,
-          "maxLength": 12,
-          "regexp": "",
-          "prefix": "+374"
+    "responseData": {
+      "data": [
+        {
+          "id": 17667,
+          "input1Object": {
+            "hint": "Հեռախոսահամար",
+            "minLength": 12,
+            "maxLength": 12,
+            "regexp": "",
+            "prefix": "+374"
+          },
+          "input2Object": null,
+          "input3Object": null,
+          "input4Object": null,
+          "isEnabled": true,
+          "maxAmount": 200000,
+          "minAmount": 10,
+          "name": "Easy Pay Wallet New For Getway"
         },
-        "input2Object": null,
-        "input3Object": null,
-        "input4Object": null,
-        "isEnabled": true,
-        "maxAmount": 200000,
-        "minAmount": 10,
-        "name": "Easy Pay Wallet New For Getway"
-      },
-      {
-        "id": 18473,
-        "input1Object": {
-          "hint": "Քարտի համար",
-          "minLength": 16,
-          "maxLength": 16,
-          "regexp": "",
-          "prefix": ""
+        {
+          "id": 18473,
+          "input1Object": {
+            "hint": "Քարտի համար",
+            "minLength": 16,
+            "maxLength": 16,
+            "regexp": "",
+            "prefix": ""
+          },
+          "input2Object": null,
+          "input3Object": null,
+          "input4Object": null,
+          "isEnabled": true,
+          "maxAmount": 399000,
+          "minAmount": 100,
+          "name": "Փոխանցում քարտին coin - Bitcoin Armenia"
         },
-        "input2Object": null,
-        "input3Object": null,
-        "input4Object": null,
-        "isEnabled": true,
-        "maxAmount": 399000,
-        "minAmount": 100,
-        "name": "Փոխանցում քարտին coin - Bitcoin Armenia"
-      },
-      {
-        "id": 18474,
-        "input1Object": {
-          "hint": "Հեռախոսահամար",
-          "minLength": 12,
-          "maxLength": 12,
-          "regexp": "",
-          "prefix": "+374"
-        },
-        "input2Object": null,
-        "input3Object": null,
-        "input4Object": null,
-        "isEnabled": true,
-        "maxAmount": 200000,
-        "minAmount": 10,
-        "name": "Փոխանցում դրամապանակին coin - Bitcoin Armenia"
-      }
-    ]
-  },
-  "success": true,
-  "message": "",
-  "responseStatus": "Ok"
+        {
+          "id": 18474,
+          "input1Object": {
+            "hint": "Հեռախոսահամար",
+            "minLength": 12,
+            "maxLength": 12,
+            "regexp": "",
+            "prefix": "+374"
+          },
+          "input2Object": null,
+          "input3Object": null,
+          "input4Object": null,
+          "isEnabled": true,
+          "maxAmount": 200000,
+          "minAmount": 10,
+          "name": "Փոխանցում դրամապանակին coin - Bitcoin Armenia"
+        }
+      ]
+    },
+    "success": true,
+    "message": "",
+    "responseStatus": "Ok"
   }
   ```
 
@@ -254,6 +254,7 @@ To use the API, you must have a registered user account in the system. It's cruc
 - **Endpoint:** `POST /api/v1/pay`
 - **Description:** Process a payment.
 - **Request:**
+
   ```json
   {
     "amount": 1,
@@ -273,7 +274,7 @@ To use the API, you must have a registered user account in the system. It's cruc
     "message": "string",
     "responseStatus": "Ok",
     "responseData": {
-    "data": 0
+      "data": 0
     }
   }
   ```
@@ -297,22 +298,19 @@ To use the API, you must have a registered user account in the system. It's cruc
   }
   ```
 
-
 ### 1.8.4. Get cheque
 
 - **Endpoint:** `GET /api/v1/receipt?transactionId=1`
 - **Description:** Get transaction cheque by transaction id.
 - **Request:**
-  
+
   ```json
   {
     "success": true,
     "message": "string",
     "responseStatus": "Ok",
     "responseData": {
-      "data": [
-        "string"
-      ]
+      "data": ["string"]
     }
   }
   ```

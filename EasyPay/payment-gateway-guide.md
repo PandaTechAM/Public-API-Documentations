@@ -21,21 +21,22 @@
     - [1.8.7. Customer Commission Check](#187-customer-commission-check)
     - [1.8.8. Payment Order Creation](#188-payment-order-creation)
     - [1.8.9. Order Details](#189-order-details)
-    - [1.8.10. Additional Considerations](#1810-additional-considerations)
-    - [1.8.11. Support \& Troubleshooting](#1811-support--troubleshooting)
+    - [1.8.10. Cancel order](#1810-cancel-order)
+    - [1.8.11. Additional Considerations](#1811-additional-considerations)
+    - [1.8.12. Support \& Troubleshooting](#1812-support--troubleshooting)
 
 # 1. FinHub Payment Gateway Integration Guide
 
 ## 1.1. Introduction
 
-Welcome to FinHub’s Payment Gateway Integration Guide. This document walks you through:
+Welcome to FinHub's Payment Gateway Integration Guide. This document walks you through:
 
 - Authenticating requests via HMAC-SHA256.
 - Querying terminals, balances, and service details.
 - Checking commissions and performing balance inquiries.
 - Creating and monitoring payment orders.
 
-By following this guide, you’ll seamlessly integrate FinHub’s APIs into your existing or new payment solutions, ensuring secure and efficient payment transactions.
+By following this guide, you'll seamlessly integrate FinHub's APIs into your existing or new payment solutions, ensuring secure and efficient payment transactions.
 
 ## 1.2. Key Terminology
 
@@ -48,7 +49,7 @@ By following this guide, you’ll seamlessly integrate FinHub’s APIs into your
 
 ## 1.3. Overview
 
-This guide provides a comprehensive overview of how to integrate with FinHub’s payment gateway. It details the required authentication, input formatting for HMAC calculations, and descriptions of each API endpoint. Whether you are setting up your terminal information or processing payment orders, this document is designed to be clear and accessible.
+This guide provides a comprehensive overview of how to integrate with FinHub's payment gateway. It details the required authentication, input formatting for HMAC calculations, and descriptions of each API endpoint. Whether you are setting up your terminal information or processing payment orders, this document is designed to be clear and accessible.
 
 ## 1.4. Prerequisites
 
@@ -60,7 +61,7 @@ Before integrating with FinHub, ensure you have:
 - **HMAC Key:** Must be stored securely (in a vault or key management system).
 
 2. **Base URL**
-   - The root address for FinHub’s API calls (e.g., https://your-env.easypay.am/).
+   - The root address for FinHub's API calls (e.g., https://your-env.easypay.am/).
 3. **Language Header**
    Include an `Accept-Language` HTTP header with a valid ISO language code:
    - `en-US` (English, default),
@@ -119,47 +120,49 @@ Some endpoints require you to compute an HMAC hash over specific parameters. The
 
 3. **Identifier Detail Types:**
    The following list describes common identifier types. You might use these when constructing the HMAC string:
-   | Code | Description |
-   | :--- | :------------------------------------------------ |
-   |1|Id|
-   |2|Name|
-   |3|Phone Number|
-   |4|Social Security Number|
-   |5|Passport|
-   |6|Estate Number|
-   |7|Plate Number|
-   |8|Registration Certificate No.|
-   |9|Date|
-   |10|Code|
-   |11|Description|
-   |12|Email|
-   |13|Tax Code|
-   |14|Customer Id|
-   |15|Username|
-   |16|Bank Account|
-   |17|Bank Card|
-   |18|Payer Name|
-   |19|Course|
-   |20|Address|
-   |21|Count|
-   |22|Loan Id|
-   |23|Investment Id|
-   |24|Surname|
-   |25|Full Name|
-   |26|Technical Id|
-   |27|Unique Document Id|
+
+   | Code | Description                  |
+   | :--- | :--------------------------- |
+   | 1    | Id                           |
+   | 2    | Name                         |
+   | 3    | Phone Number                 |
+   | 4    | Social Security Number       |
+   | 5    | Passport                     |
+   | 6    | Estate Number                |
+   | 7    | Plate Number                 |
+   | 8    | Registration Certificate No. |
+   | 9    | Date                         |
+   | 10   | Code                         |
+   | 11   | Description                  |
+   | 12   | Email                        |
+   | 13   | Tax Code                     |
+   | 14   | Customer Id                  |
+   | 15   | Username                     |
+   | 16   | Bank Account                 |
+   | 17   | Bank Card                    |
+   | 18   | Payer Name                   |
+   | 19   | Course                       |
+   | 20   | Address                      |
+   | 21   | Count                        |
+   | 22   | Loan Id                      |
+   | 23   | Investment Id                |
+   | 24   | Surname                      |
+   | 25   | Full Name                    |
+   | 26   | Technical Id                 |
+   | 27   | Unique Document Id           |
 
 4. **Payment Order Statuses**
    The following list describes payment order statuses.
-   | Code | Description |
-   | :--- | :------------------------------------------------ |
-   |1|Enqueued|
-   |2|Initialized|
-   |3|Charged|
-   |4|Processing|
-   |5|Canceled|
-   |6|Success|
-   |7|Rejected|
+
+| Code | Name        | Description                                                                                                                    |
+| :--- | :---------- | :----------------------------------------------------------------------------------------------------------------------------- |
+| 1    | Enqueued    | The order has been received and queued. To check if it ultimately succeeds or gets rejected, call the order details endpoint.  |
+| 2    | Initialized | The order has been received and is being set up directly (not queued). No extra call is required for basic status information. |
+| 3    | Charged     | Payment for the order has been successfully collected.                                                                         |
+| 4    | Processing  | The order is currently being processed with the relevant counterparties.                                                       |
+| 5    | Canceled    | The order was canceled, either by the client or by an administrator.                                                           |
+| 6    | Success     | The order has been completed successfully.                                                                                     |
+| 7    | Rejected    | The order was automatically rejected due to a problem or validation error from the merchant’s side.                            |
 
 > **Note:**
 > You can verify results with an online HMAC-SHA256 generator (e.g., https://easypay.am/hmac-generator).
@@ -279,7 +282,7 @@ Fetch detailed configurations, input identifiers, and transaction constraints fo
 
 - **URL:** `GET /api/external/v1/merchant-services/{merchantServiceId}`
 - **Path Parameters:**
-  `merchantServiceId` (`integer`) – Unique identifier for the merchant service.
+  `merchantServiceId` (`integer`) - Unique identifier for the merchant service.
 - **HMAC Calculation:**
   `HMAC(merchantServiceId + Nonce)`
 - **Response Example:**
@@ -304,7 +307,6 @@ Fetch detailed configurations, input identifiers, and transaction constraints fo
             "prefix": "0",
             "placeHolder": "Enter phone number",
             "hint": "Type only +374 prefixed phone number",
-            "example": "+37491234567",
             "defaultValue": "077123456",
             "regex": "^\\+374[0-9]{8}$",
             "options": ["+37491234567", "+37498123456"],
@@ -517,11 +519,22 @@ Monitor the status of a payment order to confirm whether it was processed succes
   {
     "orderId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     "status": 6,
-    "cancelable": false
+    "cancelable": false,
+    "receipt":
   }
   ```
 
-### 1.8.10. Additional Considerations
+### 1.8.10. Cancel order
+
+If the **Order Details** endpoint indicates that an order can be canceled, this endpoint will cancel that order.
+
+- **URL:** `DELETE /api/external/v1/orders/{orderId}`
+- **HMAC Calculation:**
+  `HMAC(orderId + Nonce)`
+
+> **Note:** A successful cancellation returns an HTTP 200 status code. Refer to the standard error code documentation for other scenarios.
+
+### 1.8.11. Additional Considerations
 
 - **Unique Order ID Enforcement:**
   FinHub treats the order ID as unique. Reusing an ID will result in a 400 Bad Request with the error message `ORDER_ALREADY_EXISTS`.
@@ -532,10 +545,10 @@ Monitor the status of a payment order to confirm whether it was processed succes
 - **HMAC Integrity:**
   Consistent HMAC validation across endpoints secures your integration. Always verify that all input values and the nonce are correctly concatenated before generating the signature.
 
-### 1.8.11. Support & Troubleshooting
+### 1.8.12. Support & Troubleshooting
 
 For additional assistance or to report issues, please contact your designated FinHub integration manager. When troubleshooting, include both the `RequestId` and `TraceId` from the error responses to help expedite the resolution process.
 
 ---
 
-This guide is designed to provide a clear, step-by-step overview of FinHub’s payment gateway integration. By following the instructions for authentication, input formatting, and endpoint usage, you can ensure a secure and efficient integration experience.
+This guide is designed to provide a clear, step-by-step overview of FinHub's payment gateway integration. By following the instructions for authentication, input formatting, and endpoint usage, you can ensure a secure and efficient integration experience.

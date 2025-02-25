@@ -2,10 +2,9 @@ PRIVACY POLICY
 About
 Service provision by Electronic Payment System
 
+The following terms and conditions are the Privacy policy of Service provision by Electronic Payment System “Easy Pay” between the operator of Easy Pay Electronic payment system /hereafter also System's operator/ and physical person and/or individual entrepreneurs /hereafter also Customer and/or User/, wishing to receive these services by given conditions.
 
-The following terms and conditions are the Privacy policy of Service provision by Electronic Payment System “Easy Pay” between the operator of Easy Pay Electronic payment system /hereafter also System’s operator/ and physical person and/or individual entrepreneurs /hereafter also Customer and/or User/, wishing to receive these services by given conditions.
-
-The Privacy policy of Service use can be submitted online or at the System’s Operator branches by filling out an application in the form prescribed by the Operator or by another way prescribed by the Operator.
+The Privacy policy of Service use can be submitted online or at the System's Operator branches by filling out an application in the form prescribed by the Operator or by another way prescribed by the Operator.
 
 Upon registration the Customer in the Electronic Payment System “Easy Pay”, hereafter EPS “Easy Pay”, and upon activation of an account for the Customer, the Privacy policy considers to be accepted / approved / by the Operator and Customer, and beginning from this moment, the Privacy policy together with the General Conditions, Rules and Tariffs of Service provision, form the contract signed between the Operator and The Customer, which is mandatory for performance /Contract/.
 
@@ -13,14 +12,13 @@ Accepting conditions of Privacy policy, the Customer confirms that has fully rea
 
 The Main Concepts Used in the Contract
 
-
 1.1. Electronic Payment System “Easy Pay”, hereafter EPS “Easy Pay”
 
-Online payment tool, as well as, equipment and program complex, which are the property of System’s Operator or belong him by the lease rights, and which are used in the Internet environment for making online transactions and through which the System’s operator ensures the provision of services for the Customer.
+Online payment tool, as well as, equipment and program complex, which are the property of System's Operator or belong him by the lease rights, and which are used in the Internet environment for making online transactions and through which the System's operator ensures the provision of services for the Customer.
 
-Having “Easy Wallet” and an appropriate advance in the EPS “Easy Pay”, the User gets an opportunity to commit to the System’s Operator to purchase goods or services by the User’s name. The System’s Operator makes payments from the prepaid account of the User and from his name.
+Having “Easy Wallet” and an appropriate advance in the EPS “Easy Pay”, the User gets an opportunity to commit to the System's Operator to purchase goods or services by the User's name. The System's Operator makes payments from the prepaid account of the User and from his name.
 
-1.2. System’s Operator
+1.2. System's Operator
 
 “Easy Pay” payment accounting limited liability company, information on which is available on the internet site www.easypay.am. The website provides also detailed information on "Easy Pay” EPS and conditions on its usage.
 
@@ -38,13 +36,11 @@ The legal entity or individual entrepreneur on the official website, who sells g
 
 1.6. Third Person
 
-
 Each Physical Person, individual entrepreneur, legal entity who does not consider to be the Customer/User of ‘Easy Pay” EPS, but who can be in any civil legal relations with the Customer.
 
 1.7. Loss
 
-
-The losses are the expenses of the person/Customer, the System’s Operator or the Third Persons, whose rights are violated, and which he/she has to do in order to recover his /her violated rights, unearned income, as well as non-material loss /lost profit/, that this person would have received under ordinary civil conditions, if his/her rights had not been violated.
+The losses are the expenses of the person/Customer, the System's Operator or the Third Persons, whose rights are violated, and which he/she has to do in order to recover his /her violated rights, unearned income, as well as non-material loss /lost profit/, that this person would have received under ordinary civil conditions, if his/her rights had not been violated.
 
 1.8. The rules of usage “Easy Pay” EPS
 
@@ -52,7 +48,7 @@ The rules contained in the Given Contract and on the website of “Easy Pay” E
 
 1.9. Replenished account or prepayment.
 
-The payment of money prescribed by the Contract, which the Operator pays to the System’s Operator and for which the System’s Operator replenishes the Customer’s “Easy Wallet” registration account. The replenishment is made by 1 currency, i.e. for the one AMD, the registration account of the User is being replenished by one point/AMD.
+The payment of money prescribed by the Contract, which the Operator pays to the System's Operator and for which the System's Operator replenishes the Customer's “Easy Wallet” registration account. The replenishment is made by 1 currency, i.e. for the one AMD, the registration account of the User is being replenished by one point/AMD.
 
 1.10. “Easy Wallet” points
 
@@ -60,16 +56,13 @@ Points consider to the means of Internet payment within the frames of “Easy Pa
 
 1.11. Password
 
-
 The combination of numbers and letters created by the User, which is used as an identification method of the User and allows to enter the “Easy Pay” EPS and use the data in “Easy Pay” EPS.
 
 1.12. Pin
 
-
 The sequence of four numbers, which the EPS “Easy Pay” uses as an identification method for the User and allows him/her to enter the “Easy Pay” EPS and use the data in “Easy Pay” EPS, in case when the Customer himself/herself does not personally leave the system.
 
 1.13. Tariffs
-
 
 Tariffs set by the Operator. based on which fees are charged from the Customer for the provided Services.
 
@@ -79,19 +72,15 @@ The official website of the Operator in the Internet.
 
 1.15. Financial Agent
 
-
 The bank in the Republic of Armenia, foreign bank branches or the organizations having the license of money /cash/ transfers, which have signed the contract with the Operator in order to carry out some functions ordered by the Operator /e.g. account replenishment, cash payment, etc/.
 
 1.16. Mobile phone number
-
 
 The GSM number provided by the mobile operator, if the Customer uses his/her mobile phone number as the identifier of the account.
 
 1.17 Mobile application
 
-
 The application developed on the bases of Android or iOS, through which it is possible to manage the account, use the services, as well as exchange the information between the Customer and the Operator /as well as electronic notifications/.
-
 
 2. Services
 
@@ -121,7 +110,7 @@ The application developed on the bases of Android or iOS, through which it is po
 
 3.1. The Customer can have only one working registration and consequently one working “Easy Wallet” in the System, if something other is not determined by the Operator and/or any other software access is not defined. If the Operator discovers that for the same person there had been opened more than one accounts at the system, than, the Operator can immediately terminate any or all of the relevant contracts after notification.
 
-3.2. It is necessary to attach a bank account belonging to the Client to the Account in order to register an Account in the domain of EPS. Specifically, the Account is considered to be registered exclusively under the conditions of attaching Client’s bank account to the Account. In case of downloading, running the EPS mobile application and/or "web" version, identifying through an identity document, without attaching a bank account, the EPS Account is not created.
+3.2. It is necessary to attach a bank account belonging to the Client to the Account in order to register an Account in the domain of EPS. Specifically, the Account is considered to be registered exclusively under the conditions of attaching Client's bank account to the Account. In case of downloading, running the EPS mobile application and/or "web" version, identifying through an identity document, without attaching a bank account, the EPS Account is not created.
 
 3.2.1 In the case defined by the second paragraph of clause 3.2 of these rules, on condition of downloading, running the EPS mobile application and/or entering the "web" version of EPS, an opportunity is created to get acquainted with the domain of EPS, the services provided and the information necessary to use them, but a transaction cannot be performed.
 
@@ -129,7 +118,7 @@ The application developed on the bases of Android or iOS, through which it is po
 
 3.2.3 The Client is notified about the conditions for making transactions through EPS, transaction sizes, the maximum balance of the Account and the conditions necessary for using Account through the EPS Account.
 
-3.3 After downloading and running of EPS mobile application, User, as an additional tool, automatically receives the instruction for online identification. In order to identify the User in online regime, it is needed to take a photo of the identity document with the camera of the mobile device, ensuring the clarity of the image and the legibility of the text (In the case of the RA old-style passport, it is necessary to take a picture of the page with the photo containing the MRZ and the pages with the registration address, and in the case of the biometric passport, the page with the photo containing the MRZ, in the case of the identification card, both sides).3.4 After uploading the photos mentioned herein point 3.3, System Operator, according to data on uploaded by User document, requests all data necessary for User’s identification from appropriate databases of authentication system «Ekeng», managed by «Ekeng» CJSC. Moreover, the electronic acceptance of this Contract is the consent of User for making requests concerning that very User by authentication system «Ekeng», collection, storage and transfer of personal data.
+3.3 After downloading and running of EPS mobile application, User, as an additional tool, automatically receives the instruction for online identification. In order to identify the User in online regime, it is needed to take a photo of the identity document with the camera of the mobile device, ensuring the clarity of the image and the legibility of the text (In the case of the RA old-style passport, it is necessary to take a picture of the page with the photo containing the MRZ and the pages with the registration address, and in the case of the biometric passport, the page with the photo containing the MRZ, in the case of the identification card, both sides).3.4 After uploading the photos mentioned herein point 3.3, System Operator, according to data on uploaded by User document, requests all data necessary for User's identification from appropriate databases of authentication system «Ekeng», managed by «Ekeng» CJSC. Moreover, the electronic acceptance of this Contract is the consent of User for making requests concerning that very User by authentication system «Ekeng», collection, storage and transfer of personal data.
 
 3.5 If in appropriate databases of authentication system «Ekeng» the social service number of User is not registered, the procedure of online identification will be interrupted and User will be obliged to visit the head office or branches of System Operator (the list and addresses are represented on web-page of System Operator www.easypay.am) for identification on place.
 
@@ -149,33 +138,33 @@ The application developed on the bases of Android or iOS, through which it is po
 
 3.13. The Operator has a right to require from the client who has the status of Easy Standard but is not of an adult age stated by the legislation of Republic of Armenia, to confirms his/her operations by his/her legal representative, if thereare not sufficient bases to consider the Customer fully capable.
 
-3.14. The Operator releases electronic money units and enters them the Customer’s Account by the cash or non-cash currency received from the Customer and from the third Persons in favor of the Client in accordance with the procedure established by the RA current legislation. The Easy Wallet of the Customer can be replenished by transfers from Easy Wallets of other Customers, as well as other ways, not prohibited by law.
+3.14. The Operator releases electronic money units and enters them the Customer's Account by the cash or non-cash currency received from the Customer and from the third Persons in favor of the Client in accordance with the procedure established by the RA current legislation. The Easy Wallet of the Customer can be replenished by transfers from Easy Wallets of other Customers, as well as other ways, not prohibited by law.
 
 3.15. The period of validity of Easy Wallet units released by the Operator is not limited, with the exception of cases stated by the paragraph 3.4 of the Contract.
 
 3.16. All cash payments are rounded down; to the minimum nominal value of coins in circulation in the Republic of Armenia.
 
-3.17. Transfer, payment or repayment performance of a client's order is made only if the ‘Easy Wallet” balance is sufficient for complete realization of the Customer’s order, taking into account and the Operator’s remuneration. Otherwise, the performance of these transactions is rejected. The performance of transactions can be rejected by the Operator, if;
+3.17. Transfer, payment or repayment performance of a client's order is made only if the ‘Easy Wallet” balance is sufficient for complete realization of the Customer's order, taking into account and the Operator's remuneration. Otherwise, the performance of these transactions is rejected. The performance of transactions can be rejected by the Operator, if;
 
-3.18.1. As a result of their performance are violated a legislation or the conditions stated by the Operator (as well as are being violated the Operator’s or the Third Person’s rights or legal interests).
+3.18.1. As a result of their performance are violated a legislation or the conditions stated by the Operator (as well as are being violated the Operator's or the Third Person's rights or legal interests).
 
-3.18.2. Their performance is not possible for the reasons, which don’t dependonthe Operator.
+3.18.2. Their performance is not possible for the reasons, which don't dependonthe Operator.
 
 3.18.3. In other cases, stated by law or the Contract.
 
 3.19. The Customer can give the Service Providers the right to make a charge without an acceptance in the order stated by the Operator, and in this case the requirements of the charge without an acceptance will be subject to execution in the same way, as they would otherwise be executed getting the relevant instructions from the Customer.
 
-3.20.The sum of money accrued to the Customer’s account due to the Operator’s /Financial Agent/ mistake /as well as the exceeding sum/, without an acceptance may be drawn back by the Operator from the Customer’s account; notifying the Customer. If the account balance is not sufficient to take the whole money, transferred by mistake, the Operator not late than within 30 calendar days of the mistake, introduces to the Customer the demand about returning the difference, and the Customer must return the appropriate sum of money within 15 /fifteen/ calendar days.
+3.20.The sum of money accrued to the Customer's account due to the Operator's /Financial Agent/ mistake /as well as the exceeding sum/, without an acceptance may be drawn back by the Operator from the Customer's account; notifying the Customer. If the account balance is not sufficient to take the whole money, transferred by mistake, the Operator not late than within 30 calendar days of the mistake, introduces to the Customer the demand about returning the difference, and the Customer must return the appropriate sum of money within 15 /fifteen/ calendar days.
 
 3.21. The Customer must be diligent, and agree to return the money sent /paid/ to his account by chance by the Third Persons.With the exception of cases when such kind ofThird Persons have monetary obligation towards the Customer or such obligation will arise in case of returning money.
 
-3.22. The money mistakenly paid/sent by the Customer to another Customer or Service Provider, may be returned only by that another Customer’s or Service Provider’s agreement.
+3.22. The money mistakenly paid/sent by the Customer to another Customer or Service Provider, may be returned only by that another Customer's or Service Provider's agreement.
 
 3.23. The order of the Customer about making transfer or payment to another Customer or Service Provider, considers being performed by the Operator, when adequate funds are debited from the “Easy Wallet” of the Customer making transfer/payment and credited to the “Easy Wallet” of the Customer of Service Provider receiving it.
 
 3.24. The order of the Customer about making transfer to the accounts serviced by other financial organizations and/or clients, not in online variant, considers being performed by the Operator from the moment, when the adequate funds are debited from the “Easy Wallet” of the Customer making transfer, exchanged by the Operator and debited from the bank Account of the Operator, with all the necessary details about the order, for making a transfer to another Organization.
 
-3.25. In case of the Contract termination the Operator repays the positive balance of the “Easy Wallet” or transfers it to another Customer’s “Easy Wallet” with the request of the Customer and using the adequate prices, terms and conditions.
+3.25. In case of the Contract termination the Operator repays the positive balance of the “Easy Wallet” or transfers it to another Customer's “Easy Wallet” with the request of the Customer and using the adequate prices, terms and conditions.
 
 3.26. In case of absence of any other agreement between the Operator and the Customer, the Operator gets remuneration from the Customer due to the tariffs; levying it from the Customer without acceptance procedure.
 
@@ -201,15 +190,15 @@ The application developed on the bases of Android or iOS, through which it is po
 
 4.2.2. To use the Services personally and exclusively for lawful purposes. The Customer is responsible for providing information about his/her Account or using funds available in the bank account / accounts / attached to the Account to Third persons, and consequently for transactions made by Third persons by his/her “Easy Wallet” units.
 
-4.2.3. To abstain from the usage of the Operator’s official website or other means for Account management in any way, not stated by the Contract. Periodically check the information included in the Personal Information section of the mobile application site.
+4.2.3. To abstain from the usage of the Operator's official website or other means for Account management in any way, not stated by the Contract. Periodically check the information included in the Personal Information section of the mobile application site.
 
 4.2.4 Be informed about the information published in Personal part of official web-page.
 
 4.2.5. Immediately inform the Operator about all the inconsistencies and unusual circumstances, especially about the absence or error of any message or order in the mobile application.
 
-4.2.6. To provide the confidentiality of Account requisites’ management /passwords, PIN-codes/ and the protection against unauthorized use.
+4.2.6. To provide the confidentiality of Account requisites' management /passwords, PIN-codes/ and the protection against unauthorized use.
 
-4.2.7. Immediately, through Hotline services or personally visiting the Operator’s branch, inform the Operator about the mobile phone number changes, which is used to manage the Account, as well as about its loss or any other case, when it comes out of possession of the Customer.
+4.2.7. Immediately, through Hotline services or personally visiting the Operator's branch, inform the Operator about the mobile phone number changes, which is used to manage the Account, as well as about its loss or any other case, when it comes out of possession of the Customer.
 
 4.2.8 In case of changing the documents which are the base of identification for Users, immediately inform Operator, providing with the copy of changed and valid identification document. All risks, raised from non-implementation or improper implementation of the obligation defined herein, bears User.
 
@@ -219,7 +208,7 @@ The application developed on the bases of Android or iOS, through which it is po
 
 4.3.2. To block the Account management requisites (in a number of which identifiers) and/or request from the Customer to change them, in case of the Operator has any doubt about the protection of requisites from unauthorized use and/or there is a reasonable opinion or there is a reliable document that it /they/ belongs to another person.
 
-4.3.5. If as a result of the Customer’s activities a harm is caused to the Operator, the Third Person or the state, the Operator, within 1 /one/ month from discovery of such activities, can reject the Customer’s order or request to perform any redemption, transfer or payment from the account and can suspend the Services, if it is necessary for the protection of rights and legal interests of the Operator, Customer, Third persons or the state or determining the essential conditions of the suspicious situation defined by this point.
+4.3.5. If as a result of the Customer's activities a harm is caused to the Operator, the Third Person or the state, the Operator, within 1 /one/ month from discovery of such activities, can reject the Customer's order or request to perform any redemption, transfer or payment from the account and can suspend the Services, if it is necessary for the protection of rights and legal interests of the Operator, Customer, Third persons or the state or determining the essential conditions of the suspicious situation defined by this point.
 
 4.3.6. To stop the Service provision` beginning from the date of notification of the Customer about the Contract termination.
 
@@ -233,24 +222,23 @@ The application developed on the bases of Android or iOS, through which it is po
 
 4.4. The Operator is Obliged;
 
-4.4.1.To state the proper processing of the User’s; identification, according to the RA Law “About Money Laundry and Combating Terrorism Financing” or due to the process of identification through payment card (credit card) released by trade banks, with the exception of payment cards released by trade banks of high risk countries stated by Financial Action Task Force (FATF).
+4.4.1.To state the proper processing of the User's; identification, according to the RA Law “About Money Laundry and Combating Terrorism Financing” or due to the process of identification through payment card (credit card) released by trade banks, with the exception of payment cards released by trade banks of high risk countries stated by Financial Action Task Force (FATF).
 
 4.4.2.Toexert the necessary measures in order to ensure the access of Service use and the proper quality of the Services within the frameworks of present technical opportunities.
 
 4.4.3. To provide the Customer with the information about transactions performed by Account as well as about the “Easy Wallet” balance.
 
-4.4.4. If the User makes the prepayment by banking transfer, but the data mentioned in transfer document does not coincide with the System Operator’s data, the Operator is obliged to re-transfer the sum of money by requisites mentioned in these documents or to contact the User to correct the data and ensure the successful completion of the transaction.
+4.4.4. If the User makes the prepayment by banking transfer, but the data mentioned in transfer document does not coincide with the System Operator's data, the Operator is obliged to re-transfer the sum of money by requisites mentioned in these documents or to contact the User to correct the data and ensure the successful completion of the transaction.
 
 4.4.5. To take measures for the confidentiality of information shared by “Easy Pay” EPS, as well as for its protection from unauthorized use and/or its disclosure by Third persons.
 
-4.4.6. In case of disputes to provide a sealed reference by the User’s request about transaction performed by the User through EPS, and about the actual payment made by EPS for goods and/or services.
+4.4.6. In case of disputes to provide a sealed reference by the User's request about transaction performed by the User through EPS, and about the actual payment made by EPS for goods and/or services.
 
 4.4.7. To inform the User about arising, changing and eliminating of that circumstances, which are essential for the implementation of a given Contract; especially publish the tariffs on the official website and regularly update the list of services, publish the system rules, etc.
 
 4.4.8.To investigate and solve the complaints submitted by customers within 10/ten/ working days due to order specified by internal procedures of the Operator.
 
-4.4.9. To implement other Contract provided obligations which are defined by the System Operator’s system rules, other legal acts.
-
+4.4.9. To implement other Contract provided obligations which are defined by the System Operator's system rules, other legal acts.
 
 5. Responsibility
 
@@ -258,9 +246,9 @@ The application developed on the bases of Android or iOS, through which it is po
 
 5.2. The Operator is not responsible for checking the nature and legitimacy of relationships between the Customer and Third persons, as well as, Service providers.
 
-5.3. If anything other is not stated, the Operator has no responsibility for Service providers’ obligations and can not ensure the compliance of their services with the law requirements or their descriptions, the quality, quantity, service provision terms and other conditions. Accordingly, the operator does not accept any complaints about correction of possible violations of the service providers or claims to refund payments.
+5.3. If anything other is not stated, the Operator has no responsibility for Service providers' obligations and can not ensure the compliance of their services with the law requirements or their descriptions, the quality, quantity, service provision terms and other conditions. Accordingly, the operator does not accept any complaints about correction of possible violations of the service providers or claims to refund payments.
 
-5.4. Each party is responsible for actual losses caused to the other party during the Contract execution. The parties decline and keep away from the claims of indirect losses, as well as claims of compensation of missed profits. The size of Operator’s responsibility, in any case, can not exceed the size of the account balance in the moment of occurrence of circumstances that served as a basis for liability. The Operator is not responsible for errors, failures, delinquent acts occurred not by his fault, as well as for any result caused by suspension or termination of Services, stated by the Contract / as well as during works of the System’s technical service/.
+5.4. Each party is responsible for actual losses caused to the other party during the Contract execution. The parties decline and keep away from the claims of indirect losses, as well as claims of compensation of missed profits. The size of Operator's responsibility, in any case, can not exceed the size of the account balance in the moment of occurrence of circumstances that served as a basis for liability. The Operator is not responsible for errors, failures, delinquent acts occurred not by his fault, as well as for any result caused by suspension or termination of Services, stated by the Contract / as well as during works of the System's technical service/.
 
 5.5. The Customer personally bears all the risks, which may occur as a result of not following the advice and instructions, as well as of violation the rules stated by the Operator.
 
@@ -268,7 +256,7 @@ The application developed on the bases of Android or iOS, through which it is po
 
 6.1. The Parties ensure the information protection exchanged between each other within the Contract frames.
 
-6.2. The Operator ensures the confidentiality of the Customer’s personal data, transactions made by an Account, Account balance and other information. The information may be disclosed by the Operator exceptionally in those cases and to that extent, that is required by the law, or is necessary for Service provision, for the legal of Operator’s violated rights /as well as judicial defense/. In all other cases, such information may be disclosed only with the consent or order of the Customer. The Operator has a right to reveal the details of transaction and personal data of the person making payment to a person receiving the payment.
+6.2. The Operator ensures the confidentiality of the Customer's personal data, transactions made by an Account, Account balance and other information. The information may be disclosed by the Operator exceptionally in those cases and to that extent, that is required by the law, or is necessary for Service provision, for the legal of Operator's violated rights /as well as judicial defense/. In all other cases, such information may be disclosed only with the consent or order of the Customer. The Operator has a right to reveal the details of transaction and personal data of the person making payment to a person receiving the payment.
 
 6.3. The information, received by another means, without violating the confidentiality requirements, is not considered confidential for the Contract purposes.
 
@@ -282,11 +270,11 @@ The application developed on the bases of Android or iOS, through which it is po
 
 7.1. Unless otherwise is specified by the Contract, all the notifications within the frames of the Contract are made on electronic way through mobile application.
 
-7.2. Exceptionally for the Customer’s convenience, the Operator, in provided cases, can send the copies of notifications and messages about them to the e-mail and/or mobile phone number mentioned by the Customer.
+7.2. Exceptionally for the Customer's convenience, the Operator, in provided cases, can send the copies of notifications and messages about them to the e-mail and/or mobile phone number mentioned by the Customer.
 
 7.3. Coming from technical peculiarities the Operator can not guarantee the acceptance of the messages sent to an e-mail address or mobile phone by the Customer.
 
-7.4. If, in any case, there is no possibility to make a notification by mobile application, the Customer has to contact with the Operator by Hotline service or by visiting the Operator’s branch.
+7.4. If, in any case, there is no possibility to make a notification by mobile application, the Customer has to contact with the Operator by Hotline service or by visiting the Operator's branch.
 
 8. Force Majeure
 
@@ -304,7 +292,7 @@ The Contract is concluded in Armenian and published in the language selected fro
 
 11.1. The Customer is obliged to check transactions performed by the Account and in case of finding any noncompliance, to notify the Operator about it, within two months from the moment of the very transaction.
 
-11.2. In case of having any complaints or suggestions, the Customer can apply to the Operator by submitting letters, also by e-mail, by visiting the Operator’s branch or by the Operator’s hotline service. According to the rules stated by him, the Operator accepts internal procedures for conducting complaints and suggestions, which are being posted at branches and on the Operator’s website. The operator is obliged to respond to complaints and proposals received the terms and procedures established by him/her and following the requirements of the legislation. To the written complaints of the Customer the answer should be given in a written form.
+11.2. In case of having any complaints or suggestions, the Customer can apply to the Operator by submitting letters, also by e-mail, by visiting the Operator's branch or by the Operator's hotline service. According to the rules stated by him, the Operator accepts internal procedures for conducting complaints and suggestions, which are being posted at branches and on the Operator's website. The operator is obliged to respond to complaints and proposals received the terms and procedures established by him/her and following the requirements of the legislation. To the written complaints of the Customer the answer should be given in a written form.
 
 12. Settlement of Disputes
 
@@ -312,11 +300,11 @@ The Contract is concluded in Armenian and published in the language selected fro
 
 12.2. In case of absence of a mutual agreement to resolve the dispute, it is resolved according to the order stated by the legislation of Republic of Armenia.
 
-13. Contract Terms’ Changes
+13. Contract Terms' Changes
 
 13.1. The operator can by own discretion unilaterally change the terms of the Contract by publishing the applicable redaction. The Operator can submit an additional notification about the changes to the Agreement in the domain of EPS.
 
-13.2. If the Customer doesn’t agree with these changes, he/she solves the Contract, immediately notifying about it to the Operator.
+13.2. If the Customer doesn't agree with these changes, he/she solves the Contract, immediately notifying about it to the Operator.
 
 13.3. In case of performing transactions by Account after changes, the changes considered to be unconditionally accepted by the Customer.
 

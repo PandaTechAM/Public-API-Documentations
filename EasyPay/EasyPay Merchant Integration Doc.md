@@ -18,13 +18,13 @@
 
 ## Overview
 
-This document provides detailed instructions on how merchants can integrate with EasyPay’s system through secure API endpoints. The integration supports balance inquiries and payment processing with standardized security protocols such as `HMAC-based authentication`.
+This document provides detailed instructions on how merchants can integrate with EasyPay's system through secure API endpoints. The integration supports balance inquiries and payment processing with standardized security protocols such as `HMAC-based authentication`.
 
 ## Prerequisites
 
 - **API Base URL**: Provided by the merchant upon registration.
 - **HMAC Key**: A unique key shared securely by EasyPay.
-  > **Security Note:** Merchants are advised to whitelist EasyPay’s IP addresses to ensure only trusted requests are processed.
+  > **Security Note:** Merchants are advised to whitelist EasyPay's IP addresses to ensure only trusted requests are processed.
 
 ## Authentication and Security
 
@@ -76,9 +76,6 @@ All errors return a standardized JSON structure to aid in debugging:
 - **Message:** A general explanation of the problem.
 
 Use `RequestId` and `TraceId` when contacting support to help with troubleshooting.
-
-
-
 
 ## Input Formatting and HMAC Calculation
 
@@ -140,16 +137,20 @@ key = "your HMAC secret key"
 Follow these steps to calculate the HMAC:
 
 1. Combine the provided inputs into a single string:
+
 ```json
 "123456789016:12345:1:3:98765:2:69f77f9c-b9b5-43ac-9e6b-516863b8a451"
 ```
+
 2. Use the HMAC-SHA256 algorithm and apply the secret key:
+
 ```json
 "your HMAC secret key"
 ```
 
-3. After computing the HMAC hash from the concatenated string and key, 
-convert the resulting byte array into a Base64-encoded string.
+3. After computing the HMAC hash from the concatenated string and key,
+   convert the resulting byte array into a Base64-encoded string.
+
 ```json
 "EQiqUTkEQOGNkfcW4MU6XooOm+rL1REz5njbkvq40bA="
 ```

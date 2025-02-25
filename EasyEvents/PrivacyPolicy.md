@@ -12,14 +12,17 @@ EasyEvents ("we," "our," or "us") is committed to protecting your privacy. This 
 We may collect and process the following data:
 
 ### 1.1 Personal Data
+
 - Name, email address, phone number, or any other identifier you provide voluntarily when you contact us.
 - Information you provide during event registration or ticket verification.
 
-### 1.2 Device Data  
+### 1.2 Device Data
+
 - Device type, operating system, unique device identifiers, and mobile network information.
 - Location data (if you allow location-based services).
 
-### 1.3 Usage Data  
+### 1.3 Usage Data
+
 - Information about how you use the app, such as scanned QR codes (limited to relevant event-related data).
 - Application logs and error reports for diagnostic purposes.
 
@@ -29,9 +32,9 @@ We may collect and process the following data:
 
 We may use the information we collect for the following purposes:
 
-- **To Provide Services:** Facilitate QR code scanning and event access.  
-- **To Communicate:** Send important updates related to the event or technical notifications.  
-- **To Improve User Experience:** Monitor and analyze usage trends to enhance the app.  
+- **To Provide Services:** Facilitate QR code scanning and event access.
+- **To Communicate:** Send important updates related to the event or technical notifications.
+- **To Improve User Experience:** Monitor and analyze usage trends to enhance the app.
 - **Legal Compliance:** Ensure compliance with applicable laws and enforce our terms.
 
 ---
@@ -40,8 +43,8 @@ We may use the information we collect for the following purposes:
 
 We do not sell or rent your personal data. However, we may share your data with:
 
-- **Event Organizers:** To verify your attendance and provide event services.  
-- **Service Providers:** Third-party vendors supporting app functionality, such as analytics and crash reporting services.  
+- **Event Organizers:** To verify your attendance and provide event services.
+- **Service Providers:** Third-party vendors supporting app functionality, such as analytics and crash reporting services.
 - **Legal Authorities:** When required by law, subpoena, or for investigation of fraud or security issues.
 
 ---
@@ -63,8 +66,8 @@ Depending on your jurisdiction, you may have the following rights:
 - **Withdrawal of Consent:** Withdraw consent for specific data uses (if applicable).
 
 To exercise your rights, please contact us at:  
-**Email:** info.easypay.am 
-**Phone:** +37411261261 
+**Email:** info.easypay.am
+**Phone:** +37411261261
 
 ---
 
@@ -82,7 +85,7 @@ Our app may contain links to or integrate with third-party services. We are not 
 
 ## 8. Children's Privacy
 
-Our app is not intended for use by children under the age of 13. We do not knowingly collect personal data from children. If we become aware that a child’s information has been collected without parental consent, we will delete it promptly.
+Our app is not intended for use by children under the age of 13. We do not knowingly collect personal data from children. If we become aware that a child's information has been collected without parental consent, we will delete it promptly.
 
 ---
 
@@ -98,8 +101,8 @@ If you have any questions or concerns about this Privacy Policy, please contact 
 
 **EasyPay LLC**  
 **Address:** Adonts 8/171 st, Yerevan, RA  
-**Email:** info.easypay.am 
-**Phone:** +37411261261 
+**Email:** info.easypay.am
+**Phone:** +37411261261
 
 ---
 
