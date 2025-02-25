@@ -1,6 +1,6 @@
-# 1. EasyTransact API Documentation V1.0
+# 1. EasyTransact API Documentation
 
-- [1. EasyTransact API Documentation V1.0](#1-easytransact-api-documentation-v10)
+- [1. EasyTransact API Documentation](#1-easytransact-api-documentation)
   - [1.1. Overview](#11-overview)
   - [1.2. Base URL](#12-base-url)
   - [1.3. Common Response Codes](#13-common-response-codes)
@@ -20,6 +20,7 @@
     - [1.8.1. Check](#181-check)
     - [1.8.2. Pay](#182-pay)
     - [1.8.3. Balance](#183-balance)
+    - [1.8.4. Get cheque](#184-get-cheque)
   - [1.9. Contributing](#19-contributing)
   - [1.10. Issues and Support](#110-issues-and-support)
   - [1.11. Stay Updated](#111-stay-updated)
