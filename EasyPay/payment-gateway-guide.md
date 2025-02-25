@@ -119,6 +119,7 @@ Some endpoints require you to compute an HMAC hash over specific parameters. The
      Base64-encoded HMAC: iVGljbFol+xfKGW/uw3B9wxP5timuV5YYyzYkL3cicU=
      Final Header: "HMAC ffa5be93-35e6-4186-8b84-44882d6dbb30:iVGljbFol+xfKGW/uw3B9wxP5timuV5YYyzYkL3cicU="
      ```
+     > **Note:** You can verify results with an online HMAC-SHA256 generator (e.g., https://easypay.am/hmac-generator).
 
 3. **Identifier Detail Types:**
    The following list describes common identifier types. You might use these when constructing the HMAC string:
@@ -165,9 +166,6 @@ Some endpoints require you to compute an HMAC hash over specific parameters. The
 | 5    | Canceled    | The order was canceled, either by the client or by an administrator.                                                           |
 | 6    | Success     | The order has been completed successfully.                                                                                     |
 | 7    | Rejected    | The order was automatically rejected due to a problem or validation error from the merchant’s side.                            |
-
-> **Note:**
-> You can verify results with an online HMAC-SHA256 generator (e.g., https://easypay.am/hmac-generator).
 
 ## 1.6. Response Codes & Error Handling
 
