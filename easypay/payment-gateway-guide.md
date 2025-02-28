@@ -157,15 +157,15 @@ Some endpoints require you to compute an HMAC hash over specific parameters. The
 4. **Payment Order Statuses**
    The following list describes payment order statuses.
 
-| Code | Name        | Description                                                                                                                    |
-| :--- | :---------- | :----------------------------------------------------------------------------------------------------------------------------- |
-| 1    | Enqueued    | The order has been received and queued. To check if it ultimately succeeds or gets rejected, call the order details endpoint.  |
-| 2    | Initialized | The order has been received and is being set up directly (not queued). No extra call is required for basic status information. |
-| 3    | Charged     | Payment for the order has been successfully collected.                                                                         |
-| 4    | Processing  | The order is currently being processed with the relevant counterparties.                                                       |
-| 5    | Canceled    | The order was canceled, either by the client or by an administrator.                                                           |
-| 6    | Success     | The order has been completed successfully.                                                                                     |
-| 7    | Rejected    | The order was automatically rejected due to a problem or validation error from the merchant’s side.                            |
+   | Code | Name        | Description                                                                                                                    |
+   | :--- | :---------- | :----------------------------------------------------------------------------------------------------------------------------- |
+   | 1    | Enqueued    | The order has been received and queued. To check if it ultimately succeeds or gets rejected, call the order details endpoint.  |
+   | 2    | Initialized | The order has been received and is being set up directly (not queued). No extra call is required for basic status information. |
+   | 3    | Charged     | Payment for the order has been successfully collected.                                                                         |
+   | 4    | Processing  | The order is currently being processed with the relevant counterparties.                                                       |
+   | 5    | Canceled    | The order was canceled, either by the client or by an administrator.                                                           |
+   | 6    | Success     | The order has been completed successfully.                                                                                     |
+   | 7    | Rejected    | The order was automatically rejected due to a problem or validation error from the merchant’s side.                            |
 
 ## 1.6. Response Codes & Error Handling
 
