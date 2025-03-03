@@ -350,45 +350,84 @@ EasyEvents provides an embeddable IFrame for ticket browsing, purchase, and imme
    Provide user-level tokens (obtained via sync-and-login) to the IFrame’s local storage.
 
    ```js
-   window.localStorage.setItem("token", JSON.stringify({
-       refreshTokenExpirationTime: "Date";
-       deviceId: "string";
-   }));
+   document.addEventListener("DOMContentLoaded", () => {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get("token");
+      const refreshToken = params.get("refresh_token");
+      const device = params.get("device_id");
+        
+      if (token && refreshToken && device) {
+          localStorage.setItem("device_id", device);
+          localStorage.setItem("token", token);
+          localStorage.setItem("refresh_token", refreshToken);
+          }
+        
+          const eventsWrapper = document.createElement("div");
+          eventsWrapper.id = "events-wrapper";
+          document.body.appendChild(eventsWrapper);
+        
+          // Assuming EventsWrapper is a function that initializes the events
+          EventsWrapper();
+        });
    ```
 
 3. **Handle IFrame Responses**
 
-   - The IFrame communicates back to the host application via `postMessage` or a polling strategy.
-   - A response of `"-1"` often indicates the user canceled.
+   - The IFrame communicates back to the host application via `params.set("checkout_id")`.
    - A valid TicketOrderId indicates a confirmed order.
    - Hide or remove the IFrame once you receive a final status.
 
    **Example JavaScript for Polling**
 
+    ## URL Query Parameters
+    
+    ### goBack
+    When present and set to `"true"`, this instructs the host application to navigate back from the iframe. Essentially, it signals a return action to the host app.
+    
+    ### checkout_id
+    Instructs the host application to navigate to its checkout page.  
+    The value of `checkout_id` determines which specific checkout flow or product is intended.
+    
+    ### redirect
+    When present, this signals to the host application that it should redirect to the provided link. It’s typically used for opening external or specific pages within the host app.
+    
+    ### sharePDF
+    Contains a link to a PDF document. The host application may use this link to open, preview, or otherwise share the PDF from its end.
+    
+    ### count
+    This numeric value can be used by the host application to track or log every action that occurs within the iframe. It increments (or changes) whenever a new action (`goBack`, `checkout`, `redirect`, `sharePDF`) is triggered.
+
+
    ```js
-   function startPollingMessages() {
-     const intervalId = setInterval(() => {
-       const message = window.getMessage(); // Custom function retrieving messages
-       if (message !== undefined) {
-         if (message === '-1') {
-           closeIFrame();
-         } else {
-           handleOrder(message);
-         }
-         clearInterval(intervalId);
-       }
-     }, 100);
-   }
-
-   function closeIFrame() {
-     const iframe = document.getElementById('easyEventsIframe');
-     if (iframe) iframe.style.display = 'none';
-   }
-
-   function handleOrder(orderId) {
-     console.log('Handle order with ID:', orderId);
-     // Implement order handling logic
-   }
+    const handleCheckout = (option: string, count: number) => {
+      setSearchParams((params) => {
+        params.set("checkout_id", option);
+        params.set("count", count.toString());
+        return params;
+      });
+    };
+  
+    const handGoBack = () => {
+      setSearchParams((params) => {
+        params.set("goBack", "true");
+        return params;
+      });
+    };
+  
+    const redirect = (link: string, count: number) => {
+      setSearchParams((params) => {
+        params.set("redirect", link);
+        params.set("count", count.toString());
+        return params;
+      });
+    };
+    const handleSharePDF = (link: string, count: number) => {
+      setSearchParams((params) => {
+        params.set("sharePDF", link);
+        params.set("count", count.toString());
+        return params;
+      });
+    };
    ```
 
 ### 1.9.2. Support & Troubleshooting
