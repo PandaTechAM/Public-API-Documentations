@@ -238,7 +238,10 @@ Below are the primary endpoints for server-side integration. In all cases, inclu
 
   ```json
   {
-    "refreshTokenSignature": "e384b714-86e3-4cde-a658-00a321045735"
+    "accessTokenSignature": "c384b714-86e3-4cde-a658-00a321045735",
+    "accessTokenExpiration": "2025-03-28T08:48:15.404Z",
+    "refreshTokenSignature": "e384b714-86e3-4cde-a658-00a321045735",
+    "refreshTokenExpiration": "2025-03-28T08:48:15.404Z"
   }
   ```
 
