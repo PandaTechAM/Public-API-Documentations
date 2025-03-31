@@ -143,8 +143,22 @@ Authorization: HMAC ABCD123:ccXVrWSaE243axjtQnMUAYyWNMAlv/VzdKNAkzDPvqs=
 - **Purpose:** Synchronize user details and retrieve access/refresh tokens.
 - **Usage:**
   - Pass `externalUserId` and at least one of `phoneNumber` or `email`.
+  - Include `Client-Type`
   - Include the HMAC-based `Authorization` header.
   - On success, the user-specific tokens (access/refresh) are returned, which the IFrame uses for subsequent requests.
+
+```json
+Client-Type
+{
+  Browser = 1,
+  Ios = 2,
+  Android = 3,
+  Windows = 4,
+  Mac = 5,
+  Linux = 6,
+  Other = 7
+}
+```
 
 ## 1.6. Response Codes & Error Handling
 
@@ -217,7 +231,6 @@ Below are the primary endpoints for server-side integration. In all cases, inclu
     "socialSecurityNumber": "1234567891",
     "address": "ք․ Երևան, Վարդանի փ․, բն․ Վազգեն",
     "dateOfBirth": "1985-02-22T00:00:00.000Z",
-    "gender": 1,
     "device": {
       "clientType": 2,
       "name": "Iphone 11 Pro",
