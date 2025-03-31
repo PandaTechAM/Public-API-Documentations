@@ -7,6 +7,7 @@
   - [1.5. Security \& Authentication](#15-security--authentication)
     - [1.5.1. Server Authentication](#151-server-authentication)
     - [1.5.2. User-Level Authentication](#152-user-level-authentication)
+    - [1.5.3. Client Type Header (Mandatory)](#153-client-type-header-mandatory)
   - [1.6. Response Codes \& Error Handling](#16-response-codes--error-handling)
     - [1.6.1. Standard HTTP Response Codes](#161-standard-http-response-codes)
   - [1.7. Error Response Structure](#17-error-response-structure)
@@ -49,14 +50,14 @@ EasyEvents offers two primary integration pathways:
 
 1. **Server Integration**
 
-- Obtain server credentials (API key and secret).
-- Implement user synchronization (sync-and-login), ticket order lookups, and payment operations.
+   - Obtain server credentials (API key and secret).
+   - Implement user synchronization (sync-and-login), ticket order lookups, and payment operations.
 
 2. **IFrame Integration**
 
-- Embed the EasyEvents IFrame into your UI.
-- The IFrame automatically uses user-level tokens for searching, reserving seats, and initiating orders.
-- You receive a `TicketOrderId` upon successful reservation, which your server can use to finalize or cancel the order.
+   - Embed the EasyEvents IFrame into your UI.
+   - The IFrame automatically uses user-level tokens for searching, reserving seats, and initiating orders.
+   - You receive a `TicketOrderId` upon successful reservation, which your server can use to finalize or cancel the order.
 
 For testing, use the **Test Environment**. Once verified, switch your base URLs to the **Production Environment**.
 
@@ -143,22 +144,40 @@ Authorization: HMAC ABCD123:ccXVrWSaE243axjtQnMUAYyWNMAlv/VzdKNAkzDPvqs=
 - **Purpose:** Synchronize user details and retrieve access/refresh tokens.
 - **Usage:**
   - Pass `externalUserId` and at least one of `phoneNumber` or `email`.
-  - Include `Client-Type`
   - Include the HMAC-based `Authorization` header.
   - On success, the user-specific tokens (access/refresh) are returned, which the IFrame uses for subsequent requests.
 
-```json
-Client-Type
+### 1.5.3. Client Type Header (Mandatory)
+
+Along with the standard headers (`Authorization`, `Accept-Language`), all API requests must include a header indicating the `Client-Type`:
+
+```txt
+client-type: <int value from the ClientType enum>
+```
+
+Where `ClientType` is defined as:
+
+```cs
+public enum ClientType
 {
-  Browser = 1,
-  Ios = 2,
-  Android = 3,
-  Windows = 4,
-  Mac = 5,
-  Linux = 6,
-  Other = 7
+   Browser = 1,
+   Ios = 2,
+   Android = 3,
+   Windows = 4,
+   Mac = 5,
+   Linux = 6,
+   Other = 7
 }
 ```
+
+1. **For Server Requests**
+   Use the appropriate OS type: `Windows (4)`, `Mac (5)`, or `Linux (6)`.
+   If you simply cannot classify the server, use `Other (7)`.
+
+2. **For Mobile Clients**
+   Use `Ios (2)` or `Android (3)`.
+
+This header ensures the EasyEvents platform correctly classifies and tracks the source environment. If omitted or invalid, requests may be rejected.
 
 ## 1.6. Response Codes & Error Handling
 
@@ -352,99 +371,8 @@ EasyEvents provides an embeddable IFrame for ticket browsing, purchase, and imme
 
 ### 1.9.1. Implementation Steps
 
-1. **Embed the IFrame**
-
-   ```html
-   <iframe
-     id="easyEventsIframe"
-     src="https://iframe.easyevents.com"
-     style="width:100%; height:100%; border:none;"
-   ></iframe>
-   ```
-
-2. **Setting Tokens**
-   Provide user-level tokens (obtained via sync-and-login) to the IFrame’s local storage.
-
-   ```js
-   document.addEventListener("DOMContentLoaded", () => {
-      const params = new URLSearchParams(window.location.search);
-      const token = params.get("token");
-      const refreshToken = params.get("refresh_token");
-      const device = params.get("device_id");
-        
-      if (token && refreshToken && device) {
-          localStorage.setItem("device_id", device);
-          localStorage.setItem("token", token);
-          localStorage.setItem("refresh_token", refreshToken);
-          }
-        
-          const eventsWrapper = document.createElement("div");
-          eventsWrapper.id = "events-wrapper";
-          document.body.appendChild(eventsWrapper);
-        
-          // Assuming EventsWrapper is a function that initializes the events
-          EventsWrapper();
-        });
-   ```
-
-3. **Handle IFrame Responses**
-
-   - The IFrame communicates back to the host application via `params.set("checkout_id")`.
-   - A valid TicketOrderId indicates a confirmed order.
-   - Hide or remove the IFrame once you receive a final status.
-
-   **Example JavaScript for Polling**
-
-    ## URL Query Parameters
-    
-    ### goBack
-    When present and set to `"true"`, this instructs the host application to navigate back from the iframe. Essentially, it signals a return action to the host app.
-    
-    ### checkout_id
-    Instructs the host application to navigate to its checkout page.  
-    The value of `checkout_id` determines which specific checkout flow or product is intended.
-    
-    ### redirect
-    When present, this signals to the host application that it should redirect to the provided link. It’s typically used for opening external or specific pages within the host app.
-    
-    ### sharePDF
-    Contains a link to a PDF document. The host application may use this link to open, preview, or otherwise share the PDF from its end.
-    
-    ### count
-    This numeric value can be used by the host application to track or log every action that occurs within the iframe. It increments (or changes) whenever a new action (`goBack`, `checkout`, `redirect`, `sharePDF`) is triggered.
-
-
-   ```js
-    const handleCheckout = (option: string, count: number) => {
-      setSearchParams((params) => {
-        params.set("checkout_id", option);
-        params.set("count", count.toString());
-        return params;
-      });
-    };
-  
-    const handGoBack = () => {
-      setSearchParams((params) => {
-        params.set("goBack", "true");
-        return params;
-      });
-    };
-  
-    const redirect = (link: string, count: number) => {
-      setSearchParams((params) => {
-        params.set("redirect", link);
-        params.set("count", count.toString());
-        return params;
-      });
-    };
-    const handleSharePDF = (link: string, count: number) => {
-      setSearchParams((params) => {
-        params.set("sharePDF", link);
-        params.set("count", count.toString());
-        return params;
-      });
-    };
-   ```
+Coming soon!.
+We are currently making this implementation more developer friendly.
 
 ### 1.9.2. Support & Troubleshooting
 
