@@ -517,10 +517,26 @@ Monitor the status of a payment order to confirm whether it was processed succes
 - **Response Example:**
   ```json
   {
+    "finTechName": "Fin tech name",
+    "finTechTaxCode": "Fin tech tax code",
+    "finTechPhoneNumber": "+37491234567",
+    "finTechAddress": "Fin tech address",
+    "merchantServiceName": "string",
+    "date": "2025-04-04T07:52:47.666Z",
+    "inputs": [
+      {
+        "technicalIndex": 0,
+        "type": 1,
+        "value": "1",
+        "nameKey": "ID"
+      }
+    ],
+    "amount": 1000,
+    "customerCommission": 100,
+    "alphabeticIsoCode": "AMD",
     "orderId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    "status": 6,
-    "cancelable": false,
-    "receipt":
+    "status": 1,
+    "cancelable": true
   }
   ```
 
