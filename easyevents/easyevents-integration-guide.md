@@ -286,7 +286,7 @@ Below are the primary endpoints for server-side integration. In all cases, inclu
 
 - **Endpoint:** `GET /api/v1/integration/order/{ticketOrderId}`
 - **Description:** Retrieve order details after the user has created an order in the IFrame.
-- Note: You must retrieve the ticketOrderId from the IFrame before the user is redirected, as it is required to call this endpoint.
+  - Note: You must retrieve the ticketOrderId from the IFrame before the user is redirected, as it is required to call this endpoint.
 - **Request:** /api/v1/integration/order/asd
 - **Response:**
   ```json
