@@ -247,9 +247,6 @@ Below are the primary endpoints for server-side integration. In all cases, inclu
     "firstName": "Vardan",
     "lastName": "Vardanyan",
     "middleName": "Vazgeni",
-    "socialSecurityNumber": "1234567891",
-    "address": "ք․ Երևան, Վարդանի փ․, բն․ Վազգեն",
-    "dateOfBirth": "1985-02-22T00:00:00.000Z",
     "device": {
       "clientType": 2,
       "name": "Iphone 11 Pro",
@@ -289,6 +286,7 @@ Below are the primary endpoints for server-side integration. In all cases, inclu
 
 - **Endpoint:** `GET /api/v1/integration/order/{ticketOrderId}`
 - **Description:** Retrieve order details after the user has created an order in the IFrame.
+- Note: You must retrieve the ticketOrderId from the IFrame before the user is redirected, as it is required to call this endpoint.
 - **Request:** /api/v1/integration/order/asd
 - **Response:**
   ```json
