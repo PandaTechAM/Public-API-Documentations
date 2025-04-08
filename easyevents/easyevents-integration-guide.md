@@ -371,8 +371,124 @@ EasyEvents provides an embeddable IFrame for ticket browsing, purchase, and imme
 
 ### 1.9.1. Implementation Steps
 
-Coming soon!.
-We are currently making this implementation more developer friendly.
+## Overview
+
+This document describes how a host application integrates with an external event management iFrame. Communication from the iFrame to the application is done using message-passing (typically postMessage). Each message is sent independently and is treated as a separate command with its own purpose.
+
+## API Endpoint
+
+The host application retrieves the iFrame configuration by sending a GET request to: `/api/mobile/v1/integrations/easy-events/sync-and-login`.
+
+## Purpose of URL Construction
+
+To securely embed an authenticated session in an iFrame, the application must append
+authentication-related query parameters to the base iFrame URL. These parameters include access
+and refresh tokens, as well as a unique device identifier.
+
+**Parameters Appended to URL**
+
+- `token`: A temporary access token for user authentication
+- `refresh_token`: Token used to renew the access token
+- `device_id`: Identifier of the device making the request (used to session tracking)
+
+**How It Works**
+- Parse the original iFrame URL received from the server.
+- Extract existing query parameters.
+- Merge existing parameters with required authentication parameters.
+- Create and return the updated URL as a string.
+
+## Example in Flutter (Dart)
+
+```dart
+String _addQueryParamsToUrl(IFrameEntity iFrameEntity) {
+  final Uri uri = Uri.parse(iFrameEntity.iFrameUrl);
+  final updatedUri = uri.replace(queryParameters: {
+    ...uri.queryParameters,
+    'token': iFrameEntity.accessTokenSignature,
+    'refresh_token': iFrameEntity.refreshTokenSignature,
+    'device_id': iFrameEntity.deviceId,
+  });
+  return updatedUri.toString();
+}
+```
+## JavaScript Channel Name
+
+The JavaScript channel is used to receive messages from the iFrame to the host application. In this
+integration, the channel name is defined as `'parent'`.
+
+**Usage:**
+
+```dart
+..addJavaScriptChannel(
+   'parent',
+    onMessageReceived: (JavaScriptMessage message) {
+    _handleUrlChange(message.message, context);
+  },
+)
+```
+**On the iFrame (Web) side:**
+
+```javascript
+window.parent.postMessage(JSON.stringify({ checkout_id: '123' }), '*');
+// or for WebView channel
+Parent.postMessage('{"checkout_id":"123"}');
+```
+## Security Considerations
+
+- Always use HTTPS for URL construction and WebView loading.
+- Avoid exposing sensitive tokens in URLs that could be logged or shared.
+- Validate all received messages before performing actions on them.
+
+## Use Case
+
+This approach is used in applications embedding third-party services in an iFrame, requiring a
+secure and dynamic session initialization along with two-way communication via JavaScript
+channels.
+
+## Command Format (JSON Message).
+
+Messages received from the iFrame are JSON objects. Each message contains one or more of the following keys, each representing a distinct command that the application handles separately: selected.
+
+```json
+{
+"checkout_id": "<ticket_order_id>", 
+"link": "<external_url>", 
+"pdf": "<base64_encoded_pdf>", 
+"goBack": "true"
+}
+```
+
+These keys may appear individually or together, but each triggers a specific handler.
+
+## Command Description
+
+  - `checkout_id` - Indicates that the user has selected a ticket and is ready to proceed to payment. The application navigates to a checkout page using the given ticket ID.
+  - `link` - Represents a URL that should be opened in the device's external browser (e.g., YouTube, Maps).
+  - `pdf` - Contains a Base64-encoded PDF (e.g., a ticket). The application decodes and shares this file via local sharing options.
+  - `goBack` - A boolean flag (`true` or `false`) that instructs the application to return to the previous screen (e.g., to cancel or exit the ticket selection process).
+
+## Command Handling Strategy
+
+Each command should be processed independently even if multiple commands appear in the same message.
+
+- **Messages may arrive in any order.**
+- **Commands are optional and can be sent one at a time.**
+- **No assumption should be made about message sequence or completeness.**
+
+## Security ad Validation
+
+- **Ensure all received messages are valid JSON and keys are sanitized before use** 
+- **Always validate the content of `checkout_id`, `link`, and `pdf` before executing any action**
+- **Use secure connections (HTTPS) and validate external links before opening. selected**
+
+## Use Cases
+
+- **Online event booking and checkout** 
+- **External redirection to media or map services** 
+- **Sharing event tickets via PDF** 
+- **Providing a back action to gracefully exit the flow**
+
+
 
 ### 1.9.2. Support & Troubleshooting
 
