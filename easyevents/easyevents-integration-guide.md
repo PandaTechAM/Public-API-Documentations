@@ -447,23 +447,33 @@ channels.
 
 Messages received from the iFrame are JSON objects. Each message contains one or more of the following keys, each representing a distinct command that the application handles separately: selected.
 
+`checkout_id` - Indicates that the user has selected a ticket and is ready to proceed to payment. The application navigates to a checkout page using the given ticket ID.
 ```json
 {
-"checkout_id": "<ticket_order_id>", 
-"link": "<external_url>", 
-"pdf": "<base64_encoded_pdf>", 
+"checkout_id": "<ticket_order_id>"
+}
+```
+`link` - Represents a URL that should be opened in the device's external browser (e.g., YouTube, Maps).
+```json
+{
+"link": "<external_url>"
+}
+```
+`pdf` - Contains a Base64-encoded PDF (e.g., a ticket). The application decodes and shares this file via local sharing options.
+```json
+{
+"pdf": "<base64_encoded_pdf>"
+}
+```
+`goBack` - A boolean flag (`true` or `false`) that instructs the application to return to the previous screen (e.g., to cancel or exit the ticket selection process).
+```json
+{
 "goBack": "true"
 }
 ```
 
 These keys may appear individually or together, but each triggers a specific handler.
 
-## Command Description
-
-  - `checkout_id` - Indicates that the user has selected a ticket and is ready to proceed to payment. The application navigates to a checkout page using the given ticket ID.
-  - `link` - Represents a URL that should be opened in the device's external browser (e.g., YouTube, Maps).
-  - `pdf` - Contains a Base64-encoded PDF (e.g., a ticket). The application decodes and shares this file via local sharing options.
-  - `goBack` - A boolean flag (`true` or `false`) that instructs the application to return to the previous screen (e.g., to cancel or exit the ticket selection process).
 
 ## Command Handling Strategy
 
@@ -491,3 +501,4 @@ Each command should be processed independently even if multiple commands appear 
 ### 1.9.2. Support & Troubleshooting
 
 For additional assistance or to report issues, please contact your designated EasyEvents integration manager. When troubleshooting, include both the `RequestId` and `TraceId` from the error responses to help expedite the resolution process.
+
