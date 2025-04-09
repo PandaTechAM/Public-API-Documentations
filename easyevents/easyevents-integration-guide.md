@@ -295,7 +295,21 @@ Below are the primary endpoints for server-side integration. In all cases, inclu
     "price": 12000,
     "commission": 200,
     "bankName": 1,
-    "bankAccount": "1450013254687513"
+    "bankAccount": "1450013254687513",
+    "tickets": [
+    {
+      "eventName": "Stand Up",
+      "price": 1000,
+      "areaName": "Area 1",
+      "areaId": 100,
+      "row": "1",
+      "seat": 3,
+      "seatId": 12537,
+      "discountedPrice": 10
+    }
+  ],
+  "partnerFullName": "Partners Name",
+  "uniqueDocumentId": "5454545445"
   }
   ```
 - **BankName enum:**
