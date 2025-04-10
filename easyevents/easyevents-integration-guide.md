@@ -18,8 +18,15 @@
     - [1.8.4. Payment](#184-payment)
     - [1.8.5. Ticket Order Cancel](#185-ticket-order-cancel)
   - [1.9. IFrame Integration](#19-iframe-integration)
-    - [1.9.1. Implementation Steps](#191-implementation-steps)
-    - [1.9.2. Support \& Troubleshooting](#192-support--troubleshooting)
+    - [1.9.1. Introduction](#191-introduction)
+    - [1.9.2. Integration Flow](#192-integration-flow)
+    - [1.9.3. Building the IFrame URL](#193-building-the-iframe-url)
+    - [1.9.4. Communication Mechanism (JavaScript Channel)](#194-communication-mechanism-javascript-channel)
+    - [1.9.5. Handling IFrame Commands](#195-handling-iframe-commands)
+    - [1.9.6. Example: Constructing \& Loading the IFrame in Flutter (Dart)](#196-example-constructing--loading-the-iframe-in-flutter-dart)
+    - [1.9.7. Security Considerations](#197-security-considerations)
+    - [1.9.8. Additional Use Cases](#198-additional-use-cases)
+  - [1.10. Support \& Troubleshooting](#110-support--troubleshooting)
 
 # 1. EasyEvents Integration Guide
 
@@ -233,7 +240,7 @@ Below are the primary endpoints for server-side integration. In all cases, inclu
 ### 1.8.2. Sync and Login
 
 - **Endpoint:** `POST /api/v1/integration/authentication/sync-and-login`
-- **Description:** Synchronizes the user to EasyEvents (creating or updating if necessary) and returns refresh tokens.
+- **Description:** Synchronizes the user to EasyEvents (creating or updating if necessary) and returns refresh token.
 - **Request:**
   Include at least `externalUserId` and either `phoneNumber` or `email`. Also provide `Authorization` header with the HMAC signature.
 
@@ -267,10 +274,7 @@ Below are the primary endpoints for server-side integration. In all cases, inclu
 
   ```json
   {
-    "accessTokenSignature": "c384b714-86e3-4cde-a658-00a321045735",
-    "accessTokenExpiration": "2025-03-28T08:48:15.404Z",
-    "refreshTokenSignature": "e384b714-86e3-4cde-a658-00a321045735",
-    "refreshTokenExpiration": "2025-03-28T08:48:15.404Z"
+    "refreshTokenSignature": "e384b714-86e3-4cde-a658-00a321045735"
   }
   ```
 
@@ -356,12 +360,12 @@ Below are the primary endpoints for server-side integration. In all cases, inclu
 
 - **Response:**
 
-    ```json
-    {
-        "partnerFullName": "Partners Name",
-        "uniqueDocumentId": "5454545445"
-    }
-    ```
+  ```json
+  {
+    "partnerFullName": "Partners Name",
+    "uniqueDocumentId": "5454545445"
+  }
+  ```
 
 - **Error Cases:**
   - `400 Bad Request` - Invalid price or commission mismatch.
@@ -384,138 +388,235 @@ Below are the primary endpoints for server-side integration. In all cases, inclu
 
 EasyEvents provides an embeddable IFrame for ticket browsing, purchase, and immediate creation of ticket orders.
 
-### 1.9.1. Implementation Steps
+### 1.9.1. Introduction
 
-## Overview
+EasyEvents provides an embeddable IFrame that allows end-users to:
 
-This document describes how a host application integrates with an external event management iFrame. Communication from the iFrame to the application is done using message-passing (typically postMessage). Each message is sent independently and is treated as a separate command with its own purpose.
+1. Browse available events.
+2. Select seats (if applicable).
+3. Immediately create a ticket order.
 
-## API Endpoint
+Once an order is created in the IFrame, the host application is notified (via JavaScript channel or similar messaging mechanism) and receives a `ticketOrderId`. That ID can then be used by your backend to finalize or cancel the order, as needed.
 
-The host application retrieves the iFrame configuration by sending a GET request to: `/api/mobile/v1/integrations/easy-events/sync-and-login`.
+### 1.9.2. Integration Flow
 
-## Purpose of URL Construction
+A typical IFrame integration flow looks like this:
 
-To securely embed an authenticated session in an iFrame, the application must append
-authentication-related query parameters to the base iFrame URL. These parameters include access
-and refresh tokens, as well as a unique device identifier.
+1. **Obtain User Tokens (Server-Side)**
 
-**Parameters Appended to URL**
+   - On your server, call **Sync and Login** (`/api/v1/integration/authentication/sync-and-login`) to retrieve the `refreshTokenSignature`.
+   - Store this token securely and associate it with the current user/session in your application.
 
-- `token`: A temporary access token for user authentication
-- `refresh_token`: Token used to renew the access token
-- `device_id`: Identifier of the device making the request (used to session tracking)
+2. **Construct the IFrame URL**
 
-**How It Works**
-- Parse the original iFrame URL received from the server.
-- Extract existing query parameters.
-- Merge existing parameters with required authentication parameters.
-- Create and return the updated URL as a string.
+   - Start with the EasyEvents IFrame base URL (Test or Production).
+   - Append the user’s `refreshTokenSignature` as `refresh_token`.
+   - Also append a `device_id` (unique device identifier) or any other required query parameters.
 
-## Example in Flutter (Dart)
+3. **Load the IFrame in Your Front-End**
 
-```dart
-String _addQueryParamsToUrl(IFrameEntity iFrameEntity) {
-  final Uri uri = Uri.parse(iFrameEntity.iFrameUrl);
-  final updatedUri = uri.replace(queryParameters: {
-    ...uri.queryParameters,
-    'token': iFrameEntity.accessTokenSignature,
-    'refresh_token': iFrameEntity.refreshTokenSignature,
-    'device_id': iFrameEntity.deviceId,
-  });
-  return updatedUri.toString();
-}
+   - Open a WebView or IFrame component in your front-end.
+   - Pass the constructed URL to the component, ensuring that HTTPS is used.
+
+4. **Handle Messages from the IFrame**
+
+   - The IFrame sends events to the host application via JavaScript messages (e.g., `window.parent.postMessage`, or the equivalent channel mechanism on your platform).
+
+   - Parse and validate these messages. If a `ticketOrderId` (or `checkout_id` key) is present, use it to retrieve order details, process payments, etc.
+
+5. **Finalize or Cancel Orders via API**
+
+   - Once you have the `ticketOrderId`, you can call EasyEvents endpoints such as:
+
+     - `GET /api/v1/integration/order/{ticketOrderId}` to retrieve details,
+
+     - `POST /api/v1/integration/payment` to submit a payment, and
+
+     - `DELETE /api/v1/integration/order/{ticketOrderId}` to cancel.
+
+### 1.9.3. Building the IFrame URL
+
+When embedding the IFrame, you need to append essential authentication parameters to the base URL. The two most critical parameters are:
+
+1. `refresh_token`
+
+   - Comes from the `refreshTokenSignature` field, obtained via **Sync and Login**.
+   - Used by the IFrame to fetch or refresh the user’s access token.
+
+2. `device_id`
+
+   - A unique identifier representing the device or session.
+   - Required by EasyEvents for security, logging, and session tracking.
+
+> Important: You may have other parameters required by your business logic or additional query params from EasyEvents. Always ensure these parameters are merged without overwriting each other.
+
+Example base URLs:
+
+- **Test:** `https://qaiframe.easypay.am`
+- **Production:** `https://iframe.easypay.com`
+
+If you start with `https://qaiframe.easypay.am?lang=hy-AM`, for example, and need to append `refresh_token` and `device_id`, your final URL might look like:
+
+```txt
+https://qaiframe.easypay.am?lang=hy-AM&refresh_token=<YOUR_REFRESH_TOKEN>&device_id=<UNIQUE_DEVICE_ID>
 ```
-## JavaScript Channel Name
 
-The JavaScript channel is used to receive messages from the iFrame to the host application. In this
-integration, the channel name is defined as `'parent'`.
+### 1.9.4. Communication Mechanism (JavaScript Channel)
 
-**Usage:**
+To communicate back to your application, the IFrame uses the `postMessage` API (or a similar mechanism), typically targeting a specific channel name. In Flutter/Dart’s WebView, this channel is often referred to as `JavaScriptChannel`. In other frameworks (React Native, Xamarin, etc.), the approach is analogous:
+
+- The IFrame calls `window.parent.postMessage(...)` to send data.
+- Your host application listens on the appropriate channel and processes the incoming JSON messages.
+
+Below is a Flutter-specific example, but the concept is identical in other platforms:
 
 ```dart
-..addJavaScriptChannel(
-   'parent',
-    onMessageReceived: (JavaScriptMessage message) {
-    _handleUrlChange(message.message, context);
+webView.addJavaScriptChannel(
+  'parent',
+  onMessageReceived: (JavaScriptMessage message) {
+    final String rawJson = message.message;
+    // Parse, validate, and handle the JSON message
   },
-)
+);
 ```
-**On the iFrame (Web) side:**
 
-```javascript
+```js
 window.parent.postMessage(JSON.stringify({ checkout_id: '123' }), '*');
-// or for WebView channel
+```
+
+Or, if using a named channel inside a WebView context:
+
+```js
 Parent.postMessage('{"checkout_id":"123"}');
 ```
-## Security Considerations
 
-- Always use HTTPS for URL construction and WebView loading.
-- Avoid exposing sensitive tokens in URLs that could be logged or shared.
-- Validate all received messages before performing actions on them.
+> Tip: Always validate or sanitize the data in the received JSON before acting on it.
 
-## Use Case
+### 1.9.5. Handling IFrame Commands
 
-This approach is used in applications embedding third-party services in an iFrame, requiring a
-secure and dynamic session initialization along with two-way communication via JavaScript
-channels.
+All communication from the IFrame arrives as JSON messages that may contain one or more command keys. Each command key signals a specific action:
 
-## Command Format (JSON Message).
+- `checkout_id:`
+  Indicates that a user has selected a ticket order for checkout.
+  Example:
 
-Messages received from the iFrame are JSON objects. Each message contains one or more of the following keys, each representing a distinct command that the application handles separately: selected.
+  ```json
+  { "checkout_id": "<ticket_order_id>" }
+  ```
 
-`checkout_id` - Indicates that the user has selected a ticket and is ready to proceed to payment. The application navigates to a checkout page using the given ticket ID.
-```json
-{
-"checkout_id": "<ticket_order_id>"
+  _Host Action:_ Navigate to a payment screen or retrieve the order details.  <br><br>
+
+- `link`
+  A URL that the application should open in a browser (e.g., YouTube link, maps directions).
+  Example:
+
+  ```json
+  { "link": "https://myspecialoffer.example.com" }
+  ```
+
+  _Host Action:_ Open an external browser or in-app browser with the provided link. <br><br>
+
+- `pdf`
+  A Base64-encoded PDF, e.g., a ticket or receipt.
+  Example:
+
+  ```json
+  { "pdf": "<base64_encoded_pdf_data>" }
+  ```
+
+  _Host Action:_ Decode and display/share the PDF file. <br><br>
+
+- `goBack`
+  A boolean string (`"true"`/`"false"`) instructing the host app to navigate back or close the IFrame.
+  Example:
+
+  ```json
+  { "goBack": "true" }
+  ```
+
+  _Host Action:_ Close or pop the current screen to return to a previous view.
+
+> Important: Messages may arrive in any order and can contain multiple keys. Treat each key independently.
+
+### 1.9.6. Example: Constructing & Loading the IFrame in Flutter (Dart)
+
+Below is a concise Flutter/Dart snippet showing how to append query parameters to the base IFrame URL and then load it into a `WebView`. You can do the same (albeit with different APIs) in React Native, Xamarin, native Android/iOS, or any other platform.
+
+```dart
+String buildIFrameUrl({
+  required String baseIFrameUrl,
+  required String refreshTokenSignature,
+  required String deviceId,
+  Map<String, String>? additionalParams,
+}) {
+  final uri = Uri.parse(baseIFrameUrl);
+  final updatedUri = uri.replace(queryParameters: {
+    // Keep original parameters
+    ...uri.queryParameters,
+    // Add required ones
+    'refresh_token': refreshTokenSignature,
+    'device_id': deviceId,
+    // Add any extras, if provided
+    ...?additionalParams,
+  });
+
+  return updatedUri.toString();
 }
+
+...
+
+// Usage in code:
+final iframeUrl = buildIFrameUrl(
+  baseIFrameUrl: 'https://qaiframe.easypay.am',
+  refreshTokenSignature: 'e384b714-86e3-4cde-a658-00a321045735',
+  deviceId: 'device-uuid-1234',
+);
+
+WebView(
+  initialUrl: iframeUrl,
+  javascriptMode: JavascriptMode.unrestricted,
+  onWebViewCreated: (controller) {
+    controller.addJavaScriptChannel(
+      'parent',
+      onMessageReceived: (JavaScriptMessage message) {
+        _handleIFrameMessage(message.message);
+      },
+    );
+  },
+);
 ```
-`link` - Represents a URL that should be opened in the device's external browser (e.g., YouTube, Maps).
-```json
-{
-"link": "<external_url>"
-}
-```
-`pdf` - Contains a Base64-encoded PDF (e.g., a ticket). The application decodes and shares this file via local sharing options.
-```json
-{
-"pdf": "<base64_encoded_pdf>"
-}
-```
-`goBack` - A boolean flag (`true` or `false`) that instructs the application to return to the previous screen (e.g., to cancel or exit the ticket selection process).
-```json
-{
-"goBack": "true"
-}
-```
 
-These keys may appear individually or together, but each triggers a specific handler.
+### 1.9.7. Security Considerations
 
+1. **HTTPS Only**
+   Always use `https://` for the IFrame URL to avoid sending tokens over unencrypted connections.
 
-## Command Handling Strategy
+2. **Secure Token Handling**
 
-Each command should be processed independently even if multiple commands appear in the same message.
+   - The `refresh_token` must be protected. Do not store it in plaintext or persist it in logs.
 
-- **Messages may arrive in any order.**
-- **Commands are optional and can be sent one at a time.**
-- **No assumption should be made about message sequence or completeness.**
+   - Always validate your tokens on the server side before performing sensitive operations.
 
-## Security ad Validation
+3. **Sanitize Incoming Messages**
 
-- **Ensure all received messages are valid JSON and keys are sanitized before use** 
-- **Always validate the content of `checkout_id`, `link`, and `pdf` before executing any action**
-- **Use secure connections (HTTPS) and validate external links before opening. selected**
+   - Parse the JSON from the IFrame carefully.
 
-## Use Cases
+   - Reject or ignore unrecognized keys, suspicious links, or invalid data.
 
-- **Online event booking and checkout** 
-- **External redirection to media or map services** 
-- **Sharing event tickets via PDF** 
-- **Providing a back action to gracefully exit the flow**
+4. **Minimal Exposure**
 
+   - Include only the parameters that are strictly necessary in the query string.
 
+   - If your platform or environment exposes the full URLs in logs, consider additional measures (like ephemeral short-lifetime tokens).
 
-### 1.9.2. Support & Troubleshooting
+### 1.9.8. Additional Use Cases
+
+- **Native iOS/Android:** Use a web component (`WKWebView` in iOS or `WebView` in Android) and set up a similar “bridge” for message handling.
+
+- **React Native:** Implement `WebView` from `react-native-webview` and the `onMessage` prop to capture postMessage events from the IFrame.
+
+- **Xamarin:** Use the built-in WebView or third-party libraries. The messaging concept remains the same: calls from JavaScript back to C#.
+
+## 1.10. Support & Troubleshooting
 
 For additional assistance or to report issues, please contact your designated EasyEvents integration manager. When troubleshooting, include both the `RequestId` and `TraceId` from the error responses to help expedite the resolution process.
-
