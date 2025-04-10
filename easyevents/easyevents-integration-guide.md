@@ -127,14 +127,14 @@ Authorization: HMAC <API_KEY>:<BASE64_SIGNATURE>
 ```
 
 - `<API_KEY>` is provided by EasyEvents.
-- `<BASE64_SIGNATURE>` is an HMAC-SHA256 hash computed over relevant fields (e.g., `externalUserId`, `phoneNumber`, `email`) concatenated into a string. The hash is then Base64-encoded.
+- `<BASE64_SIGNATURE>` is an HMAC-SHA256 hash computed over relevant fields (e.g., `externalUserId`, `phoneNumber`, `email`,`ticketOrderId`) concatenated into a string. The hash is then Base64-encoded.
 
 **Example**
 
 ```txt
 apiKey     = "ABCD123"
 secretKey  = "Secret"
-inputData  = "externalUserId + phoneNumber + email"
+inputData  = "externalUserId + phoneNumber + email" or ("ticketOrderId")
 signature  = Base64(HMACSHA256(inputData, secretKey))
 
 // In final header:
@@ -291,6 +291,7 @@ Below are the primary endpoints for server-side integration. In all cases, inclu
 - **Endpoint:** `GET /api/v1/integration/order/{ticketOrderId}`
 - **Description:** Retrieve order details after the user has created an order in the IFrame.
   - Note: You must retrieve the ticketOrderId from the IFrame before the user is redirected, as it is required to call this endpoint.
+  - Also provide `Authorization` header with the HMAC signature (inputData  = "ticketOrderId").
 - **Request:** /api/v1/integration/order/asd
 - **Response:**
   ```json
@@ -346,7 +347,7 @@ Below are the primary endpoints for server-side integration. In all cases, inclu
 ### 1.8.4. Payment
 
 - **Endpoint:** `POST /api/v1/integration/payment`
-- **Description:** Submit payment details for a completed ticket purchase.
+- **Description:** Submit payment details for a completed ticket purchase. Also provide `Authorization` header with the HMAC signature (inputData  = "ticketOrderId").
 - **Request Body:**
 
   ```json
@@ -374,7 +375,7 @@ Below are the primary endpoints for server-side integration. In all cases, inclu
 ### 1.8.5. Ticket Order Cancel
 
 - **Endpoint:** `DELETE /api/v1/integration/order/{ticketOrderId}`
-- **Description:** Cancel a pending ticket order, releasing any reserved seats.
+- **Description:** Cancel a pending ticket order, releasing any reserved seats.Also provide `Authorization` header with the HMAC signature (inputData  = "ticketOrderId").
 - **Request:** /api/v1/integration/order/asd
 - **Response:**
 
