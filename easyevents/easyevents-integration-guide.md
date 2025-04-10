@@ -297,19 +297,17 @@ Below are the primary endpoints for server-side integration. In all cases, inclu
     "bankName": 1,
     "bankAccount": "1450013254687513",
     "tickets": [
-    {
-      "eventName": "Stand Up",
-      "price": 1000,
-      "areaName": "Area 1",
-      "areaId": 100,
-      "row": "1",
-      "seat": 3,
-      "seatId": 12537,
-      "discountedPrice": 10
-    }
-  ],
-  "partnerFullName": "Partners Name",
-  "uniqueDocumentId": "5454545445"
+      {
+        "eventName": "Stand Up",
+        "price": 1000,
+        "areaName": "Area 1",
+        "areaId": 100,
+        "row": "1",
+        "seat": 3,
+        "seatId": 12537,
+        "discountedPrice": 10
+      }
+    ]
   }
   ```
 - **BankName enum:**
@@ -358,7 +356,12 @@ Below are the primary endpoints for server-side integration. In all cases, inclu
 
 - **Response:**
 
-  - No body; a `200 OK` implies success.
+    ```json
+    {
+        "partnerFullName": "Partners Name",
+        "uniqueDocumentId": "5454545445"
+    }
+    ```
 
 - **Error Cases:**
   - `400 Bad Request` - Invalid price or commission mismatch.
