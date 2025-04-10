@@ -152,7 +152,7 @@ Authorization: HMAC ABCD123:ccXVrWSaE243axjtQnMUAYyWNMAlv/VzdKNAkzDPvqs=
 - **Usage:**
   - Pass `externalUserId` and at least one of `phoneNumber` or `email`.
   - Include the HMAC-based `Authorization` header.
-  - On success, the user-specific tokens (access/refresh) are returned, which the IFrame uses for subsequent requests.
+  - On success, the user-specific refresh token is returned, which the IFrame uses for subsequent requests.
 
 ### 1.5.3. Client Type Header (Mandatory)
 
