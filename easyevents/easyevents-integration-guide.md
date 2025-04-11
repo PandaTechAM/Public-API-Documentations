@@ -116,7 +116,7 @@ EasyEvents uses a two-layered authentication strategy:
 1. **Server Authentication**
    Secure each server-to-server request with HMAC-SHA256 using the keys provided by EasyEvents.
 2. **User-Level Tokens**
-   Perform a `sync-and-login` to obtain per-user access and refresh tokens. The client-side IFrame automatically handles token usage and refresh.
+   Perform a `sync-and-login` to obtain per-user refresh token. The client-side IFrame automatically handles token usage and refresh.
 
 ### 1.5.1. Server Authentication
 
@@ -148,7 +148,7 @@ Authorization: HMAC ABCD123:ccXVrWSaE243axjtQnMUAYyWNMAlv/VzdKNAkzDPvqs=
 **Sync and Login**
 
 - **Endpoint:** `POST /api/v1/integration/authentication/sync-and-login`
-- **Purpose:** Synchronize user details and retrieve access/refresh tokens.
+- **Purpose:** Synchronize user details and retrieve refresh token.
 - **Usage:**
   - Pass `externalUserId` and at least one of `phoneNumber` or `email`.
   - Include the HMAC-based `Authorization` header.
@@ -364,7 +364,8 @@ Below are the primary endpoints for server-side integration. In all cases, inclu
   ```json
   {
     "partnerFullName": "Partners Name",
-    "uniqueDocumentId": "5454545445"
+    "uniqueDocumentId": "5454545445",
+    "bankAccount": "1450013254687513"
   }
   ```
 
