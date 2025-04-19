@@ -1,64 +1,66 @@
-- [EasyPay Merchant Integration Guide](#easypay-merchant-integration-guide)
-  - [Overview](#overview)
-  - [Prerequisites](#prerequisites)
-  - [Authentication and Security](#authentication-and-security)
-    - [HMAC Authentication](#hmac-authentication)
-  - [Standard HTTP Response Codes](#standard-http-response-codes)
-  - [Error Handling](#error-handling)
-  - [Input Formatting and HMAC Calculation](#input-formatting-and-hmac-calculation)
-  - [API Endpoints](#api-endpoints)
-    - [Balance Inquiry](#balance-inquiry)
-    - [Make Payment](#make-payment)
-    - [Ping](#ping)
-  - [Security Recommendation](#security-recommendation)
-  - [Summary](#summary)
-    - [Key Takeaways:](#key-takeaways)
+# 1. EasyPay merchant integration guide
 
-# EasyPay Merchant Integration Guide
+Integrate with EasyPay quickly and securely using our HMAC‑protected REST API.  
+This guide walks you through authentication, request/response formats, and best‑practice safeguards.
 
-## Overview
+---
 
-This document provides detailed instructions on how merchants can integrate with EasyPay's system through secure API endpoints. The integration supports balance inquiries and payment processing with standardized security protocols such as `HMAC-based authentication`.
+## 1.1. Overview
 
-## Prerequisites
+EasyPay exposes three endpoints—**balance inquiry**, **payment**, and **ping**—over HTTPS.  
+All requests are authenticated with _HMAC‑SHA‑256_ and must finish within **8 seconds**.
 
-- **API Base URL**: Provided by the merchant upon registration.
-- **HMAC Key**: A unique key shared securely by EasyPay.
-  > **Security Note:** Merchants are advised to whitelist EasyPay's IP addresses to ensure only trusted requests are processed.
+---
 
-## Authentication and Security
+## 1.2. Prerequisites
 
-### HMAC Authentication
+- **API base URL** – supplied after merchant onboarding.
+- **HMAC secret key** – delivered out‑of‑band; store only in an encrypted vault.
+- **IP allow‑list** – add EasyPay’s IP ranges to reject untrusted traffic.
+- **TLS 1.2+** – required for all connections.
 
-1. **Algorithm:** Use HMAC-SHA256 for authentication.
-2. **Key Storage:** Store securely in vaults or encrypted databases (not in code).
-3. **Headers:**
-   - **Authorization:** `HMAC <HMAC hash of concatenated parameters>`
-   - **Nonce:** UUIDv4 string format
-4. **Language Header:** Optional but recommended for multi-language support:
-   - `Accept-Language`: Set to `hy-AM` (Armenian), `en-US` (English), or `ru-RU` (Russian) based on the response language preference.
+---
 
-## Standard HTTP Response Codes
+## 1.3. Authentication & security
 
-All API responses must follow standard HTTP status codes:
+### 1.3.1. HMAC workflow
 
-- 200: Success
-- 400: Bad Request
-- 401: Unauthorized
-- 404: Not Found
-- 500: Internal Server Error
+1. **Generate a nonce** – random UUID v4 per request (header `Nonce`).
+2. **Concatenate fields** (order defined per endpoint).
+3. **Hash** the string with `HMAC‑SHA‑256(secret key, payload)`.
+4. **Base64‑encode** the hash.
+5. **Send** the result in `Authorization: HMAC <signature>`.
 
-## Error Handling
+**Optional header**  
+`Accept‑Language: hy‑AM | en‑US | ru‑RU` – localizes error/messages.
 
-All errors return a standardized JSON structure to aid in debugging:
+---
+
+## 1.4. Response Codes & Error Handling
+
+### 1.4.1. Standard HTTP Response Codes
+
+| Code | Description                                       |
+| :--- | :------------------------------------------------ |
+| 200  | Request succeeded.                                |
+| 202  | Request accepted (e.g. order enqueued).           |
+| 400  | Invalid request parameters or duplicate requests. |
+| 401  | Authentication failed.                            |
+| 403  | Insufficient permissions.                         |
+| 404  | Resource not found.                               |
+| 500  | Server encountered an unexpected error.           |
+
+### 1.4.2. Error Response Structure
+
+All errors are returned in a standard JSON format to help with troubleshooting:
 
 ```json
 {
   "RequestId": "Unique request ID",
   "TraceId": "Unique trace ID",
-  "Instance": "API context info",
+  "Instance": "Contextual API information",
   "StatusCode": 400,
-  "Type": "Error type (e.g. BadRequestException)",
+  "Type": "Short error descriptor (e.g. BadRequestException)",
   "Errors": {
     "field": "Error message"
   },
@@ -66,22 +68,34 @@ All errors return a standardized JSON structure to aid in debugging:
 }
 ```
 
-**Key Fields:**
+**Key points:**
 
-- **RequestId / TraceId:** Use these IDs for debugging and support requests.
-- **Instance:** Provides contextual details about the API operation.
-- **StatusCode:** Matches the HTTP status code.
-- **Type:** A short error descriptor.
-- **Errors:** Field-specific error details.
-- **Message:** A general explanation of the problem.
+- Use the `RequestId` and `TraceId` when contacting support.
+- The `Errors` property gives field-specific details.
+- The `Instance` field offers additional context for the operation.
 
-Use `RequestId` and `TraceId` when contacting support to help with troubleshooting.
+## 1.5. Input formatting & HMAC calculation
 
-## Input Formatting and HMAC Calculation
+### 1.5.1. Technical input list
 
-Each input provided must follow the below structure:
+```text
+1: Id                9:  Date                17: BankCard
+2: Name              10: Code               18: PayerName
+3: PhoneNumber       11: Description        19: Course
+4: SocialSecurityNumber
+                     12: Email              20: Address
+5: Passport          13: TaxCode            21: Count
+6: EstateNumber      14: CustomerId         22: LoanId
+7: PlateNumber       15: Username           23: InvestmentId
+8: RegistrationCertificateNumber
+                     16: BankAccount        24: Surname
+```
 
-Example Input:
+### 1.5.2. Concatenation rule
+
+`Type:Value:TechnicalIndex:` (repeat for each element).
+
+Example payload:
 
 ```json
 [
@@ -90,94 +104,29 @@ Example Input:
 ]
 ```
 
-**Concatenation for HMAC:**
-Inputs should be concatenated in the format `Type:Value:TechnicalIndex:`, separated by colons.
+Concatenated string → `16:12345:1:3:98765:2:`
 
-**Result:**
-`16:12345:1:3:98765:2:`
+Full hash input (Balance Inquiry example): `BalanceInquiryId + MerchantServiceIdentifierId + 16:12345:1:3:98765:2: + Nonce`
 
-> Usage: The concatenated string forms part of the HMAC calculation, ensuring message integrity.
+---
 
-**List of types:**
+## 1.6. API endpoints
 
-```txt
-1: Id
-2: Name
-3: PhoneNumber
-4: SocialSecurityNumber
-5: Passport
-6: EstateNumber
-7: PlateNumber
-8: RegistrationCertificateNumber
-9: Date
-10: Code
-11: Description
-12: Email
-13: TaxCode
-14: CustomerId
-15: Username
-16: BankAccount
-17: BankCard
-18: PayerName
-19: Course
-20: Address
-21: Count
-22: LoanId
-23: InvestmentId
-24: Surname
-```
+### 1.6.1. Balance inquiry
 
-HMAC Calculation Example:
+| Method | Path                   |
+| ------ | ---------------------- |
+| POST   | `/api/balance-inquiry` |
 
-```json
-HMAC(12345 + 67890 + 16:12345:1:3:98765:2: + 69f77f9c-b9b5-43ac-9e6b-516863b8a451)
-key = "your HMAC secret key"
-```
-
-Follow these steps to calculate the HMAC:
-
-1. Combine the provided inputs into a single string:
-
-```json
-"123456789016:12345:1:3:98765:2:69f77f9c-b9b5-43ac-9e6b-516863b8a451"
-```
-
-2. Use the HMAC-SHA256 algorithm and apply the secret key:
-
-```json
-"your HMAC secret key"
-```
-
-3. After computing the HMAC hash from the concatenated string and key,
-   convert the resulting byte array into a Base64-encoded string.
-
-```json
-"EQiqUTkEQOGNkfcW4MU6XooOm+rL1REz5njbkvq40bA="
-```
-
-> **Note:**
-> You can verify results with an online HMAC-SHA256 generator (e.g., https://easypay.am/hmac-generator).
-> Ensure the key and input values are correctly formatted and match the expected output.
-
-## API Endpoints
-
-### Balance Inquiry
-
-**Endpoint:**
-`POST /api/balance-inquiry`
-
-**Headers:**
+#### 1.6.1.1. Required headers
 
 ```http
 Nonce: 69f77f9c-b9b5-43ac-9e6b-516863b8a451
-Authorization: HMAC 5EXOvak7ZZWG6ZCiliXK6TNKRIEgTu1Clw8E8ilsoTQ=
+Authorization: HMAC 5EXOva…soTQ=
 Accept-Language: en-US
 ```
 
-**HMAC Calculation:**
-`HMAC(BalanceInquiryId + MerchantServiceIdentifierId + Inputs + Nonce)`
-
-**Request Body:**
+#### 1.6.1.2. Request body
 
 ```json
 {
@@ -190,7 +139,7 @@ Accept-Language: en-US
 }
 ```
 
-**Response Example:**
+#### 1.6.1.3. Successful response
 
 ```json
 {
@@ -199,38 +148,31 @@ Accept-Language: en-US
 }
 ```
 
-**Response Headers**
+_Response HMAC_ → `HMAC(Debt + Properties.Values + Request Nonce)`.
 
-```http
-Authorization: HMAC euAmWwAGbPkV1YXQffhpNFBh8/1Y5my3ZsZ+uNmooKo=
-```
+---
 
-**HMAC Calculation For Response:**
-`HMAC(Debt + Properties.Values + Request's Nonce)`
+### 1.6.2. Make payment
 
-### Make Payment
+| Method | Path            |
+| ------ | --------------- |
+| POST   | `/api/payments` |
 
-**Endpoint:**
-`POST /api/payments`
-
-**Headers:**
+#### 1.6.2.1. Required headers
 
 ```http
 Nonce: 04ba5422-e021-4dfb-a716-bdd1440e91b4
-Authorization: HMAC 5EXOvak7ZZWG6ZCiliXK6TNKRIEgTu1Clw8E8ilsoTQ=
+Authorization: HMAC 5EXOva…soTQ=
 Accept-Language: ru-RU
 ```
 
-**HMAC Calculation:**
-`HMAC(OrderId + Amount + BalanceInquiryId + MerchantServiceIdentifierId + Inputs + Nonce)`
-
-**Request Body:**
+#### 1.6.2.2. Request body
 
 ```json
 {
   "OrderId": "434dd03f-ede8-4e55-b71f-f81cb4120cba",
   "Amount": 500.75,
-  "BalanceInquiryId": 12345, // Not required/nullable
+  "BalanceInquiryId": 12345, // optional
   "MerchantServiceIdentifierId": 67890,
   "Inputs": [
     { "TechnicalIndex": 1, "Type": 1, "Value": "12345" },
@@ -239,66 +181,47 @@ Accept-Language: ru-RU
 }
 ```
 
-> **⚠️ Important Notice:**  
-> We **highly recommend** storing the `OrderId` in your database with a **unique index constraint**. Failing to do so may lead to **duplicate payment issues**.
+> **Important:** store `OrderId` with a **unique index** to avoid duplicate payments.  
+> On repeat `OrderId`, respond with the original `PaymentId`.
 
-Duplicate payments can occur due to several reasons:
-
-- **Timeouts** and improper **timeout handling**
-- **Networking issues** causing multiple retries
-- **Replay attacks** where the same request is maliciously or accidentally reused
-
-In case of a duplicate `OrderId`, **return the original `PaymentId`** associated with it instead of generating an error or processing the payment again. This approach ensures safe handling and prevents unintended multiple payments.
-
-**Response Example:**
+#### 1.6.2.3. Successful response
 
 ```json
-{
-  "PaymentId": "xyz-12345"
-}
+{ "PaymentId": "xyz-12345" }
 ```
 
-**Response Headers**
+_Response HMAC_ → `HMAC(PaymentId + Request Nonce)`.
 
-```http
-Authorization: HMAC 4Q3soI9dTLuCLl3kWnVqPcCnayHwreKYUBwtLor3LRI=
-```
+---
 
-**HMAC Calculation For Response:**
-`HMAC(PaymentId + Request's Nonce)`
+### 1.6.3. Ping
 
-### Ping
+| Method | Path        |
+| ------ | ----------- |
+| GET    | `/api/ping` |
 
-**Endpoint:**
-`GET /api/ping`
-
-This endpoint is used to check the availability of the services. It does not require any headers or body.
-
-**Response:**
+Returns service health.
 
 ```json
-{
-  "Status": "OK"
-}
+{ "Status": "OK" }
 ```
 
-## Security Recommendation
+---
 
-- Merchants should persist HMAC signatures temporarily to detect duplicate or replay attacks. If a subsequent request arrives with the same signature, it should be treated as a duplicate request or a potential replay attack, and appropriate action should be taken (e.g., rejecting the request and logging the incident).
-- Merchants **must handle timeouts gracefully**. If a timeout occurs, **all pending operations within the request scope must be terminated immediately** to prevent inconsistencies.
-  - A request timeout indicates that **no further actions related to the request should proceed**.
-  - **Ensure all cancellable operations** (e.g., database transactions, API calls) are aborted promptly to avoid data corruption or partial processing.
-  - EasyPay enforces an **8-second timeout policy**. After this limit, a **timeout error** is returned. Merchants should use this as a trigger to rollback or cancel any ongoing operations effectively.
+## 1.7. Additional security best practices
 
-## Summary
+- **Replay defense** – cache recent HMAC signatures; reject duplicates.
+- **Timeout handling** – abort all downstream work after EasyPay’s **8 s** limit.
+- **Idempotency** – use the unique `OrderId` strategy above for safe retries.
+- **Audit logging** – log `RequestId`/`TraceId`, status, and timing for each call.
 
-This guide provides the necessary steps to integrate and communicate securely with EasyPay's platform using **HMAC-based authentication**. The APIs covered in this documentation ensure seamless **balance inquiry** and **payment processing**.
+---
 
-### Key Takeaways:
+## 1.8. Next steps
 
-- **HMAC Authentication**: Protects data integrity and authenticity.
-- **Timeout Handling**: Ensure rollback of operations if the 8-second timeout limit is exceeded.
-- **Duplicate Requests**: Store `OrderId` with a unique index to prevent multiple payments.
-- **Replay Protection**: Use temporary storage of HMAC signatures to detect and block potential replay attacks.
+1. Generate test credentials in the EasyPay sandbox.
+2. Implement the HMAC helper in your preferred language.
+3. Run integration‑test scenarios: balance‑only, payment, timeout, duplicate order.
+4. Move to production after passing all automated checks.
 
-Following these guidelines ensures **robust security** and **efficient interaction** with the EasyPay system. For further assistance, reach out to your designated EasyPay integration manager.
+For questions, contact your EasyPay integration manager.
