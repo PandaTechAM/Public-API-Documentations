@@ -505,6 +505,13 @@ All communication from the IFrame arrives as JSON messages that may contain one 
   ```json
   { "checkout_id": "<ticket_order_id>" }
   ```
+- `event_id:`
+  To enable proper navigation within the application, provide the parent event identifier to establish a deeplink navigation path.
+  Example:
+
+  ```json
+  { "event_id": "<event_id>" }
+  ```
 
   _Host Action:_ Navigate to a payment screen or retrieve the order details.  <br><br>
 
