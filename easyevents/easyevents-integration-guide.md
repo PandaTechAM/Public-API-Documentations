@@ -86,9 +86,9 @@ For testing, use the **Test Environment**. Once verified, switch your base URLs 
 **Production Environment**
 
 - **Base URL:**
-  [https://events.easypay.am](https://events.easypay.am)
+  [https://beevents.easypay.am](https://beevents.easypay.am) (api url)
 - **IFrame URL**
-  [https://iframe.easypay.com](https://iframe.easypay.com)
+  [https://iframe.easypay.com](https://iframe.easypay.com) (front-end url)
 
 > **Note:** Scalar UI and Swagger UI are not available in the production environment.
 
