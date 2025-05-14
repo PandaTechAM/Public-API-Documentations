@@ -17,9 +17,6 @@
     - [1.6.5. Debt Retrieval by Owner Unique Identifier](#165-debt-retrieval-by-owner-unique-identifier)
     - [1.6.6. Debt Commission Calculation](#166-debt-commission-calculation)
     - [1.6.7. Debt Payment](#167-debt-payment)
-      - [1.6.7.1. Request](#1671-request)
-      - [1.6.7.2. Success (`200 OK`)](#1672-success-200-ok)
-      - [1.6.7.3. Duplicate request (`400 Bad Request`)](#1673-duplicate-request-400-badrequest)
     - [1.6.8. Search Cities](#168-search-cities)
     - [1.6.9. Search Condominium Association](#169-search-condominium-association)
     - [1.6.10. Search Buildings](#1610-search-buildings)
@@ -28,7 +25,6 @@
   - [1.7. Contributing](#17-contributing)
   - [1.8. Issues and Support](#18-issues-and-support)
   - [1.9. Stay Updated](#19-stay-updated)
-
 
 # 1. e-bak API Documentation
 
@@ -53,10 +49,10 @@ Requests should include an `Accept-Language` header with a supported ISO languag
 
 ## 1.2. Environments
 
-| Environment | Base URL                       | Swagger                                            | Scalar UI                                         |
-| ----------- | ------------------------------ | -------------------------------------------------- | ------------------------------------------------- |
-| **Test**    | `https://qabe-ca.pandatech.it` | `https://qabe-ca.pandatech.it/swagger/integration` | `https://qabe-ca.pandatech.it/scalar/integration` |
-| **Prod**    | `https://be.e-bak.am`          | Not exposed                                        | Not exposed                                       |
+| Environment | Base URL                       | Swagger                          | Scalar UI                       |
+| ----------- | ------------------------------ | -------------------------------- | ------------------------------- |
+| **Test**    | `https://qabe-ca.pandatech.it` | `{Base URL}/swagger/integration` | `{Base URL}/scalar/integration` |
+| **Prod**    | `https://be.e-bak.am`          | Not exposed                      | Not exposed                     |
 
 Switch to Production only after your integration passes all tests.
 
@@ -293,57 +289,59 @@ public enum CheckCommission
 - **Description:** Repays debts (FIFO unless `debtId` specified). The call is **idempotent**
   when accompanied by a unique `outerPaymentId`.
 
-#### 1.6.7.1. Request
+- **Request**
 
-```json
-{
-  "debtPaymentRequestModels": [
-    {
-      "estateId": 1654896,
-      "amount": 452.25,
-      "debtId": 24
-    }
-  ],
-  "outerPaymentId": "9c98610b‑1cd3‑4f12‑83e2‑2a0b86ff4c2e",
-  "commission": 10
-}
-```
+  ```json
+  {
+    "debtPaymentRequestModels": [
+      {
+        "estateId": 1654896,
+        "amount": 452.25,
+        "debtId": 24
+      }
+    ],
+    "outerPaymentId": "9c98610b‑1cd3‑4f12‑83e2‑2a0b86ff4c2e",
+    "commission": 10
+  }
+  ```
 
-#### 1.6.7.2. Success (`200 OK`)
+- **Response (`200 OK`)**
 
-```json
-{
-  "transactions": [
-    {
-      "estateId": 1654896,
-      "debtId": 42,
-      "amount": 452.25,
-      "transactionId": 443,
-      "date": "2023-10-18T11:21:43.757Z",
-      "bank": "Ameriabank",
-      "bankAccount": "1500016548794561"
-    }
-  ],
-  "outerPaymentId": "9c98610b‑1cd3‑4f12‑83e2‑2a0b86ff4c2e",
-  "commission": 10
-}
-```
+  ```json
+  {
+    "transactions": [
+      {
+        "estateId": 1654896,
+        "debtId": 42,
+        "amount": 452.25,
+        "transactionId": 443,
+        "date": "2023-10-18T11:21:43.757Z",
+        "bank": "Ameriabank",
+        "bankAccount": "1500016548794561"
+      }
+    ],
+    "outerPaymentId": "9c98610b‑1cd3‑4f12‑83e2‑2a0b86ff4c2e",
+    "commission": 10
+  }
+  ```
 
-#### 1.6.7.3. Duplicate request (`400 Bad Request`)
+- **Response Duplicate request (`400 Bad Request`)**
 
-```json
-{
-  "RequestId": "Unique request ID",
-  "TraceId": "Unique trace ID",
-  "Instance": "Contextual API information",
-  "StatusCode": 400,
-  "Type": "BadRequestException",
-  "Errors": null,
-  "Message": "transaction_already_processed"
-}
-```
+  ```json
+  {
+    "RequestId": "Unique request ID",
+    "TraceId": "Unique trace ID",
+    "Instance": "Contextual API information",
+    "StatusCode": 400,
+    "Type": "BadRequestException",
+    "Errors": null,
+    "Message": "transaction_already_processed"
+  }
+  ```
 
-> Treat this as confirmation that the **initial payment succeeded**; do **not** replace `outerPaymentId` or attempt additional charges.
+> **Handle this response as a success.**  
+> It confirms the original payment was processed; do **not** retry with
+> a different `outerPaymentId` or charge the user again.
 
 **Bank Enum Values:**
 
