@@ -339,11 +339,9 @@ public enum CheckCommission
   }
   ```
 
-> **Handle this response as a success.**  
-> It confirms the original payment was processed; do **not** retry with
-> a different `outerPaymentId` or charge the user again.
-
----
+  > **Handle this response as a success.**  
+  > It confirms the original payment was processed; do **not** retry with
+  > a different `outerPaymentId` or charge the user again.
 
 
 **Bank Enum Values:**
