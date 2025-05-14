@@ -343,8 +343,7 @@ public enum CheckCommission
 > It confirms the original payment was processed; do **not** retry with
 > a different `outerPaymentId` or charge the user again.
 
-<br>
-
+<br> <br>
 **Bank Enum Values:**
 
 ```csharp
