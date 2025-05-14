@@ -1,8 +1,9 @@
 - [1. e-bak API Documentation](#1-e-bak-api-documentation)
   - [1.1. Overview](#11-overview)
   - [1.2. Environments](#12-environments)
-  - [1.3. Common Response Codes](#13-common-response-codes)
-  - [1.4. Error Handling](#14-error-handling)
+  - [1.3. Response Codes \& Error Handling](#13-response-codes--error-handling)
+    - [1.3.1. Standard HTTP Response Codes](#131-standard-http-response-codes)
+  - [1.4. Error Response Structure](#14-error-response-structure)
   - [1.5. Authentication \& Authorization](#15-authentication--authorization)
     - [1.5.1. User Authentication](#151-user-authentication)
     - [1.5.2. Obtaining an Access Token](#152-obtaining-an-access-token)
@@ -15,7 +16,10 @@
     - [1.6.4. Debt Retrieval by Estate](#164-debt-retrieval-by-estate)
     - [1.6.5. Debt Retrieval by Owner Unique Identifier](#165-debt-retrieval-by-owner-unique-identifier)
     - [1.6.6. Debt Commission Calculation](#166-debt-commission-calculation)
-    - [1.6.7. Debt Payment](#167-debt-repayment)
+    - [1.6.7. Debt Payment](#167-debt-payment)
+      - [1.6.7.1. Request](#1671-request)
+      - [1.6.7.2. Success (`200 OK`)](#1672-success-200-ok)
+      - [1.6.7.3. Duplicate request (`400 Bad Request`)](#1673-duplicate-request-400-badrequest)
     - [1.6.8. Search Cities](#168-search-cities)
     - [1.6.9. Search Condominium Association](#169-search-condominium-association)
     - [1.6.10. Search Buildings](#1610-search-buildings)
@@ -25,18 +29,20 @@
   - [1.8. Issues and Support](#18-issues-and-support)
   - [1.9. Stay Updated](#19-stay-updated)
 
+
 # 1. e-bak API Documentation
 
 ## 1.1. Overview
 
-The e-bak API allows secure and programmatic access to condominium association debt retrieval and repayment functionalities. This RESTful interface enables you to:
+The **e‑bak API** provides secure, programmatic access to condominium‑fee debt retrieval and payment
+services. Use these REST endpoints to:
 
-- Retrieve outstanding debts for a specific estate or owner.
-- Calculate and apply commissions on debts.
-- Process debt repayment transactions.
-- Search and query related information such as cities, buildings, districts, and more.
+- Query outstanding debts for a given estate or owner.
+- Calculate commissions.
+- Repay debts in bulk or individually.
+- Discover reference data (cities, buildings, districts, estates).
 
-With these endpoints, you can seamlessly integrate condominium fee management functionality into your own applications.
+Integrate these capabilities to streamline end‑user payments and accounting workflows.
 
 **Language Support:**
 Requests should include an `Accept-Language` header with a supported ISO language code. Valid options include:
@@ -47,46 +53,38 @@ Requests should include an `Accept-Language` header with a supported ISO languag
 
 ## 1.2. Environments
 
-**Test Environment (for development and QA)**
+| Environment | Base URL                       | Swagger                                            | Scalar UI                                         |
+| ----------- | ------------------------------ | -------------------------------------------------- | ------------------------------------------------- |
+| **Test**    | `https://qabe-ca.pandatech.it` | `https://qabe-ca.pandatech.it/swagger/integration` | `https://qabe-ca.pandatech.it/scalar/integration` |
+| **Prod**    | `https://be.e-bak.am`          | Not exposed                                        | Not exposed                                       |
 
-- **Base URL:**
-  [https://qabe-ca.pandatech.it](https://qabe-ca.pandatech.it).
-- **OpenAPI Spec:**
-  [https://qabe-ca.pandatech.it/openapi/integration.json](https://qabe-ca.pandatech.it/openapi/integration-v1.json)
-- **Scalar UI (Test Only):**
-  [https://qabe-ca.pandatech.it/scalar/integration](https://qabe-ca.pandatech.it/docs/integration-v1)
-- **Swagger UI (Test Only):**
-  [https://qabe-ca.pandatech.it/swagger/integration](https://qabe-ca.pandatech.it/swagger/integration-v1)
+Switch to Production only after your integration passes all tests.
 
-> **Note:** Scalar UI and Swagger UI are not available in the production environment.
+## 1.3. Response Codes & Error Handling
 
-**Production Environment**
+### 1.3.1. Standard HTTP Response Codes
 
-- **Base URL:**
-  [https://be.e-bak.am](https://be.e-bak.am)
+| Code | Description                                       |
+| :--- | :------------------------------------------------ |
+| 200  | Request succeeded.                                |
+| 202  | Request accepted (e.g. order enqueued).           |
+| 400  | Invalid request parameters or duplicate requests. |
+| 401  | Authentication failed.                            |
+| 403  | Insufficient permissions.                         |
+| 404  | Resource not found.                               |
+| 500  | Server encountered an unexpected error.           |
 
-Use the test environment for initial integration and testing. Once stable and production-ready, switch your base URL to the production environment.
+## 1.4. Error Response Structure
 
-## 1.3. Common Response Codes
-
-- `200 OK` - Request succeeded.
-- `400 Bad Request` - Invalid request format or parameters.
-- `401 Unauthorized` - Authentication failed.
-- `403 Forbidden` - Insufficient permissions.
-- `404 Not Found` - Resource not found.
-- `500 Internal Server Error` - An unexpected server-side error occurred.
-
-## 1.4. Error Handling
-
-All errors return a standardized JSON structure to aid in debugging:
+All errors are returned in a standard JSON format to help with troubleshooting:
 
 ```json
 {
   "RequestId": "Unique request ID",
   "TraceId": "Unique trace ID",
-  "Instance": "API context info",
+  "Instance": "Contextual API information",
   "StatusCode": 400,
-  "Type": "Error type (e.g. BadRequestException)",
+  "Type": "Short error descriptor (e.g. BadRequestException)",
   "Errors": {
     "field": "Error message"
   },
@@ -94,16 +92,11 @@ All errors return a standardized JSON structure to aid in debugging:
 }
 ```
 
-**Key Fields:**
+**Key points:**
 
-- **RequestId / TraceId:** Use these IDs for debugging and support requests.
-- **Instance:** Provides contextual details about the API operation.
-- **StatusCode:** Matches the HTTP status code.
-- **Type:** A short error descriptor.
-- **Errors:** Field-specific error details.
-- **Message:** A general explanation of the problem.
-
-Use `RequestId` and `TraceId` when contacting support to help with troubleshooting.
+- Use the `RequestId` and `TraceId` when contacting support.
+- The `Errors` property gives field-specific details.
+- The `Instance` field offers additional context for the operation.
 
 ## 1.5. Authentication & Authorization
 
@@ -168,8 +161,7 @@ public enum EstateTypes
 }
 ```
 
-**
-Check Commission Enum**
+**Check Commission Enum**
 
 ```csharp
 public enum CheckCommission
@@ -298,40 +290,60 @@ public enum CheckCommission
 ### 1.6.7. Debt Payment
 
 - **Path:** `POST /api/v2/integration/debts/payments`
-- **Description:** Repays debts using a FIFO approach unless a specific `debtId` is provided. Provide an `outerPaymentId` for tracking this payment in your system.
+- **Description:** Repays debts (FIFO unless `debtId` specified). The call is **idempotent**
+  when accompanied by a unique `outerPaymentId`.
 
-- **Request:**
-  ```json
-  {
-    "debtPaymentRequestModels": [
-      {
-        "estateId": 1654896,
-        "amount": 452.25,
-        "debtId": 24
-      }
-    ],
-    "outerPaymentId": "3fa85f64",
-    "commission": 10
-  }
-  ```
-- **Response:**
-  ```json
-  {
-    "transactions": [
-      {
-        "estateId": 1654896,
-        "debtId": 42,
-        "amount": 452.25,
-        "transactionId": 443,
-        "date": "2023-10-18T11:21:43.757Z",
-        "bank": "Ameriabank",
-        "bankAccount": "1500016548794561"
-      }
-    ],
-    "outerPaymentId": "3fa85f64",
-    "commission": 10
-  }
-  ```
+#### 1.6.7.1. Request
+
+```json
+{
+  "debtPaymentRequestModels": [
+    {
+      "estateId": 1654896,
+      "amount": 452.25,
+      "debtId": 24
+    }
+  ],
+  "outerPaymentId": "9c98610b‑1cd3‑4f12‑83e2‑2a0b86ff4c2e",
+  "commission": 10
+}
+```
+
+#### 1.6.7.2. Success (`200 OK`)
+
+```json
+{
+  "transactions": [
+    {
+      "estateId": 1654896,
+      "debtId": 42,
+      "amount": 452.25,
+      "transactionId": 443,
+      "date": "2023-10-18T11:21:43.757Z",
+      "bank": "Ameriabank",
+      "bankAccount": "1500016548794561"
+    }
+  ],
+  "outerPaymentId": "9c98610b‑1cd3‑4f12‑83e2‑2a0b86ff4c2e",
+  "commission": 10
+}
+```
+
+#### 1.6.7.3. Duplicate request (`400 Bad Request`)
+
+```json
+{
+  "RequestId": "Unique request ID",
+  "TraceId": "Unique trace ID",
+  "Instance": "Contextual API information",
+  "StatusCode": 400,
+  "Type": "BadRequestException",
+  "Errors": null,
+  "Message": "transaction_already_processed"
+}
+```
+
+> Treat this as confirmation that the **initial payment succeeded**; do **not** replace `outerPaymentId` or attempt additional charges.
 
 **Bank Enum Values:**
 
