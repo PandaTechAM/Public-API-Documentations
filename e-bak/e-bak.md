@@ -373,7 +373,7 @@ public enum Bank
 ### 1.6.8. Search Cities
 
 - **Endpoint:** `GET /api/v2/integration/search/cities`
-- **Description:** Retrieves all cities.
+- **Description:** Retrieves all cities that have buildings.
 - **Request:** https://qabe-ca.pandatech.it/api/v2/integration/search/cities
 - **Response:**
   ```json
