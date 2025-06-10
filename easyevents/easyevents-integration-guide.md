@@ -469,6 +469,12 @@ To redirect users to their ticket-history view, use:
 https://qaiframe.easypay.am/owner-tickets?lang=hy-AM&refresh_token=<YOUR_REFRESH_TOKEN>&device_id=<UNIQUE_DEVICE_ID>
 ```
 
+To open special event view, use:
+
+```txt
+https://qaiframe.easypay.am/event/<event_id>?lang=hy-AM&refresh_token=<YOUR_REFRESH_TOKEN>&device_id=<UNIQUE_DEVICE_ID>
+```
+
 ### 1.9.4. Communication Mechanism (JavaScript Channel)
 
 To communicate back to your application, the IFrame uses the `postMessage` API (or a similar mechanism), typically targeting a specific channel name. In Flutter/Dart’s WebView, this channel is often referred to as `JavaScriptChannel`. In other frameworks (React Native, Xamarin, etc.), the approach is analogous:
