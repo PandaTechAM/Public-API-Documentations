@@ -291,7 +291,7 @@ Below are the primary endpoints for server-side integration. In all cases, inclu
 - **Endpoint:** `GET /api/v1/integration/order/{ticketOrderId}`
 - **Description:** Retrieve order details after the user has created an order in the IFrame.
   - Note: You must retrieve the ticketOrderId from the IFrame before the user is redirected, as it is required to call this endpoint.
-  - Also provide `Authorization` header with the HMAC signature (inputData  = "ticketOrderId").
+  - Also provide `Authorization` header with the HMAC signature (inputData = "ticketOrderId").
 - **Request:** /api/v1/integration/order/asd
 - **Response:**
   ```json
@@ -347,7 +347,7 @@ Below are the primary endpoints for server-side integration. In all cases, inclu
 ### 1.8.4. Payment
 
 - **Endpoint:** `POST /api/v1/integration/payment`
-- **Description:** Submit payment details for a completed ticket purchase. Also provide `Authorization` header with the HMAC signature (inputData  = "ticketOrderId").
+- **Description:** Submit payment details for a completed ticket purchase. Also provide `Authorization` header with the HMAC signature (inputData = "ticketOrderId").
 - **Request Body:**
 
   ```json
@@ -376,7 +376,7 @@ Below are the primary endpoints for server-side integration. In all cases, inclu
 ### 1.8.5. Ticket Order Cancel
 
 - **Endpoint:** `DELETE /api/v1/integration/order/{ticketOrderId}`
-- **Description:** Cancel a pending ticket order, releasing any reserved seats.Also provide `Authorization` header with the HMAC signature (inputData  = "ticketOrderId").
+- **Description:** Cancel a pending ticket order, releasing any reserved seats.Also provide `Authorization` header with the HMAC signature (inputData = "ticketOrderId").
 - **Request:** /api/v1/integration/order/asd
 - **Response:**
 
@@ -462,11 +462,13 @@ If you start with `https://qaiframe.easypay.am?lang=hy-AM`, for example, and nee
 ```txt
 https://qaiframe.easypay.am?lang=hy-AM&refresh_token=<YOUR_REFRESH_TOKEN>&device_id=<UNIQUE_DEVICE_ID>
 ```
-if you want to redirect to tickets history your url should look like:
+
+To redirect users to their ticket-history view, use:
 
 ```txt
 https://qaiframe.easypay.am/owner-tickets?lang=hy-AM&refresh_token=<YOUR_REFRESH_TOKEN>&device_id=<UNIQUE_DEVICE_ID>
 ```
+
 ### 1.9.4. Communication Mechanism (JavaScript Channel)
 
 To communicate back to your application, the IFrame uses the `postMessage` API (or a similar mechanism), typically targeting a specific channel name. In Flutter/Dart’s WebView, this channel is often referred to as `JavaScriptChannel`. In other frameworks (React Native, Xamarin, etc.), the approach is analogous:
@@ -509,15 +511,16 @@ All communication from the IFrame arrives as JSON messages that may contain one 
   ```json
   { "checkout_id": "<ticket_order_id>" }
   ```
-- `event_id:`
-  To enable proper navigation within the application, provide the parent event identifier to establish a deeplink navigation path.
-  Example:
+
+  _Host Action:_ Navigate to a payment screen or retrieve the order details. <br><br>
+
+- `event_id`  
+  Provides the parent event’s identifier so your app can build a deep link.  
+  Example: when the user taps “Share” on an event, the IFrame sends:
 
   ```json
   { "event_id": "<event_id>" }
   ```
-
-  _Host Action:_ Navigate to a payment screen or retrieve the order details.  <br><br>
 
 - `link`
   A URL that the application should open in a browser (e.g., YouTube link, maps directions).
