@@ -462,7 +462,11 @@ If you start with `https://qaiframe.easypay.am?lang=hy-AM`, for example, and nee
 ```txt
 https://qaiframe.easypay.am?lang=hy-AM&refresh_token=<YOUR_REFRESH_TOKEN>&device_id=<UNIQUE_DEVICE_ID>
 ```
+if you want to redirect to tickets history your url should look like:
 
+```txt
+https://qaiframe.easypay.am/owner-tickets?lang=hy-AM&refresh_token=<YOUR_REFRESH_TOKEN>&device_id=<UNIQUE_DEVICE_ID>
+```
 ### 1.9.4. Communication Mechanism (JavaScript Channel)
 
 To communicate back to your application, the IFrame uses the `postMessage` API (or a similar mechanism), typically targeting a specific channel name. In Flutter/Dart’s WebView, this channel is often referred to as `JavaScriptChannel`. In other frameworks (React Native, Xamarin, etc.), the approach is analogous:
