@@ -365,7 +365,9 @@ Below are the primary endpoints for server-side integration. In all cases, inclu
   {
     "partnerFullName": "Partners Name",
     "uniqueDocumentId": "5454545445",
-    "bankAccount": "1450013254687513"
+    "bankAccount": "1450013254687513",
+    "TinNumber":"1234567",
+    "ArmSoftAccount":"4567891"
   }
   ```
 
