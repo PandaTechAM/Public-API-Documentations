@@ -73,15 +73,15 @@ For testing, use the **Test Environment**. Once verified, switch your base URLs 
 **Test Environment**
 
 - **Base URL:**
-  [https://qabeevents.easypay.am](https://qabeevents.easypay.am).
+  [https://qa-beeasyevents.pandatech.it](https://qa-beeasyevents.pandatech.it).
 - **IFrame URL:**
-  [https://qaiframe.easypay.am](https://qaiframe.easypay.am)
+  [https://qa-iframe.pandatech.it](https://qa-iframe.pandatech.it)
 - **OpenAPI Spec:**
-  [https://qabeevents.easypay.am/openapi/integration-v1.json](https://qabeevents.easypay.am/openapi/integration-v1.json)
+  [https://qa-beeasyevents.pandatech.it/openapi/integration-v1.json](https://qa-beeasyevents.pandatech.it/openapi/integration-v1.json)
 - **Scalar UI (Test Only):**
-  [https://qabeevents.easypay.am/scalar/integration-v1](https://qabeevents.easypay.am/docs/integration-v1)
+  [https://qa-beeasyevents.pandatech.it/scalar/integration-v1](https://qa-beeasyevents.pandatech.it/docs/integration-v1)
 - **Swagger UI (Test Only):**
-  [https://qabeevents.easypay.am/swagger/integration-v1](https://qabeevents.easypay.am/swagger/integration-v1)
+  [https://qa-beeasyevents.pandatech.it/swagger/integration-v1](https://qa-beeasyevents.pandatech.it/swagger/integration-v1)
 
 **Production Environment**
 
