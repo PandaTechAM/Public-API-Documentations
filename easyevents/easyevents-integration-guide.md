@@ -560,6 +560,14 @@ All communication from the IFrame arrives as JSON messages that may contain one 
   { "goBack": "true" }
   ```
 
+  - `sync_and_login`
+  A boolean string (`"true"`/`"false"`) instructing to call sync and login API, in case of fail, navigate back or close the IFrame.
+  Example:
+
+  ```json
+  { "sync_and_login": "true" }
+  ```
+
   _Host Action:_ Close or pop the current screen to return to a previous view.
 
 > Important: Messages may arrive in any order and can contain multiple keys. Treat each key independently.
