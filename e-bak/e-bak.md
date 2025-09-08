@@ -358,7 +358,6 @@ public enum Bank
    Armswissbank = 6,
    Artsakhbank = 7,
    BiblosBankArmenia = 8,
-   HSBCBankArmenia = 9,
    Evocabank = 10,
    Inecobank = 11,
    ConverseBank = 12,
