@@ -455,12 +455,10 @@ public enum Bank
   {
     "values": [
       {
-        "type": 0,
         "id": 13548785,
-        "address": "21/2"
+        "name": "Arabkir"
       }
-    ],
-    "totalCount": 150
+    ]
   }
   ```
 
