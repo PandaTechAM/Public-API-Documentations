@@ -148,12 +148,14 @@ If you receive a `401 Unauthorized` error, your token may have expired. Re-authe
 ```csharp
 public enum EstateTypes
 {
-   Apartment = 0,
-   CommercialArea = 1,
-   ParkingArea = 2,
-   Basement = 3,
-   House = 4,
-   Other = 5
+   Apartment = 0, //Բնակարան
+   CommercialArea = 1, //Կոմերցիոն տարածք
+   ParkingArea = 2, //Կայանման տարածք
+   Basement = 3, //Նկուղ
+   House = 4, //Տուն
+   Other = 5, //Այլ
+   Elevator = 6, //Վերելակ
+   SolarStation = 7 //Արևային կայան
 }
 ```
 
