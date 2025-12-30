@@ -1,6 +1,6 @@
 - [1. CashMe Integration Guide (External APIs)](#1-cashme-integration-guide-(external-APIs))
     - [1.1. Prerequisites](#11-prerequisites)
-        - [1.1.1. Required Headers](#111-requiredheaders)
+        - [1.1.1. Required Headers](#111-required-headers)
         - [1.1.2 HMAC Signature Generation](#112-hmac-signature-generation)
     - [1.2. API Endpoints](#12-api-endpoints)
         - [1.2.1. Get Wallet User Payload](#121-get-wallet-user-payload)
