@@ -1,4 +1,15 @@
-# CashMe Integration Guide (External APIs)
+- [1. CashMe Integration Guide (External APIs)]
+    - [1.1. Prerequisites]
+        - [1.1.1. Required Headers]
+        - [1.1.2 HMAC Signature Generation]
+    - [1.2. API Endpoints]
+        - [1.2.1. Get Wallet User Payload]
+        - [1.2.2. Disburse Loan to Wallet]
+
+
+
+
+# 1. CashMe Integration Guide (External APIs)
 
 These endpoints allow **CashMe** to interact with wallet loan sessions.
 
@@ -7,31 +18,40 @@ These endpoints allow **CashMe** to interact with wallet loan sessions.
 
 ---
 
-## Authentication & Request Requirements
+## 1.1. Prerequisites
 
-Each request **must** include:
+Before integrating with FinHub, ensure you have:
+
+1. **Valid FinHub Credentials**
+
+- **HMAC Key:** Must be stored securely (in a vault or key management system).
+
+2. **Base URL**
+   - The root address for FinHub's API calls (e.g., https://your-env.easypay.am/).
+
+3. Each request **must** include:
 
 - A valid **Authorization** header with an HMAC signature
 - A **Timestamp** header in UTC
 - A request body specific to the endpoint(Token)
 
-### Required Headers
+### 1.1.1. Required Headers
 
 | Header        | Value                         | Notes                                  |
 |--------------|-------------------------------|----------------------------------------|
 | Authorization | `HMAC <CashMe>:<SIGNATURE>`  | HMAC-SHA256 over `Timestamp:Token`     |
 | Timestamp     | `YYYY-MM-DDTHH:mm:ssZ`        | UTC time, ISO 8601 format              |
 
-### HMAC Signature Generation
+### 1.1.2 HMAC Signature Generation
 
 Siganture is generated using HMAC-SHA256 algorithm with a **shared secret key** over the string: `Timestamp:Token`
 
 
 ---
 
-## API Endpoints
+## 1.2. API Endpoints
 
-### Get Wallet User Payload
+### 1.2.1. Get Wallet User Payload
 
 **Endpoint**  
 `POST /api/external/v1/cashme/user-payload`
@@ -75,8 +95,22 @@ Returns wallet user data for a given token.
 - **400 Bad Request**: Invalid request, expired token or missing fields.
 - **401 Unauthorized**: Invalid HMAC or expired timestamp.
 
+#### Response Example
 
-### Disburse Loan to Wallet
+```json
+{
+  "requestId": "007",
+  "traceId": "5b4d6fafe053f9b6d8aaa8e20",
+  "instance": "GET - Test",
+  "statusCode": 400,
+  "type": "BadRequestException",
+  "errors": null,
+  "message": "TOKEN_IS_NOT_FOUND"
+}
+```
+
+
+### 1.2.2. Disburse Loan to Wallet
 
 **Endpoint**  
 `POST /api/external/v1/cashme/disburse`
@@ -94,7 +128,7 @@ Top up wallet balance using a previously created loan session token
 
 #### Response Example
 
-In case of success, returns the transaction ID:
+In case of success, returns the order ID:
 ```json
 "019b6a24-0486-787b-b908-6fe3a9e08dba"
 ```
@@ -102,5 +136,19 @@ In case of success, returns the transaction ID:
 
 - **400 Bad Request**: Invalid request, expired token or missing fields.
 - **401 Unauthorized**: Invalid HMAC or expired timestamp.
+
+#### Response Example
+
+```json
+{
+  "requestId": "007",
+  "traceId": "5b4d6fafe053f9b6d8aaa8e20",
+  "instance": "GET - Test",
+  "statusCode": 400,
+  "type": "BadRequestException",
+  "errors": null,
+  "message": "TOKEN_IS_NOT_FOUND"
+}
+```
 
 
