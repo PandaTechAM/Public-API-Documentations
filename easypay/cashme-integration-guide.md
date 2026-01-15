@@ -39,7 +39,7 @@ Before integrating with FinHub, ensure you have:
 
 | Header        | Value                         | Notes                                  |
 |--------------|-------------------------------|----------------------------------------|
-| Authorization | `HMAC <CashMe>:<SIGNATURE>`  | HMAC-SHA256 over `Timestamp:Token`     |
+| Authorization | `HMAC <CashMe>:<SIGNATURE>`  | HMAC-SHA256 over `Timestamp:Token` when calling `/user-payload` and over `Timestamp:Token:Amount:ContractNumber` when calling the `/disburse` endpoint|
 | Timestamp     | `YYYY-MM-DDTHH:mm:ssZ`        | UTC time, ISO 8601 format              |
 
 ### 1.1.2 HMAC Signature Generation
@@ -93,7 +93,7 @@ Returns wallet user data for a given token.
 #### Error Responses and Messages
 `400 Bad Request`
 - TOKEN_IS_NOT_FOUND: When the provided token does not exist.
-- ACCESS_TOKEN_EXPIRED: When the provided token has expired.
+- SESSION_EXPIRED: When the provided token has expired.
 - INVALID_SESSION_STATUS: When the session status is not valid for this operation.
 - PHONE_NUMBER_NOT_FOUND: When the phone number associated with the user is missing.
 - EMAIL_IS_REQUIRED: When the email associated with the user is missing.
@@ -123,7 +123,7 @@ Returns wallet user data for a given token.
 `POST /api/external/v1/cashme/disburse`
 
 **Summary**  
-Top up wallet balance using a previously created loan session token
+Top up wallet balance using a previously created loan session token. Here as Amount should be provided the approved loan amount and ContractNumber is the loan contract number.
 
 #### Request Body Example
 
@@ -145,7 +145,7 @@ In case of success, returns the order ID:
 
 `400 Bad Request`
 - TOKEN_IS_NOT_FOUND: When the provided token does not exist.
-- ACCESS_TOKEN_EXPIRED: When the provided token has expired.
+- SESSION_EXPIRED: When the provided token has expired.
 - INVALID_SESSION_STATUS: When the session status is not valid for this operation.
 - NOT_ENOUGH_FUNDS: When there are insufficient funds in the CashMe balance to disburse the loan.
 
