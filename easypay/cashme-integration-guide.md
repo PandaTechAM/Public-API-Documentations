@@ -39,7 +39,7 @@ Before integrating with FinHub, ensure you have:
 
 | Header        | Value                         | Notes                                  |
 |--------------|-------------------------------|----------------------------------------|
-| Authorization | `HMAC <CashMe>:<SIGNATURE>`  | HMAC-SHA256 over `Timestamp:Token` when calling `/user-payload` and over `Timestamp:Token:Amount:ContractNumber` when calling the `/disburse` endpoint|
+| Authorization | `HMAC <CashMe>:<SIGNATURE>`  | HMAC-SHA256 over `Timestamp:Token` when calling `/user-payload` and over `Timestamp:Token:Amount:ContractNumber` when calling the `/disburse` endpoint. In this case, the amount must be provided without decimal places.|
 | Timestamp     | `YYYY-MM-DDTHH:mm:ssZ`        | UTC time, ISO 8601 format              |
 
 ### 1.1.2 HMAC Signature Generation
@@ -123,7 +123,7 @@ Returns wallet user data for a given token.
 `POST /api/external/v1/cashme/disburse`
 
 **Summary**  
-Top up wallet balance using a previously created loan session token. Here as Amount should be provided the approved loan amount and ContractNumber is the loan contract number.
+Top up wallet balance using a previously created loan session token. Here as Amount should be provided the approved loan amount(without decimal places) and ContractNumber is the loan contract number.
 
 #### Request Body Example
 
