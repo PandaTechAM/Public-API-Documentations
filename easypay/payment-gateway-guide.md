@@ -61,7 +61,7 @@ Before integrating with FinHub, ensure you have:
 - **HMAC Key:** Must be stored securely (in a vault or key management system).
 
 2. **Base URL**
-   - The root address for FinHub's API calls (e.g., https://your-env.easypay.am/).
+   - The root address for FinHub's API calls (e.g., https://ft-api-staging.easypay.am/).
 3. **Language Header**
    Include an `Accept-Language` HTTP header with a valid ISO language code:
    - `en-US` (English, default),
