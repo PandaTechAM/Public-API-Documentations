@@ -312,7 +312,9 @@ Important fields:
 POST /api/v1/identity-lookup
 ```
 
-Identify a payer by SSN or document number. EasyTransact resolves the lookup against the official identity records and, on a hit, returns the 8 identity fields needed for KYC plus a single-use `reference` UUID to pass to `/v1/pay`. Use this as the primary path; only fall back to `/v1/identity-manual` when the lookup cannot identify the payer (e.g. a foreign citizen with no Armenian record, or a typo in the document number).
+Identify a payer by SSN or document number. On success EasyTransact persists the resolved identity internally and returns a single-use `reference` UUID. **No personal fields are returned** — by design, so the endpoint cannot be used as an identity-harvesting oracle. Pass the `reference` to `/v1/pay`; the persisted identity is forwarded to the upstream KYC step server-side.
+
+Use this as the primary path. Fall back to `/v1/identity-manual` when the lookup cannot identify the payer (foreign citizen with no local record, off-roll, or a typo in the document number).
 
 **Headers** — `token` (required).
 
@@ -336,28 +338,13 @@ Identify a payer by SSN or document number. EasyTransact resolves the lookup aga
   "responseStatus": "Success",
   "responseData": {
     "data": {
-      "reference": "8c2f6f4a-9c1e-4e7d-9b8f-2c4f1c7f6d9a",
-      "person": {
-        "firstName": "John",
-        "lastName": "Doe",
-        "ssn": "1234567890",
-        "document": "AB1234567",
-        "documentType": 1,
-        "documentIssuedBy": "003",
-        "documentIssuedDate": "2019-02-13",
-        "documentValidityDate": "2029-02-13",
-        "source": "Auto"
-      }
+      "reference": "8c2f6f4a-9c1e-4e7d-9b8f-2c4f1c7f6d9a"
     }
   }
 }
 ```
 
-`documentType`: `1` = Passport (non-biometric), `2` = Biometric Passport, `3` = ID Card. Other types (Foreign Passport, Social Card) are rejected with `BadRequest` because EasyPay only accepts 1 / 2 / 3.
-
-`source` is `"Auto"` for identities resolved by lookup and `"Manual"` for those entered via `/v1/identity-manual` (see below).
-
-`reference` is **single-use**: passing it to `/v1/pay` consumes it. To pay for the same payer again, run identity verification again.
+`reference` is **single-use**: passing it to `/v1/pay` consumes it. To pay for the same payer again, look them up again.
 
 **Errors**
 - `BadRequest` — value missing, lookup type invalid, no supported document found, document type unsupported.
@@ -370,7 +357,9 @@ Identify a payer by SSN or document number. EasyTransact resolves the lookup aga
 POST /api/v1/identity-manual
 ```
 
-Submit identity fields entered by the operator. Use when the automatic lookup could not identify the payer (foreign citizen, off-roll, or document mistyped) or when the lookup service is unavailable. Returns the same `reference` + `person` shape as `/v1/identity-lookup` (with `source: "Manual"`).
+Submit identity fields entered by the operator. Use when the automatic lookup could not identify the payer (foreign citizen, off-roll, or document mistyped) or when the lookup service is unavailable.
+
+Returns a `reference` UUID **plus** the submitted fields echoed back as a `person` object — only what the caller already supplied. Nothing extra is leaked here.
 
 **Headers** — `token` (required).
 
@@ -395,7 +384,35 @@ Field rules:
 - `documentIssuedDate` and `documentValidityDate` are ISO `yyyy-MM-dd` strings.
 - `documentValidityDate` must be on or after `documentIssuedDate`.
 
-**Response** — identical to `/v1/identity-lookup`.
+**Response**
+
+```json
+{
+  "success": true,
+  "message": null,
+  "responseStatus": "Success",
+  "responseData": {
+    "data": {
+      "reference": "8c2f6f4a-9c1e-4e7d-9b8f-2c4f1c7f6d9a",
+      "person": {
+        "firstName": "John",
+        "lastName": "Doe",
+        "ssn": "1234567890",
+        "document": "AB1234567",
+        "documentType": 1,
+        "documentIssuedBy": "003",
+        "documentIssuedDate": "2019-02-13",
+        "documentValidityDate": "2029-02-13",
+        "source": "Manual"
+      }
+    }
+  }
+}
+```
+
+`documentType`: `1` = Passport (non-biometric), `2` = Biometric Passport, `3` = ID Card.
+
+`source` is always `"Manual"` for this endpoint. (`"Auto"` is reserved for internal records resolved by `/v1/identity-lookup`, but that endpoint does not expose the person object.)
 
 ### Check (pre-payment validation)
 
@@ -640,7 +657,7 @@ Once consumed, a `reference` cannot be reused. To pay for the same payer again, 
 
 ### Identity payload contract
 
-The 8 fields collected (and forwarded to EasyPay's authorize-session call) are:
+The 8 fields that make up an identity (forwarded to EasyPay's authorize-session call at Pay time) are:
 
 | Field | Type | Notes |
 | --- | --- | --- |
@@ -653,7 +670,7 @@ The 8 fields collected (and forwarded to EasyPay's authorize-session call) are:
 | `documentIssuedDate` | ISO date | `yyyy-MM-dd`. |
 | `documentValidityDate` | ISO date | `yyyy-MM-dd`. Must be on or after `documentIssuedDate`. |
 
-EasyTransact stores the full payload AES-256 encrypted; only the Pay flow ever decrypts it. List/export endpoints never return identity fields.
+These fields are the body of `/v1/identity-manual` (operator submits, response echoes back). For `/v1/identity-lookup`, none of these fields appear on the wire: the resolved identity stays server-side and only the `reference` UUID comes back. EasyTransact stores the full payload AES-256 encrypted; only the Pay flow ever decrypts it. List/export endpoints never return identity fields.
 
 ### Recovering from stale references
 
