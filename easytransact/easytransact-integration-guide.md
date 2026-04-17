@@ -1,336 +1,710 @@
-# 1. EasyTransact API Documentation
+# EasyTransact API
 
-- [1. EasyTransact API Documentation](#1-easytransact-api-documentation)
-  - [1.1. Overview](#11-overview)
-  - [1.2. Base URL](#12-base-url)
-  - [1.3. Common Response Codes](#13-common-response-codes)
-  - [1.4. Authentication and Authorization](#14-authentication-and-authorization)
-    - [1.4.1. User Authentication](#141-user-authentication)
-    - [1.4.2. Obtaining an Access Token](#142-obtaining-an-access-token)
-    - [1.4.3. Using the Token](#143-using-the-token)
-    - [1.4.4. Token Expiration and Renewal](#144-token-expiration-and-renewal)
-  - [1.5. Authentication](#15-authentication)
-    - [1.5.1. Login](#151-login)
-  - [1.6. Transaction Operations](#16-transaction-operations)
-    - [1.6.1. Export Transactions](#161-export-transactions)
-    - [1.6.2. Get Transactions](#162-get-transactions)
-  - [1.7. Provider Information](#17-provider-information)
-    - [1.7.1. Get Providers](#171-get-providers)
-  - [1.8. Transaction Verification and Payment](#18-transaction-verification-and-payment)
-    - [1.8.1. Check](#181-check)
-    - [1.8.2. Pay](#182-pay)
-    - [1.8.3. Balance](#183-balance)
-    - [1.8.4. Get cheque](#184-get-cheque)
-  - [1.9. Contributing](#19-contributing)
-  - [1.10. Issues and Support](#110-issues-and-support)
-  - [1.11. Stay Updated](#111-stay-updated)
+EasyTransact is the API gateway financial institutions use to access EasyPay's 500+ payment providers (utilities, telcos, banks, card-to-card transfers, etc.) without integrating directly with EasyPay. This guide covers everything you need to integrate.
 
-## 1.1. Overview
+## Base URL
 
-The EasyTransact API provides programmatic access to our service, allowing users to retrieve payment providers and make
-payments. This API is designed to be RESTful and is intended to be used by developers to integrate EasyTransact's
-capabilities into their applications.
+| Environment | Base URL |
+| --- | --- |
+| Production | `https://betransact.easypay.am/api` |
 
-## 1.2. Base URL
+All endpoints below are prefixed with `/v1/`. For example, the login endpoint is `https://betransact.easypay.am/api/v1/login`.
 
-All API requests should be made to the base URL: [https://betransact.easypay.am](https://betransact.easypay.am)
+## Response envelope
 
-## 1.3. Common Response Codes
+Every endpoint returns a `ServiceResponse<T>` envelope. Non-paginated:
 
-- `200 OK` - Request succeeded.
-- `400 Bad Request` - Invalid request format.
-- `401 Unauthorized` - Authentication failed or user doesn't have permissions for requested operation.
-- `404 Not Found` - Resource not found.
-- `500 Internal Server Error` - An error occurred in the server.
-
-## 1.4. Authentication and Authorization
-
-### 1.4.1. User Authentication
-
-To use the API, you must have a registered user account in the system. It's crucial to
-`store your credentials securely`.
-
-### 1.4.2. Obtaining an Access Token
-
-- To receive an access token, make a call to the `api/v1/login` endpoint using your credentials.
-- Upon successful authentication, you will receive a token.
-
-### 1.4.3. Using the Token
-
-- This token is should be always included in the header on each call.
-- The token is refreshed automatically with each API call, extending its validity.
-
-### 1.4.4. Token Expiration and Renewal
-
-- The token is not valid indefinitely. Over time, it will expire.
-- If you receive a `401 Unauthorized` error, it indicates that your token has expired.
-- In case of a `401` error, you should re-authenticate using the `api/v1/login` endpoint to obtain a new token and
-  proceed with your API calls.
-
-## 1.5. Authentication
-
-### 1.5.1. Login
-
-- **Endpoint:** `POST /api/v1/login`
-- **Description:** Authenticate the user and obtain a token for API access.
-- **Request:**
-
-  ```json
-  {
-    "Username": "string",
-    "Password": "string"
+```json
+{
+  "success": true,
+  "message": null,
+  "responseStatus": "Success",
+  "responseData": {
+    "data": { /* T */ }
   }
-  ```
+}
+```
 
-- **Response:**
+Paginated (`ServiceResponsePaged<T>`):
 
-  ```json
-  {
-    "responseData": {
-      "data": {
-        "userId": "61adcbf5-1755-4b64-ae7b-ccbcfa647609",
-        "token": "f6816910-914e-48a1-a40a-06cb6aead7e9",
-        "fullName": "Panda",
-        "username": "Admin",
-        "role": "SuperAdmin"
-      }
-    },
-    "success": true,
-    "message": "",
-    "responseStatus": "Ok"
+```json
+{
+  "success": true,
+  "message": null,
+  "responseStatus": "Success",
+  "responseData": {
+    "data": [ /* T[] */ ],
+    "page": 1,
+    "pageSize": 20,
+    "totalCount": 142
   }
-  ```
+}
+```
 
-## 1.6. Transaction Operations
+Endpoints that perform an action without returning data (e.g. logout) reply with the envelope minus `responseData.data`.
 
-### 1.6.1. Export Transactions
+## Errors
 
-- **Endpoint:** `GET /api/v1/available-user-transactions-export`
-- **Description:** Export user transaction data in following formats: `.csv`, `.xlsx`, `.pdf`.
-- **Query parameters** `dataRequest`, `exportType`
-- **Request
-  ** https://betransact.easypay.am/api/v1/user-transactions-export?token=d62266b3-c5bb-4b82-bca4-c22b8e58337a&dataRequest=%7B%7D&exportType=CSV
+Errors come back with `success: false`, a human-readable `message`, and a typed `responseStatus`. Inspect `responseStatus` for programmatic handling.
 
-### 1.6.2. Get Transactions
+```json
+{
+  "success": false,
+  "message": "Invalid credentials",
+  "responseStatus": "BadRequest",
+  "responseData": null
+}
+```
 
-- **Endpoint:** `GET /api/v1/available-user-transactions`
-- **Description:** Retrieve user transaction data.
-- **Query parameters** `page`, `pageSize`
-- **Request** https://betransact.easypay.am/api/v1/available-user-transactions?page=1&pageSize=5000
-- **Response**
+`responseStatus` values you should handle:
 
-  ```json
-  {
-    "success": true,
-    "message": "string",
-    "responseStatus": "Ok",
-    "responseData": {
-      "data": [
-        {
-          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "providerId": 0,
-          "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "inputs": "string",
-          "creationDate": "2023-10-18T11:21:43.757Z",
-          "amount": 0,
-          "comment": "string",
-          "getProviderDto": {
-            "id": 0,
-            "providerName": "string"
-          }
-        }
-      ],
-      "page": 0,
-      "pageSize": 0,
-      "totalCount": 0
+| Status | HTTP | Meaning |
+| --- | --- | --- |
+| `Success` | 200 | Request succeeded. |
+| `BadRequest` | 400 | Validation, business-rule, or upstream rejection. The `message` is safe to display. |
+| `Unauthorized` | 401 | Token missing, invalid, or expired. Re-login. |
+| `NotFound` | 404 | Resource does not exist. |
+| `ServiceUnavailable` | 503 | Upstream provider temporarily unreachable. Retry with backoff. |
+
+## Headers
+
+| Header | Required | Description |
+| --- | --- | --- |
+| `token` | Required after login | Session token issued by `POST /v1/login`. UUID format. Sent on every protected call. |
+| `language` | Optional | `en` or `hy`. Affects provider hints returned by `/v1/user-providers`. Defaults to `en`. |
+| `Content-Type` | Required for body endpoints | `application/json`. |
+
+## Authentication model
+
+EasyTransact uses opaque session tokens (UUIDs) backed by a database row, **not JWTs**. There is no refresh token: when a token expires you receive `401 Unauthorized` and must re-authenticate.
+
+The token slides forward on every authenticated call: each successful call extends its expiration window. Idle sessions expire after the configured TTL (production default: very long; treat 401 as the only authoritative expiration signal).
+
+### Login flow
+
+1. Call `POST /v1/login` with username and password.
+2. The response carries:
+   - A session `token` (UUID) ready for use **OR**
+   - A one-time token (`token`) plus `forceToChangePassword: true` if this is the user's first login.
+3. If `forceToChangePassword` is `true`, call `PATCH /v1/change-own-password-forced` with that one-time token in the `token` header and a new password in the body. The response of that call returns a fresh session token.
+4. Use the session token in the `token` header for every subsequent request.
+5. On `401 Unauthorized` from any endpoint, the token is no longer valid; re-run the login flow.
+
+### Logout
+
+`POST /v1/logout` invalidates the current token. Subsequent requests with that token receive `401`.
+
+## Endpoints
+
+### Login
+
+```
+POST /api/v1/login
+```
+
+Authenticate a user and obtain a session token.
+
+**Request body**
+
+```json
+{
+  "username": "panda.user",
+  "password": "S3cret!Pass"
+}
+```
+
+**Response**
+
+```json
+{
+  "success": true,
+  "message": null,
+  "responseStatus": "Success",
+  "responseData": {
+    "data": {
+      "id": "1k3ZA",
+      "token": "f6816910-914e-48a1-a40a-06cb6aead7e9",
+      "fullName": "Panda User",
+      "username": "panda.user",
+      "forceToChangePassword": false,
+      "role": "User"
     }
   }
-  ```
+}
+```
 
-## 1.7. Provider Information
+Notes:
+- `id` is the user's id encoded as a base-36 string (the underlying type is a 64-bit integer).
+- `role` is one of `User`, `Admin`, `SuperAdmin`. Integrators are typically `User`.
+- If `forceToChangePassword` is `true`, the returned `token` is single-use and only valid against `/v1/change-own-password-forced`.
 
-### 1.7.1. Get Providers
+**Errors**
+- `BadRequest` — username/password invalid, or user is disabled.
+- `Unauthorized` — too many failed attempts (3 failures in 30 seconds blocks further attempts).
 
-- **Endpoint:** `GET /api/v1/user-providers`
-- **Language:** Provide language in header `language` "am", "ru", "en" to get proper hint
-- **Description:** Retrieve information about available providers.
-- **Response:**
+### Logout
 
-  ```json
-  {
-    "responseData": {
-      "data": [
-        {
-          "id": 17667,
-          "input1Object": {
-            "hint": "Հեռախոսահամար",
-            "minLength": 12,
-            "maxLength": 12,
-            "regexp": "",
-            "prefix": "+374"
-          },
-          "input2Object": null,
-          "input3Object": null,
-          "input4Object": null,
-          "isEnabled": true,
-          "maxAmount": 200000,
-          "minAmount": 10,
-          "name": "Easy Pay Wallet New For Getway"
+```
+POST /api/v1/logout
+```
+
+Invalidate the current session token.
+
+**Headers** — `token` (required).
+
+**Response**
+
+```json
+{
+  "success": true,
+  "message": null,
+  "responseStatus": "Success"
+}
+```
+
+### Change own password (forced)
+
+```
+PATCH /api/v1/change-own-password-forced
+```
+
+Used immediately after a login that returned `forceToChangePassword: true`. Sends the one-time token and a new password; the response returns a fresh session token (login again with the same flow afterwards is not required).
+
+**Headers** — `token` (the one-time token from login).
+
+**Request body**
+
+```json
+{
+  "password": "N3wS3cret!Pass"
+}
+```
+
+**Response** — same shape as `POST /v1/login`, with `forceToChangePassword: false` and a usable session token.
+
+### Change own password
+
+```
+PATCH /api/v1/change-own-password
+```
+
+Routine password change for the authenticated user.
+
+**Headers** — `token` (required).
+
+**Request body**
+
+```json
+{
+  "oldPassword": "S3cret!Pass",
+  "newPassword": "N3wS3cret!Pass"
+}
+```
+
+**Response**
+
+```json
+{
+  "success": true,
+  "message": null,
+  "responseStatus": "Success"
+}
+```
+
+### Get current user
+
+```
+GET /api/v1/user-identify
+```
+
+Return the authenticated user's profile. Useful after login if you discarded part of the login response, or to detect role changes.
+
+**Headers** — `token` (required).
+
+**Response**
+
+```json
+{
+  "success": true,
+  "message": null,
+  "responseStatus": "Success",
+  "responseData": {
+    "data": {
+      "id": "1k3ZA",
+      "token": "f6816910-914e-48a1-a40a-06cb6aead7e9",
+      "fullName": "Panda User",
+      "username": "panda.user",
+      "forceToChangePassword": false,
+      "creationDate": "2024-09-12T10:11:31.000Z",
+      "role": "User"
+    }
+  }
+}
+```
+
+### List available providers
+
+```
+GET /api/v1/user-providers
+```
+
+Returns the providers this user is entitled to use, with their input-field metadata, amount limits, and verification requirement.
+
+**Headers** — `token` (required), `language` (optional, `en` or `hy`).
+
+**Response**
+
+```json
+{
+  "success": true,
+  "message": null,
+  "responseStatus": "Success",
+  "responseData": {
+    "data": [
+      {
+        "id": 17667,
+        "name": "EasyPay Wallet",
+        "isEnabled": true,
+        "minAmount": 10,
+        "maxAmount": 200000,
+        "input1Object": {
+          "hint": "Phone number",
+          "minLength": 12,
+          "maxLength": 12,
+          "regexp": "",
+          "prefix": "+374"
         },
-        {
-          "id": 18473,
-          "input1Object": {
-            "hint": "Քարտի համար",
-            "minLength": 16,
-            "maxLength": 16,
-            "regexp": "",
-            "prefix": ""
-          },
-          "input2Object": null,
-          "input3Object": null,
-          "input4Object": null,
-          "isEnabled": true,
-          "maxAmount": 399000,
-          "minAmount": 100,
-          "name": "Փոխանցում քարտին coin - Bitcoin Armenia"
+        "input2Object": null,
+        "input3Object": null,
+        "input4Object": null,
+        "requiresVerification": false
+      },
+      {
+        "id": 18900,
+        "name": "Card-to-card transfer (KYC)",
+        "isEnabled": true,
+        "minAmount": 100,
+        "maxAmount": 1000000,
+        "input1Object": {
+          "hint": "Card number",
+          "minLength": 16,
+          "maxLength": 16,
+          "regexp": "",
+          "prefix": ""
         },
-        {
-          "id": 18474,
-          "input1Object": {
-            "hint": "Հեռախոսահամար",
-            "minLength": 12,
-            "maxLength": 12,
-            "regexp": "",
-            "prefix": "+374"
-          },
-          "input2Object": null,
-          "input3Object": null,
-          "input4Object": null,
-          "isEnabled": true,
-          "maxAmount": 200000,
-          "minAmount": 10,
-          "name": "Փոխանցում դրամապանակին coin - Bitcoin Armenia"
-        }
-      ]
-    },
-    "success": true,
-    "message": "",
-    "responseStatus": "Ok"
-  }
-  ```
-
-## 1.8. Transaction Verification and Payment
-
-### 1.8.1. Check
-
-- **Endpoint:** `POST /api/v1/check`
-- **Description:** Perform pre-transaction checks.
-- **Request:**
-
-  ```json
-  {
-    "providerId": 1,
-    "input1": "077777777",
-    "input2": null,
-    "input3": null,
-    "input4": null
-  }
-  ```
-
-- **Response:**
-
-  ```json
-  {
-    "success": true,
-    "message": "string",
-    "responseStatus": "Ok",
-    "responseData": {
-      "data": "string"
-    }
-  }
-  ```
-
-### 1.8.2. Pay
-
-- **Endpoint:** `POST /api/v1/pay`
-- **Description:** Process a payment.
-- **Request:**
-
-  ```json
-  {
-    "amount": 1,
-    "providerId": 1,
-    "input1": "+37477777777",
-    "input2": null,
-    "input3": null,
-    "input4": null,
-    "sessionID": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-  }
-  ```
-
-- **Response:**
-  ```json
-  {
-    "success": true,
-    "message": "string",
-    "responseStatus": "Ok",
-    "responseData": {
-      "data": 0
-    }
-  }
-  ```
-
-### 1.8.3. Balance
-
-- **Endpoint:** `GET /api/v1/balance`
-- **Description:** Get agent balance.
-- **Request:**
-
-  ```json
-  {
-    "responseData": {
-      "data": {
-        "balance": 45348.156
+        "input2Object": null,
+        "input3Object": null,
+        "input4Object": null,
+        "requiresVerification": true
       }
-    },
-    "success": true,
-    "message": "",
-    "responseStatus": "Ok"
+    ]
   }
-  ```
+}
+```
 
-### 1.8.4. Get cheque
+Important fields:
+- `requiresVerification` — when `true`, you must verify the payer's identity (see [Payment identity verification](#payment-identity-verification)) before calling `/v1/pay`. The flag is sourced live from EasyPay; it can flip without notice.
+- `inputNObject` — describes a form field this provider expects in `/v1/check` and `/v1/pay`. Up to 4 inputs per provider; `null` means the field is unused. `prefix` is a fixed string prepended to user input (e.g. `+374` for Armenian phone numbers).
 
-- **Endpoint:** `GET /api/v1/receipt?transactionId=1`
-- **Description:** Get transaction cheque by transaction id.
-- **Request:**
+### Identity lookup (E-Keng)
 
-  ```json
-  {
-    "success": true,
-    "message": "string",
-    "responseStatus": "Ok",
-    "responseData": {
-      "data": ["string"]
+```
+POST /api/v1/identity-lookup
+```
+
+Look up a payer in Armenia's E-Keng registry by SSN or document number. Returns the 8 identity fields needed for KYC plus a single-use `reference` UUID to pass to `/v1/pay`.
+
+**Headers** — `token` (required).
+
+**Request body**
+
+```json
+{
+  "lookupType": "Ssn",
+  "value": "1234567890"
+}
+```
+
+`lookupType` accepts `"Ssn"` or `"Document"`. `value` is the SSN or document number.
+
+**Response**
+
+```json
+{
+  "success": true,
+  "message": null,
+  "responseStatus": "Success",
+  "responseData": {
+    "data": {
+      "reference": "8c2f6f4a-9c1e-4e7d-9b8f-2c4f1c7f6d9a",
+      "person": {
+        "firstName": "John",
+        "lastName": "Doe",
+        "ssn": "1234567890",
+        "document": "AB1234567",
+        "documentType": 1,
+        "documentIssuedBy": "003",
+        "documentIssuedDate": "2019-02-13",
+        "documentValidityDate": "2029-02-13",
+        "source": "Ekeng"
+      }
     }
   }
-  ```
+}
+```
 
-## 1.9. Contributing
+`documentType`: `1` = Passport (non-biometric), `2` = Biometric Passport, `3` = ID Card. Other types (Foreign Passport, Social Card) are rejected with `BadRequest` because EasyPay only accepts 1 / 2 / 3.
 
-We encourage contributions to improve our API documentation. If you have suggestions or corrections, please feel free to
-open a pull request or an issue.
+`reference` is **single-use**: passing it to `/v1/pay` consumes it. To pay for the same payer again, run identity verification again.
 
-## 1.10. Issues and Support
+**Errors**
+- `BadRequest` — value missing, lookup type invalid, no supported document found, document type unsupported.
+- `NotFound` — E-Keng has no record matching the value.
+- `ServiceUnavailable` — E-Keng is unreachable. Retry later or fall back to manual entry.
 
-If you encounter any problems or have questions regarding a specific API, please use the 'Issues' section of this
-repository. Our team will do its best to assist you.
+### Identity manual entry
 
-## 1.11. Stay Updated
+```
+POST /api/v1/identity-manual
+```
 
-We regularly update our API documentation to reflect the latest changes and improvements. Keep an eye on this repository
-for the most current information.
+Submit identity fields entered by the operator (use when E-Keng lookup is unavailable or the payer is not in the registry). Returns the same `reference` + `person` shape as `/v1/identity-lookup`.
 
----
+**Headers** — `token` (required).
 
-Thank you for using PandaTech's APIs! We hope this documentation helps you in your development journey.
+**Request body**
+
+```json
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "ssn": "1234567890",
+  "document": "AB1234567",
+  "documentType": 1,
+  "documentIssuedBy": "003",
+  "documentIssuedDate": "2019-02-13",
+  "documentValidityDate": "2029-02-13"
+}
+```
+
+Field rules:
+- All string fields are required.
+- `documentType`: `1` (Passport), `2` (Biometric Passport), or `3` (ID Card). Anything else is `BadRequest`.
+- `documentIssuedDate` and `documentValidityDate` are ISO `yyyy-MM-dd` strings.
+- `documentValidityDate` must be on or after `documentIssuedDate`.
+
+**Response** — identical to `/v1/identity-lookup`.
+
+### Check (pre-payment validation)
+
+```
+POST /api/v1/check
+```
+
+Validate a payment with the upstream provider before charging. Returns a session id you must include in `/v1/pay`.
+
+**Headers** — `token` (required).
+
+**Request body**
+
+```json
+{
+  "providerId": 17667,
+  "input1": "+37477777777",
+  "input2": null,
+  "input3": null,
+  "input4": null
+}
+```
+
+`input1` through `input4` correspond to the provider's `inputNObject.hint` from `GET /v1/user-providers`. Send `null` for unused inputs. If the provider's `inputNObject.prefix` is non-empty, prepend it to the user's value (e.g. `+374` for Armenian phones).
+
+**Response**
+
+```json
+{
+  "success": true,
+  "message": null,
+  "responseStatus": "Success",
+  "responseData": {
+    "data": "f7e6d5c4-b3a2-4910-8f7e-6d5c4b3a2910"
+  }
+}
+```
+
+`responseData.data` is the upstream session id. Pass it as `sessionID` to `/v1/pay`.
+
+**Errors**
+- `BadRequest` — provider rejected the input (e.g. unknown subscriber).
+- `NotFound` — `providerId` doesn't exist or isn't enabled for this user.
+- `ServiceUnavailable` — upstream provider unreachable.
+
+### Pay
+
+```
+POST /api/v1/pay
+```
+
+Charge the payer and create a transaction. Use only after `/v1/check` returned a session id, and (for verified providers) after `/v1/identity-lookup` or `/v1/identity-manual` returned a reference.
+
+**Headers** — `token` (required).
+
+**Request body**
+
+```json
+{
+  "providerId": 17667,
+  "input1": "+37477777777",
+  "input2": null,
+  "input3": null,
+  "input4": null,
+  "amount": 1000,
+  "sessionID": "f7e6d5c4-b3a2-4910-8f7e-6d5c4b3a2910",
+  "identityReference": null
+}
+```
+
+- `sessionID` — required, from the matching `/v1/check`.
+- `amount` — required, between the provider's `minAmount` and `maxAmount`.
+- `identityReference` — required iff the provider's `requiresVerification` is `true`. Send the UUID from identity lookup/manual. Send `null` for providers that don't require KYC.
+
+**Response**
+
+```json
+{
+  "success": true,
+  "message": null,
+  "responseStatus": "Success",
+  "responseData": {
+    "data": "1m4cP2"
+  }
+}
+```
+
+`responseData.data` is the transaction id (base-36 encoded long). Use it with `/v1/receipt`.
+
+**Errors**
+- `BadRequest` — amount out of range; identity required but not provided; identity reference not found; identity reference already consumed; upstream provider rejected the payment.
+- `NotFound` — `providerId` not enabled for this user.
+- `ServiceUnavailable` — upstream provider or KYC authorization unreachable. Safe to retry: EasyPay deduplicates by `sessionID`.
+
+Identity-related error messages you may want to detect:
+- `identity verification required for this provider` — the provider's live `requiresVerification` is `true` but you sent `identityReference: null`.
+- `identity reference not found` — the UUID you sent doesn't exist.
+- `identity reference already consumed` — the UUID was used by an earlier successful pay; verify again to get a fresh one.
+
+### Get balance
+
+```
+GET /api/v1/balance
+```
+
+Return the agent (user) balance from the upstream EasyPay account. Only available for `User` role; admins receive `Unauthorized`.
+
+**Headers** — `token` (required).
+
+**Response**
+
+```json
+{
+  "success": true,
+  "message": null,
+  "responseStatus": "Success",
+  "responseData": {
+    "data": {
+      "balance": 45348.156
+    }
+  }
+}
+```
+
+### List transactions
+
+```
+GET /api/v1/user-transactions?page=1&pageSize=50&dataRequest=%7B%7D
+```
+
+Paginated list of the authenticated user's transactions.
+
+**Headers** — `token` (required).
+
+**Query parameters**
+- `page` — 1-indexed page number.
+- `pageSize` — items per page (max 5000 in practice).
+- `dataRequest` — URL-encoded JSON describing filters/sorting. Pass `%7B%7D` (encoded `{}`) for no filters.
+
+**Response**
+
+```json
+{
+  "success": true,
+  "message": null,
+  "responseStatus": "Success",
+  "responseData": {
+    "data": [
+      {
+        "id": "1m4cP2",
+        "providerId": 17667,
+        "providerName": "EasyPay Wallet",
+        "userId": "1k3ZA",
+        "amount": 1000,
+        "creationDate": "2026-04-17T08:21:43.757Z",
+        "comment": null
+      }
+    ],
+    "page": 1,
+    "pageSize": 50,
+    "totalCount": 142
+  }
+}
+```
+
+Identity fields (FirstName, LastName, SSN, Document, …) are **never** returned in transaction lists, even for transactions that required KYC. They are AES-encrypted at rest and only ever decrypted internally during the Pay flow.
+
+### List transactions (no filters helper)
+
+```
+GET /api/v1/available-user-transactions?page=1&pageSize=50
+```
+
+Same shape as `/v1/user-transactions` but without the `dataRequest` query parameter. Equivalent to passing `dataRequest={}`.
+
+### Export transactions
+
+```
+GET /api/v1/user-transactions-export?token=<token>&dataRequest=%7B%7D&exportType=Csv
+```
+
+Stream the user's transactions as a downloadable file. The token goes in the **query string** here (not the header), so the URL can be used in a download anchor.
+
+**Query parameters**
+- `token` — session token.
+- `dataRequest` — URL-encoded filter JSON (`%7B%7D` for none).
+- `exportType` — `Csv` (other formats are not currently emitted by this endpoint).
+
+**Response** — `text/csv` body with `Content-Disposition: attachment; filename="Transactions.Csv"`.
+
+A sister endpoint `/v1/available-user-transactions-export` accepts the same `token` + `exportType` and skips `dataRequest`; it supports `Csv`, `Pdf`, and `Xlsx`.
+
+### Get receipt
+
+```
+GET /api/v1/receipt?transactionId=1m4cP2
+```
+
+Return the upstream receipt lines for a single transaction.
+
+**Headers** — `token` (required).
+
+**Query parameters**
+- `transactionId` — base-36 transaction id (the `id` returned by `/v1/pay`).
+
+**Response**
+
+```json
+{
+  "success": true,
+  "message": null,
+  "responseStatus": "Success",
+  "responseData": {
+    "data": [
+      "EasyPay receipt",
+      "Provider: EasyPay Wallet",
+      "Amount: 1000.00 AMD",
+      "Reference: ABC123"
+    ]
+  }
+}
+```
+
+Receipt lines are emitted by the upstream provider; render them as plain text or in a fixed-width font for fidelity.
+
+## Payment identity verification
+
+Some EasyPay providers (typically card-to-card transfers and high-value categories) require KYC: each payment must carry the payer's identity. EasyTransact handles this via two endpoints (`/v1/identity-lookup` for E-Keng auto-fill, `/v1/identity-manual` for operator-entered data). Both return a single-use `reference` UUID that you pass to `/v1/pay`.
+
+### When verification is required
+
+`GET /v1/user-providers` returns `requiresVerification: true` on providers that need KYC. The flag is read live from EasyPay on every call; do not cache it.
+
+### End-to-end flow
+
+1. **Discover** — `GET /v1/user-providers` and read the chosen provider's `requiresVerification`.
+2. **Verify** — call `POST /v1/identity-lookup` (auto-fill from E-Keng) or `POST /v1/identity-manual` (operator-entered). Stash the returned `reference` UUID.
+3. **Check** — call `POST /v1/check` as usual; you receive a `sessionID`.
+4. **Pay** — call `POST /v1/pay` with both `sessionID` and `identityReference`. On success the reference is consumed and the transaction is created.
+
+Once consumed, a `reference` cannot be reused. To pay for the same payer again, run step 2 again to mint a new one.
+
+### Identity payload contract
+
+The 8 fields collected (and forwarded to EasyPay's authorize-session call) are:
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `firstName` | string | |
+| `lastName` | string | |
+| `ssn` | string | Armenian Social Security Number. Patterns: `\d{10}` or `Տ\d{3}/\d{5}` or `S\d{3}A\d{5}`. |
+| `document` | string | Document number. For passport: `[A-Z]{2}\d{7}` or `\d{9}`. For ID card: `\d{9}`. |
+| `documentType` | integer | `1` Passport, `2` Biometric Passport, `3` ID Card. |
+| `documentIssuedBy` | string | Issuing authority code (e.g. `"003"`). |
+| `documentIssuedDate` | ISO date | `yyyy-MM-dd`. |
+| `documentValidityDate` | ISO date | `yyyy-MM-dd`. Must be on or after `documentIssuedDate`. |
+
+EasyTransact stores the full payload AES-256 encrypted; only the Pay flow ever decrypts it. List/export endpoints never return identity fields.
+
+### Recovering from stale references
+
+If `/v1/pay` returns `BadRequest` with one of these messages, re-run identity verification and retry:
+
+- `identity reference already consumed`
+- `identity reference not found`
+
+Both indicate the `reference` UUID is no longer usable. Re-mint and retry the same `sessionID` only if your `/v1/check` is still recent (sessions also expire upstream). Safest is to redo Check + Pay together.
+
+## Quick start
+
+A minimal end-to-end integration:
+
+```bash
+BASE=https://betransact.easypay.am/api
+
+# 1. Login
+TOKEN=$(curl -s -X POST $BASE/v1/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"panda.user","password":"S3cret!Pass"}' \
+  | jq -r '.responseData.data.token')
+
+# 2. Pick a provider
+PROVIDER_ID=$(curl -s $BASE/v1/user-providers \
+  -H "token: $TOKEN" \
+  | jq -r '.responseData.data[0].id')
+
+# 3. (KYC providers only) Verify the payer
+REFERENCE=$(curl -s -X POST $BASE/v1/identity-lookup \
+  -H "token: $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"lookupType":"Ssn","value":"1234567890"}' \
+  | jq -r '.responseData.data.reference')
+
+# 4. Check
+SESSION_ID=$(curl -s -X POST $BASE/v1/check \
+  -H "token: $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d "{\"providerId\":$PROVIDER_ID,\"input1\":\"+37477777777\"}" \
+  | jq -r '.responseData.data')
+
+# 5. Pay
+curl -s -X POST $BASE/v1/pay \
+  -H "token: $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d "{\"providerId\":$PROVIDER_ID,\"input1\":\"+37477777777\",\"amount\":1000,\"sessionID\":\"$SESSION_ID\",\"identityReference\":\"$REFERENCE\"}"
+```
+
+## Changelog
+
+- **2026-04** — Payment identity verification. `GET /v1/user-providers` now returns `requiresVerification` per provider. New endpoints `POST /v1/identity-lookup` and `POST /v1/identity-manual`. `POST /v1/pay` now accepts an optional `identityReference`, required when the selected provider has `requiresVerification: true`.
+
+## Support
+
+For issues with the API, file a ticket at the EasyTransact support channel of your contract. For documentation corrections, open a pull request against the [Public-API-Documentations](https://github.com/PandaTechAM/Public-API-Documentations) repository.
