@@ -306,13 +306,13 @@ Important fields:
 - `requiresVerification` — when `true`, you must verify the payer's identity (see [Payment identity verification](#payment-identity-verification)) before calling `/v1/pay`. The flag is sourced live from EasyPay; it can flip without notice.
 - `inputNObject` — describes a form field this provider expects in `/v1/check` and `/v1/pay`. Up to 4 inputs per provider; `null` means the field is unused. `prefix` is a fixed string prepended to user input (e.g. `+374` for Armenian phone numbers).
 
-### Identity lookup (E-Keng)
+### Identity lookup
 
 ```
 POST /api/v1/identity-lookup
 ```
 
-Look up a payer in Armenia's E-Keng registry by SSN or document number. Returns the 8 identity fields needed for KYC plus a single-use `reference` UUID to pass to `/v1/pay`.
+Identify a payer by SSN or document number. EasyTransact resolves the lookup against the official identity records and, on a hit, returns the 8 identity fields needed for KYC plus a single-use `reference` UUID to pass to `/v1/pay`. Use this as the primary path; only fall back to `/v1/identity-manual` when the lookup cannot identify the payer (e.g. a foreign citizen with no Armenian record, or a typo in the document number).
 
 **Headers** — `token` (required).
 
@@ -346,7 +346,7 @@ Look up a payer in Armenia's E-Keng registry by SSN or document number. Returns 
         "documentIssuedBy": "003",
         "documentIssuedDate": "2019-02-13",
         "documentValidityDate": "2029-02-13",
-        "source": "Ekeng"
+        "source": "Auto"
       }
     }
   }
@@ -355,12 +355,14 @@ Look up a payer in Armenia's E-Keng registry by SSN or document number. Returns 
 
 `documentType`: `1` = Passport (non-biometric), `2` = Biometric Passport, `3` = ID Card. Other types (Foreign Passport, Social Card) are rejected with `BadRequest` because EasyPay only accepts 1 / 2 / 3.
 
+`source` is `"Auto"` for identities resolved by lookup and `"Manual"` for those entered via `/v1/identity-manual` (see below).
+
 `reference` is **single-use**: passing it to `/v1/pay` consumes it. To pay for the same payer again, run identity verification again.
 
 **Errors**
 - `BadRequest` — value missing, lookup type invalid, no supported document found, document type unsupported.
-- `NotFound` — E-Keng has no record matching the value.
-- `ServiceUnavailable` — E-Keng is unreachable. Retry later or fall back to manual entry.
+- `NotFound` — no record matching the value. Most often a foreign citizen, an off-roll payer, or a typo. Fall back to `/v1/identity-manual`.
+- `ServiceUnavailable` — the lookup service is unreachable. Retry later or fall back to manual entry.
 
 ### Identity manual entry
 
@@ -368,7 +370,7 @@ Look up a payer in Armenia's E-Keng registry by SSN or document number. Returns 
 POST /api/v1/identity-manual
 ```
 
-Submit identity fields entered by the operator (use when E-Keng lookup is unavailable or the payer is not in the registry). Returns the same `reference` + `person` shape as `/v1/identity-lookup`.
+Submit identity fields entered by the operator. Use when the automatic lookup could not identify the payer (foreign citizen, off-roll, or document mistyped) or when the lookup service is unavailable. Returns the same `reference` + `person` shape as `/v1/identity-lookup` (with `source: "Manual"`).
 
 **Headers** — `token` (required).
 
@@ -621,7 +623,7 @@ Receipt lines are emitted by the upstream provider; render them as plain text or
 
 ## Payment identity verification
 
-Some EasyPay providers (typically card-to-card transfers and high-value categories) require KYC: each payment must carry the payer's identity. EasyTransact handles this via two endpoints (`/v1/identity-lookup` for E-Keng auto-fill, `/v1/identity-manual` for operator-entered data). Both return a single-use `reference` UUID that you pass to `/v1/pay`.
+Some EasyPay providers (typically card-to-card transfers and high-value categories) require KYC: each payment must carry the payer's identity. EasyTransact handles this via two endpoints (`/v1/identity-lookup` for automatic identification, `/v1/identity-manual` for operator-entered data). Both return a single-use `reference` UUID that you pass to `/v1/pay`.
 
 ### When verification is required
 
@@ -630,7 +632,7 @@ Some EasyPay providers (typically card-to-card transfers and high-value categori
 ### End-to-end flow
 
 1. **Discover** — `GET /v1/user-providers` and read the chosen provider's `requiresVerification`.
-2. **Verify** — call `POST /v1/identity-lookup` (auto-fill from E-Keng) or `POST /v1/identity-manual` (operator-entered). Stash the returned `reference` UUID.
+2. **Verify** — call `POST /v1/identity-lookup` (auto-identification by SSN or document number); if it returns `NotFound` or `ServiceUnavailable`, fall back to `POST /v1/identity-manual`. Stash the returned `reference` UUID.
 3. **Check** — call `POST /v1/check` as usual; you receive a `sessionID`.
 4. **Pay** — call `POST /v1/pay` with both `sessionID` and `identityReference`. On success the reference is consumed and the transaction is created.
 
