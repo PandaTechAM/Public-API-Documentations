@@ -420,7 +420,7 @@ Field rules:
 POST /api/v1/check
 ```
 
-Validate a payment with the upstream provider before charging. Returns a session id you must include in `/v1/pay`.
+Validate a payment with the upstream provider before charging. Returns a session id you must include in `/v1/pay`. For providers with `requiresVerification: true`, Check also performs the KYC authorization against the upstream provider, so the identity reference is required here (not on Pay alone).
 
 **Headers** — `token` (required).
 
@@ -432,11 +432,14 @@ Validate a payment with the upstream provider before charging. Returns a session
   "input1": "+37477777777",
   "input2": null,
   "input3": null,
-  "input4": null
+  "input4": null,
+  "identityReference": null
 }
 ```
 
 `input1` through `input4` correspond to the provider's `inputNObject.hint` from `GET /v1/user-providers`. Send `null` for unused inputs. If the provider's `inputNObject.prefix` is non-empty, prepend it to the user's value (e.g. `+374` for Armenian phones).
+
+`identityReference` — required iff the provider's `requiresVerification` is `true`. Send the UUID from `/v1/identity-lookup` or `/v1/identity-manual`. Send `null` for providers that don't require KYC. The reference is validated (exists, not already consumed) and forwarded to the upstream KYC authorization step before the Check call. It is not consumed here: consumption happens on a successful `/v1/pay`.
 
 **Response**
 
@@ -454,9 +457,14 @@ Validate a payment with the upstream provider before charging. Returns a session
 `responseData.data` is the upstream session id. Pass it as `sessionID` to `/v1/pay`.
 
 **Errors**
-- `BadRequest` — provider rejected the input (e.g. unknown subscriber).
+- `BadRequest` — provider rejected the input (e.g. unknown subscriber); identity required but not provided; identity reference not found; identity reference already consumed.
 - `NotFound` — `providerId` doesn't exist or isn't enabled for this user.
-- `ServiceUnavailable` — upstream provider unreachable.
+- `ServiceUnavailable` — upstream provider or KYC authorization unreachable.
+
+Identity-related error messages you may want to detect here:
+- `identity verification required for this provider` — the provider's live `requiresVerification` is `true` but you sent `identityReference: null`.
+- `identity reference not found` — the UUID you sent doesn't exist.
+- `identity reference already consumed` — the UUID was used by an earlier successful pay; verify again to get a fresh one.
 
 ### Pay
 
@@ -485,7 +493,7 @@ Charge the payer and create a transaction. Use only after `/v1/check` returned a
 
 - `sessionID` — required, from the matching `/v1/check`.
 - `amount` — required, between the provider's `minAmount` and `maxAmount`.
-- `identityReference` — required iff the provider's `requiresVerification` is `true`. Send the UUID from identity lookup/manual. Send `null` for providers that don't require KYC.
+- `identityReference` — required iff the provider's `requiresVerification` is `true`. Send the **same** UUID you used on `/v1/check` for this session. It is validated and linked to the created transaction, then consumed (cannot be reused). Send `null` for providers that don't require KYC.
 
 **Response**
 
@@ -505,7 +513,7 @@ Charge the payer and create a transaction. Use only after `/v1/check` returned a
 **Errors**
 - `BadRequest` — amount out of range; identity required but not provided; identity reference not found; identity reference already consumed; upstream provider rejected the payment.
 - `NotFound` — `providerId` not enabled for this user.
-- `ServiceUnavailable` — upstream provider or KYC authorization unreachable. Safe to retry: EasyPay deduplicates by `sessionID`.
+- `ServiceUnavailable` — upstream provider unreachable. Safe to retry: EasyPay deduplicates by `sessionID`.
 
 Identity-related error messages you may want to detect:
 - `identity verification required for this provider` — the provider's live `requiresVerification` is `true` but you sent `identityReference: null`.
@@ -650,14 +658,16 @@ Some EasyPay providers (typically card-to-card transfers and high-value categori
 
 1. **Discover** — `GET /v1/user-providers` and read the chosen provider's `requiresVerification`.
 2. **Verify** — call `POST /v1/identity-lookup` (auto-identification by SSN or document number); if it returns `NotFound` or `ServiceUnavailable`, fall back to `POST /v1/identity-manual`. Stash the returned `reference` UUID.
-3. **Check** — call `POST /v1/check` as usual; you receive a `sessionID`.
-4. **Pay** — call `POST /v1/pay` with both `sessionID` and `identityReference`. On success the reference is consumed and the transaction is created.
+3. **Check** — call `POST /v1/check` with `identityReference` set to the UUID from step 2. EasyTransact authorizes the upstream session with the payer's identity before validating inputs, and returns a `sessionID`.
+4. **Pay** — call `POST /v1/pay` with the same `sessionID` and the same `identityReference`. On success the reference is consumed and the transaction is created.
 
 Once consumed, a `reference` cannot be reused. To pay for the same payer again, run step 2 again to mint a new one.
 
+For providers where `requiresVerification` is `false`, skip step 2 and omit (or `null`) `identityReference` on both Check and Pay.
+
 ### Identity payload contract
 
-The 8 fields that make up an identity (forwarded to EasyPay's authorize-session call at Pay time) are:
+The 8 fields that make up an identity (forwarded to EasyPay's authorize-session call during Check for KYC providers) are:
 
 | Field | Type | Notes |
 | --- | --- | --- |
@@ -670,7 +680,7 @@ The 8 fields that make up an identity (forwarded to EasyPay's authorize-session 
 | `documentIssuedDate` | ISO date | `yyyy-MM-dd`. |
 | `documentValidityDate` | ISO date | `yyyy-MM-dd`. Must be on or after `documentIssuedDate`. |
 
-These fields are the body of `/v1/identity-manual` (operator submits, response echoes back). For `/v1/identity-lookup`, none of these fields appear on the wire: the resolved identity stays server-side and only the `reference` UUID comes back. EasyTransact stores the full payload AES-256 encrypted; only the Pay flow ever decrypts it. List/export endpoints never return identity fields.
+These fields are the body of `/v1/identity-manual` (operator submits, response echoes back). For `/v1/identity-lookup`, none of these fields appear on the wire: the resolved identity stays server-side and only the `reference` UUID comes back. EasyTransact stores the full payload AES-256 encrypted; only the Check flow decrypts it (to build the upstream KYC authorization payload). List/export endpoints never return identity fields.
 
 ### Recovering from stale references
 
@@ -706,14 +716,14 @@ REFERENCE=$(curl -s -X POST $BASE/v1/identity-lookup \
   -d '{"lookupType":"Ssn","value":"1234567890"}' \
   | jq -r '.responseData.data.reference')
 
-# 4. Check
+# 4. Check (pass identityReference for KYC providers, omit or null otherwise)
 SESSION_ID=$(curl -s -X POST $BASE/v1/check \
   -H "token: $TOKEN" \
   -H "Content-Type: application/json" \
-  -d "{\"providerId\":$PROVIDER_ID,\"input1\":\"+37477777777\"}" \
+  -d "{\"providerId\":$PROVIDER_ID,\"input1\":\"+37477777777\",\"identityReference\":\"$REFERENCE\"}" \
   | jq -r '.responseData.data')
 
-# 5. Pay
+# 5. Pay (same identityReference as Check)
 curl -s -X POST $BASE/v1/pay \
   -H "token: $TOKEN" \
   -H "Content-Type: application/json" \
@@ -722,7 +732,7 @@ curl -s -X POST $BASE/v1/pay \
 
 ## Changelog
 
-- **2026-04** — Payment identity verification. `GET /v1/user-providers` now returns `requiresVerification` per provider. New endpoints `POST /v1/identity-lookup` and `POST /v1/identity-manual`. `POST /v1/pay` now accepts an optional `identityReference`, required when the selected provider has `requiresVerification: true`.
+- **2026-04** — Payment identity verification. `GET /v1/user-providers` now returns `requiresVerification` per provider. New endpoints `POST /v1/identity-lookup` and `POST /v1/identity-manual`. Both `POST /v1/check` and `POST /v1/pay` now accept an optional `identityReference`, required when the selected provider has `requiresVerification: true`. The upstream KYC authorization step runs during Check; Pay consumes the reference on success.
 
 ## Support
 
