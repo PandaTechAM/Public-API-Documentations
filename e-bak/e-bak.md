@@ -112,14 +112,16 @@ These enums are referenced across multiple endpoints.
 
 | Value | Name             | Armenian           |
 | ----- | ---------------- | ------------------ |
-| 0     | Apartment        | Բնակարան           |
-| 1     | CommercialArea   | Կոմերցիոն տարածք  |
-| 2     | ParkingArea      | Կայանման տարածք    |
-| 3     | Basement         | Նկուղ              |
-| 4     | House            | Տուն               |
-| 5     | Other            | Այլ                |
-| 6     | Elevator         | Վերելակ              |
-| 7     | SolarStation     | Արևային կայան       |
+| 0     | Apartment           | Բնակարան           |
+| 1     | CommercialArea      | Կոմերցիոն տարածք  |
+| 2     | ParkingArea         | Կայանման տարածք    |
+| 3     | Basement            | Նկուղ              |
+| 4     | House               | Տուն               |
+| 5     | Other               | Այլ                |
+| 6     | Elevator            | Վերելակ              |
+| 7     | SolarStation        | Արևային կայան       |
+| 8     | Advertisement       | Գովազդ              |
+| 9     | CommercialBasement  | Կոմերցիոն նկուղ    |
 
 ### Check Commission
 
